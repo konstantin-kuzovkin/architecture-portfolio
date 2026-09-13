@@ -307,3 +307,41 @@ Key areas include:
 • schema evolution;
 • observability requirements;
 • technical documentation and integration standards.
+
+My Role
+
+Role: System Analyst / Architecture-oriented System Analyst
+
+Responsibilities
+
+• event model analysis;
+• Kafka integration design;
+• event contract definition;
+• delivery semantics analysis;
+• partitioning and ordering analysis;
+• retry and DLQ design;
+• idempotent consumer analysis;
+• schema evolution analysis.
+
+────────
+
+What This Case Demonstrates
+
+• Event-Driven Architecture
+• Kafka architecture
+• Delivery semantics
+• Partitioning
+• Ordering
+• Idempotent consumers
+• Retry strategies
+• Dead-letter queues
+• Schema evolution
+• Observability
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+
+It is not a copy of a production system.
