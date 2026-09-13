@@ -25,6 +25,20 @@ This creates an important distributed-systems problem:
 How should the bank maintain a reliable operation state when different systems may temporarily have different views of the same transaction?
 
 ⸻
+## Architecture
+
+### System Context
+
+![Payment & Transfer System Context](./diagrams/context.svg)
+
+### Main Processing Flow
+
+![Payment & Transfer Sequence](./diagrams/sequence.svg)
+
+### Reconciliation
+
+![Payment & Transfer Reconciliation](./diagrams/reconciliation.svg)
+
 
 Architectural Goals
 
