@@ -1,0 +1,17 @@
+@startuml
+
+title Synchronous REST Integration
+
+actor Client
+participant "Service A" as A
+participant "Service B" as B
+database "Service B DB" as DB
+
+Client -> A : Request
+A -> B : REST request
+B -> DB : Process
+DB --> B : Result
+B --> A : Response
+A --> Client : Response
+
+@enduml
