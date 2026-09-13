@@ -170,3 +170,38 @@ A common platform standard can provide:
 Key Principle
 
 > **At platform scale, architecture is not only about designing systems. It is also about creating mechanisms that allow many teams to design systems consistently.**
+
+My Role
+
+Role: Platform / System Analyst
+
+Responsibilities
+
+• platform standards definition;
+• API governance;
+• event governance;
+• documentation standards;
+• architecture review practices;
+• reusable templates;
+• cross-team technical enablement.
+
+────────
+
+What This Case Demonstrates
+
+• Platform Engineering
+• Architecture Governance
+• Reusable Standards
+• API Governance
+• Event Governance
+• Documentation as an Engineering Practice
+• Cross-team Technical Enablement
+• Architecture Reviews
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+
+It is not a copy of a production system.
