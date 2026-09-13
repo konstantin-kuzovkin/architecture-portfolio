@@ -1,0 +1,27 @@
+@startuml
+
+title Payment & Transfer - System Context
+
+actor Customer
+
+rectangle "Client Application" as Client
+rectangle "Transfer Service\n(Orchestrator)" as Transfer
+database "Operations DB" as DB
+rectangle "Core Banking System" as ABS
+rectangle "Payment Processing Network" as PSP
+rectangle "Audit Service" as Audit
+rectangle "Operations Console" as Ops
+
+Customer --> Client : Initiate transfer
+Client --> Transfer : Transfer request
+
+Transfer --> DB : Persist operation state
+Transfer --> ABS : Banking operation
+Transfer --> PSP : Payment request
+Transfer --> Audit : Audit events
+
+PSP --> Transfer : Processing result
+
+Ops --> Transfer : Investigate / reconcile
+
+@enduml
