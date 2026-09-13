@@ -177,31 +177,33 @@ Role: Platform / System Analyst
 
 Responsibilities
 
-• platform standards definition;
+• platform architecture analysis;
+• definition of reusable engineering standards;
 • API governance;
 • event governance;
 • documentation standards;
-• architecture review practices;
-• reusable templates;
-• cross-team technical enablement.
-
-────────
+• architecture review preparation;
+• reusable templates and checklists;
+• cross-team technical enablement;
+• analysis of platform capabilities;
+• architecture decision documentation.
 
 What This Case Demonstrates
 
 • Platform Engineering
 • Architecture Governance
-• Reusable Standards
+• Reusable Engineering Standards
 • API Governance
 • Event Governance
 • Documentation as an Engineering Practice
-• Cross-team Technical Enablement
 • Architecture Reviews
-
-────────
+• Cross-team Enablement
+• Reusable Templates
+• Architecture Decision Records
+• Platform Capability Thinking
 
 Portfolio Note
 
-This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning, platform engineering practices and system analysis skills.
 
-It is not a copy of a production system.
+It is not a copy of a production platform or internal documentation.
