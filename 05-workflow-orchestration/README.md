@@ -316,34 +316,34 @@ Role: System Analyst / Architecture-oriented System Analyst
 
 Responsibilities
 
-• workflow analysis;
-• process modelling;
-• state management;
+• workflow and process analysis;
+• business process modelling;
+• BPMN process design;
+• process state analysis;
 • failure and recovery analysis;
 • compensation design;
-• human-task analysis;
-• workflow technology evaluation;
-• architecture decision analysis.
-
-────────
+• human-task modelling;
+• workflow engine evaluation;
+• technology comparison;
+• architecture decision analysis;
+• technical documentation.
 
 What This Case Demonstrates
 
 • Workflow Orchestration
 • BPMN
 • Long-running Processes
-• Durable State
-• Recovery
+• Durable Process State
+• Failure Recovery
+• Retry and Timeout Handling
 • Compensation
 • Human Tasks
-• Observability
+• Process Observability
 • Workflow Engine Evaluation
 • Architecture Trade-offs
-
-────────
 
 Portfolio Note
 
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
-It is not a copy of a production system.
+It is not a copy of a production workflow implementation.
