@@ -289,17 +289,19 @@ Responsibilities
 • AI-assisted analysis workflow design;
 • agent architecture;
 • tool orchestration;
-• specialist agent design;
-• structured output definition;
-• source-grounding;
-• validation;
-• hallucination control.
-
-────────
+• specialist agent decomposition;
+• system prompt design;
+• structured output design;
+• source-grounded analysis;
+• hallucination control;
+• validation workflow;
+• analysis result verification;
+• documentation generation;
+• definition of AI limitations and boundaries.
 
 What This Case Demonstrates
 
-• LLM-based Engineering
+• LLM Engineering
 • AI Agents
 • Tool Calling
 • Agent Orchestration
@@ -308,40 +310,49 @@ What This Case Demonstrates
 • Source-grounded Analysis
 • Validation
 • Hallucination Control
-
-────────
+• AI-assisted System Analysis
+• Engineering Workflow Design
 
 Core Principle
 
-The agent should behave as a detective, not an architect.
+> **The agent is a detective, not an architect.**
 
-It should extract and analyse evidence from available sources rather than invent technical implementation details.
+The agent must analyse available evidence and identify what is explicitly present in the source material.
 
-The analytical model distinguishes:
+It must not invent:
+
+• APIs;
+• endpoints;
+• Kafka topics;
+• database tables;
+• BPMN processes;
+• business rules;
+• metrics;
+• configuration values;
+• architecture components.
+
+When information cannot be established from the available sources, the agent must explicitly report:
 
 ```text
-FACT
-INFERENCE
-UNKNOWN
+НЕ НАЙДЕНО
 ```
 
-If required information is not present in the available sources, the system should return:
+or
 
 ```text
-UNKNOWN / NOT FOUND
+ОТСУТСТВУЕТ
 ```
 
-instead of generating unsupported technical information.
+The system distinguishes between:
 
-────────
+• FACT — explicitly supported by source material;
+• INFERENCE — reasoned interpretation;
+• UNKNOWN — cannot be established from available evidence.
+
+This separation is a core hallucination-control mechanism.
 
 Portfolio Note
 
-This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and AI-assisted system analysis practices.
+This is a reconstructed and sanitised portfolio case based on an AI-assisted system analysis approach.
 
-It is not a copy of a production system.
-────────
-
-Key Principle
-
-> **AI should increase analyst leverage without becoming an uncontrolled source of technical truth.**
+The case demonstrates architecture and engineering principles rather than exposing proprietary implementation details, credentials, internal data or confidential documentation.
