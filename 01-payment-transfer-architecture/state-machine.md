@@ -10,13 +10,14 @@ The state machine prevents arbitrary status changes and provides deterministic b
 
 States
 
-State	Type	Description
-NEW	Initial	Operation has been created but processing has not started
-PROCESSING	Intermediate	Transfer processing is in progress
-COMPLETED	Terminal	Successful processing confirmed
-FAILED	Terminal	Processing failed and the operation is considered unsuccessful
-UNKNOWN	Recovery	Final outcome cannot currently be determined
-MANUAL_INVESTIGATION	Operational	Operation requires controlled investigation
+|State               |Type        |Description                                                   |
+|--------------------|------------|--------------------------------------------------------------|
+|NEW                 |Initial     |Operation has been created but processing has not started     |
+|PROCESSING          |Intermediate|Transfer processing is in progress                            |
+|COMPLETED           |Terminal    |Successful processing confirmed                               |
+|FAILED              |Terminal    |Processing failed and the operation is considered unsuccessful|
+|UNKNOWN             |Recovery    |Final outcome cannot currently be determined                  |
+|MANUAL_INVESTIGATION|Operational |Operation requires controlled investigation                   |
 
 ⸻
 
