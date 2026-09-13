@@ -1,88 +1,226 @@
-Architecture Portfolio
-
 Konstantin Kuzovkin
 
-Senior System Analyst | Solution & Integration Architecture | Platform Engineering
+Lead / Principal System Analyst | Solution & Integration Architecture
 
-Banking · FinTech · Microservices · Integration · Event-Driven Architecture
+Banking · FinTech · Distributed Systems · Microservices · Kafka · Platform Engineering · AI-assisted Engineering
 
-⸻
+────────
 
 About
 
-This repository contains selected architecture and system analysis case studies demonstrating my experience and approach to designing complex distributed and integration-heavy systems.
+I am a Senior / Lead System Analyst focused on solution and integration architecture of distributed and microservice-based systems.
 
-The portfolio focuses on:
+My professional focus includes system analysis, architecture design, API and event contracts, integration patterns, reliability, security, platform engineering and architecture governance.
 
-* Solution Architecture
-* Integration Architecture
-* Microservices
-* Event-Driven Architecture
-* REST / SOAP
-* Kafka
-* OpenAPI / AsyncAPI
-* BPMN / UML
-* Distributed Systems
-* Data Consistency
-* Security
-* Platform Engineering
-* Architecture Decision Records
-* AI-assisted System Analysis
+I work with complex systems where multiple services, teams and external dependencies must operate as a consistent technical and business solution.
 
-All examples are sanitized and reconstructed for portfolio purposes and do not contain confidential information, internal system names, production endpoints, credentials, customer data or proprietary architecture.
+This portfolio contains reconstructed and sanitised architecture case studies created to demonstrate my approach to system analysis, architecture design and technical decision-making.
 
-⸻
+> **Portfolio disclaimer:** all examples are reconstructed and sanitised for demonstration purposes. They do not contain confidential information, production endpoints, credentials, customer data, internal system names or proprietary source code.
 
-Selected Case Studies
+────────
 
-Case	Area	Key Topics
-Payment & Transfer Architecture	Payments	Orchestration, state machine, idempotency, ACID, reconciliation
-Event-Driven Architecture	Integration	Kafka, events, delivery, retries, duplicates
-Integration Architecture	Integration	REST, SOAP, API contracts, security
-Platform Architecture	Platform	Governance, standards, developer experience
-Architecture Decision Records	Architecture	Trade-offs and technical decisions
-AI-Assisted System Analysis	AI / Engineering	Agents, tools, governance, quality control
+Architecture Portfolio
 
-⸻
+|Case                                                                       |Architecture Focus                  |Key Topics                                           |
+|---------------------------------------------------------------------------|------------------------------------|-----------------------------------------------------|
+|[01 — Payment & Transfer Architecture](./01-payment-transfer-architecture/)|Distributed transaction architecture|State management, idempotency, ACID, reconciliation  |
+|[02 — Event-Driven Architecture](./02-event-driven-architecture/)          |Event-driven systems                |Kafka, delivery semantics, ordering, retry, DLQ      |
+|[03 — Integration Architecture](./03-integration-architecture/)            |Integration design                  |REST, OpenAPI, SOAP, Kafka, security                 |
+|[04 — Platform Architecture](./04-platform-architecture/)                  |Platform engineering                |Standards, governance, reusable patterns             |
+|[05 — Workflow & Process Orchestration](./05-workflow-orchestration/)      |Long-running processes              |BPMN, state, recovery, compensation                  |
+|[06 — AI-Assisted System Analysis](./06-ai-assisted-system-analysis/)      |AI engineering                      |LLM, agents, tools, validation, hallucination control|
+
+────────
+
+Architecture Areas
+
+Distributed Systems
+
+• Microservice Architecture
+• Distributed Transactions
+• State Management
+• Idempotency
+• Concurrency
+• Failure Handling
+• Reconciliation
+• Reliability
+
+Integration Architecture
+
+• REST
+• OpenAPI
+• Kafka
+• AsyncAPI
+• SOAP / XML
+• Event-Driven Architecture
+• API Contracts
+• Error Handling
+• Integration Security
+
+Platform Engineering
+
+• Architecture Standards
+• API Governance
+• Event Governance
+• Architecture Reviews
+• ADR
+• Documentation Standards
+• Developer Enablement
+
+Process & Workflow Architecture
+
+• BPMN
+• Workflow Orchestration
+• Long-running Processes
+• Durable State
+• Human Tasks
+• Compensation
+• Recovery
+
+Security
+
+• OAuth2
+• JWT
+• Keycloak
+• mTLS
+• Authentication
+• Authorisation
+• Trust Boundaries
+
+AI-assisted Engineering
+
+• LLM-based Analysis
+• AI Agents
+• Tool Orchestration
+• Specialist Agents
+• Structured Outputs
+• Source-grounded Analysis
+• Hallucination Control
+• Validation
+
+────────
+
+Architecture Decision Records
+
+The portfolio also contains a separate collection of architecture decisions and trade-offs.
+
+See:
+
+Architecture Decision Records →
+
+The ADRs demonstrate how architectural alternatives are evaluated, decisions are made and consequences are documented.
+
+────────
+
+How I Approach Architecture Problems
+
+My typical approach is:
+
+```text
+Business / Technical Problem
+            ↓
+        Context
+            ↓
+      Requirements
+            ↓
+       Constraints
+            ↓
+      Architecture
+            ↓
+   Integration Contracts
+            ↓
+ Failure & Recovery Scenarios
+            ↓
+ Security & Observability
+            ↓
+ Architecture Decisions
+            ↓
+       Trade-offs
+            ↓
+      Documentation
+```
+
+The goal is not simply to produce diagrams.
+
+The goal is to make the architecture:
+
+• understandable;
+• implementable;
+• testable;
+• observable;
+• secure;
+• resilient to failures;
+• maintainable across teams.
+
+────────
 
 Professional Focus
 
 Architecture
 
-* Solution Architecture
-* Integration Architecture
-* Microservice Architecture
-* Distributed Systems
+• Solution Architecture
+• Integration Architecture
+• Microservice Architecture
+• Distributed Systems
+• Architecture Governance
+• Architecture Decision Records
+
+System Analysis
+
+• Requirements Engineering
+• Functional Requirements
+• Non-functional Requirements
+• Solution Design
+• BPMN
+• UML
+• State Machines
+• Sequence Diagrams
+• Data Modelling
 
 Integration
 
-* REST
-* SOAP
-* Kafka
-* OpenAPI
-* AsyncAPI
-
-Analysis
-
-* BPMN
-* UML
-* System Analysis
-* Requirements Engineering
-* Data Modelling
+• REST
+• OpenAPI
+• Kafka
+• AsyncAPI
+• SOAP
+• Event-Driven Architecture
 
 Platform
 
-* Platform Engineering
-* API Governance
-* Engineering Standards
-* Developer Enablement
+• Platform Engineering
+• API Governance
+• Engineering Standards
+• Documentation Standards
+• Developer Enablement
 
-⸻
+────────
+
+Career Direction
+
+Lead / Principal System Analyst → Solution / System Architect
+
+I am particularly interested in:
+
+• distributed systems;
+• integration architecture;
+• platform engineering;
+• event-driven systems;
+• banking and FinTech;
+• architecture governance;
+• AI-assisted engineering.
+
+────────
 
 Contact
 
-LinkedIn: [profile]
+• LinkedIn: [Add your LinkedIn profile]
+• Email: [Add professional email]
+• Resume: [Add resume link]
 
-Email: [professional email]
+────────
 
-Resume: [link]
+Portfolio Status
+
+This repository is actively maintained and expanded with additional architecture case studies, ADRs, diagrams and analytical artifacts.
