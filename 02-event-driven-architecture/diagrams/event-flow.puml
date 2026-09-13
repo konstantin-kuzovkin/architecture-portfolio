@@ -1,0 +1,21 @@
+@startuml
+
+title Event-Driven Architecture
+
+rectangle "Service A\nProducer" as Producer
+queue "Kafka\nTopic" as Kafka
+rectangle "Consumer A" as ConsumerA
+rectangle "Consumer B" as ConsumerB
+rectangle "Consumer C" as ConsumerC
+database "Consumer A\nState" as DB
+
+Producer -> Kafka : Publish Event
+
+Kafka -> ConsumerA : Event
+Kafka -> ConsumerB : Event
+Kafka -> ConsumerC : Event
+
+ConsumerA -> DB : Process / persist
+ConsumerA -> Kafka : Commit offset
+
+@enduml
