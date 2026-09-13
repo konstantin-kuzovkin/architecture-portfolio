@@ -280,6 +280,66 @@ Key areas include:
 • analytical workflow design;
 • technical documentation automation.
 
+My Role
+
+Role: System Analyst / AI-assisted Engineering Designer
+
+Responsibilities
+
+• AI-assisted analysis workflow design;
+• agent architecture;
+• tool orchestration;
+• specialist agent design;
+• structured output definition;
+• source-grounding;
+• validation;
+• hallucination control.
+
+────────
+
+What This Case Demonstrates
+
+• LLM-based Engineering
+• AI Agents
+• Tool Calling
+• Agent Orchestration
+• Specialist Agents
+• Structured Outputs
+• Source-grounded Analysis
+• Validation
+• Hallucination Control
+
+────────
+
+Core Principle
+
+The agent should behave as a detective, not an architect.
+
+It should extract and analyse evidence from available sources rather than invent technical implementation details.
+
+The analytical model distinguishes:
+
+```text
+FACT
+INFERENCE
+UNKNOWN
+```
+
+If required information is not present in the available sources, the system should return:
+
+```text
+UNKNOWN / NOT FOUND
+```
+
+instead of generating unsupported technical information.
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and AI-assisted system analysis practices.
+
+It is not a copy of a production system.
 ────────
 
 Key Principle
