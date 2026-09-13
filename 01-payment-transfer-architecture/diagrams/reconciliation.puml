@@ -1,34 +1,34 @@
 @startuml
-title Payment Transfer - Unknown Result and Reconciliation
-participant "Transfer Service" as TS
+title Payment & Transfer — Reconciliation Flow
+participant "Transfer Service" as Transfer
 database "Operations DB" as DB
-participant "Payment Network" as PSP
-participant "Operations Console" as Ops
-TS -> PSP : Submit transfer
-PSP --> TS : Accepted
-... response timeout ...
-TS -> DB : PROCESSING → UNKNOWN
-DB --> TS : Committed
-TS -> PSP : Query operation status
-alt Success confirmed
-    PSP --> TS : COMPLETED
-    TS -> DB : UNKNOWN → COMPLETED
-    DB --> TS : Committed
-else Failure confirmed
-    PSP --> TS : FAILED
-    TS -> DB : UNKNOWN → FAILED
-    DB --> TS : Committed
-else Status unavailable
-    PSP --> TS : UNKNOWN
-    TS -> DB : Keep UNKNOWN
-    DB --> TS : Committed
-    Ops -> TS : Manual investigation
-    TS -> PSP : Query status
-    PSP --> TS : Final status
-    alt Success
-        TS -> DB : UNKNOWN → COMPLETED
-    else Failure
-        TS -> DB : UNKNOWN → FAILED
+participant "Payment Network" as Network
+participant "Reconciliation Process" as Recon
+participant "Operations / Support" as Support
+Transfer -> DB : Operation = UNKNOWN
+... External status unavailable ...
+Recon -> DB : Find UNKNOWN operations
+DB --> Recon : Operation list
+loop For each UNKNOWN operation
+    Recon -> Network : Query operation status
+    alt Operation completed
+        Network --> Recon : COMPLETED
+        Recon -> DB : Update status = COMPLETED
+    else Operation declined
+        Network --> Recon : DECLINED
+        Recon -> DB : Update status = DECLINED
+    else Status still unavailable
+        Network --> Recon : UNKNOWN
+        Recon -> DB : Keep UNKNOWN
+    end
+end
+alt Manual investigation required
+    Recon -> Support : Create investigation task
+    Support -> Network : Manual status check
+    alt Confirmed success
+        Support -> DB : Mark COMPLETED
+    else Confirmed failure
+        Support -> DB : Mark DECLINED
     end
 end
 @enduml
