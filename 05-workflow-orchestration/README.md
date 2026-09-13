@@ -309,3 +309,41 @@ Result
 The architecture provides a structured approach for designing, evaluating and evolving workflow orchestration in distributed systems.
 
 The case demonstrates understanding of both business-process modelling and distributed-system reliability.
+
+My Role
+
+Role: System Analyst / Architecture-oriented System Analyst
+
+Responsibilities
+
+• workflow analysis;
+• process modelling;
+• state management;
+• failure and recovery analysis;
+• compensation design;
+• human-task analysis;
+• workflow technology evaluation;
+• architecture decision analysis.
+
+────────
+
+What This Case Demonstrates
+
+• Workflow Orchestration
+• BPMN
+• Long-running Processes
+• Durable State
+• Recovery
+• Compensation
+• Human Tasks
+• Observability
+• Workflow Engine Evaluation
+• Architecture Trade-offs
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+
+It is not a copy of a production system.
