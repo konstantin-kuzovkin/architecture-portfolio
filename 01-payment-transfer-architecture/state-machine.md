@@ -23,17 +23,17 @@ States
 
 Transition Rules
 
-Current State	Event	Next State	Allowed
-NEW	Start processing	PROCESSING	Yes
-PROCESSING	Successful result	COMPLETED	Yes
-PROCESSING	Business failure	FAILED	Yes
-PROCESSING	Timeout / unknown result	UNKNOWN	Yes
-UNKNOWN	External success confirmed	COMPLETED	Yes
-UNKNOWN	External failure confirmed	FAILED	Yes
-UNKNOWN	Investigation required	MANUAL_INVESTIGATION	Yes
-MANUAL_INVESTIGATION	Success confirmed	COMPLETED	Yes
-MANUAL_INVESTIGATION	Failure confirmed	FAILED	Yes
-
+|Current State       |Event                     |Next State          |Allowed|
+|--------------------|--------------------------|--------------------|-------|
+|NEW                 |Start processing          |PROCESSING          |Yes    |
+|PROCESSING          |Successful result         |COMPLETED           |Yes    |
+|PROCESSING          |Business failure          |FAILED              |Yes    |
+|PROCESSING          |Timeout / unknown result  |UNKNOWN             |Yes    |
+|UNKNOWN             |External success confirmed|COMPLETED           |Yes    |
+|UNKNOWN             |External failure confirmed|FAILED              |Yes    |
+|UNKNOWN             |Investigation required    |MANUAL_INVESTIGATION|Yes    |
+|MANUAL_INVESTIGATION|Success confirmed         |COMPLETED           |Yes    |
+|MANUAL_INVESTIGATION|Failure confirmed         |FAILED              |Yes    |
 ⸻
 
 Invalid Transitions
