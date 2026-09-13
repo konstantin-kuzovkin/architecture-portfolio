@@ -224,3 +224,41 @@ Key areas include:
 • sequence diagrams;
 • OpenAPI-oriented technical documentation;
 • integration standards.
+
+My Role
+
+Role: System Analyst / Integration-oriented System Analyst
+
+Responsibilities
+
+• integration pattern selection;
+• API contract design;
+• REST/OpenAPI analysis;
+• SOAP/XML integration analysis;
+• Kafka integration analysis;
+• security boundary analysis;
+• error handling;
+• reliability analysis.
+
+────────
+
+What This Case Demonstrates
+
+• REST integration
+• OpenAPI contracts
+• SOAP/XML integration
+• Kafka integration
+• API versioning
+• Error taxonomy
+• Authentication and authorisation
+• mTLS
+• Reliability patterns
+• Integration trade-offs
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+
+It is not a copy of a production system.
