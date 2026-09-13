@@ -387,3 +387,41 @@ The key areas of contribution include:
 * reconciliation and manual investigation scenarios;
 * definition of integration and audit requirements;
 * preparation of technical documentation and architecture models.
+
+My Role
+
+Role: System Analyst / Architecture-oriented System Analyst
+
+Responsibilities
+
+• requirements analysis;
+• solution design;
+• state model definition;
+• integration analysis;
+• idempotency design;
+• failure scenario analysis;
+• reconciliation design;
+• technical documentation;
+• architecture decision analysis.
+
+────────
+
+What This Case Demonstrates
+
+• Distributed transaction design
+• State ownership
+• Idempotency
+• ACID transaction boundaries
+• Failure handling
+• Unknown external outcomes
+• Reconciliation
+• Reliability
+• Architecture trade-offs
+
+────────
+
+Portfolio Note
+
+This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
+
+It is not a copy of a production system.
