@@ -101,6 +101,14 @@ AI-assisted Engineering
 
 ────────
 
+# Architecture Landscape
+
+A high-level view of the architecture domains, capabilities, technologies and cross-cutting concerns demonstrated by this portfolio.
+
+**[Explore the Architecture Landscape →](./architecture-landscape.md)**
+
+---
+
 Architecture Decision Records
 
 The portfolio also contains a separate collection of architecture decisions and trade-offs.
