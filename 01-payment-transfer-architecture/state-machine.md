@@ -40,12 +40,14 @@ Invalid Transitions
 
 Examples:
 
+```text
 COMPLETED → PROCESSING
 COMPLETED → FAILED
 FAILED → PROCESSING
 FAILED → COMPLETED
 NEW → COMPLETED
 NEW → FAILED
+```
 
 These transitions must be rejected.
 
@@ -59,13 +61,17 @@ A state transition must be performed atomically with the corresponding persisten
 
 Conceptually:
 
+```text
 BEGIN TRANSACTION
+
     Load operation
     Validate current state
     Validate requested transition
     Update operation state
     Persist transition metadata
+
 COMMIT
+```
 
 If any required operation fails, the transaction must not leave a partially applied state transition.
 
