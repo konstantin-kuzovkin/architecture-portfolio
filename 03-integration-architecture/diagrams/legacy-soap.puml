@@ -1,0 +1,16 @@
+@startuml
+
+title Modern Service to Legacy SOAP Integration
+
+participant "Modern Service" as Modern
+participant "Integration Adapter" as Adapter
+participant "Legacy SOAP System" as Legacy
+
+Modern -> Adapter : Domain request
+Adapter -> Adapter : Map domain → SOAP model
+Adapter -> Legacy : SOAP/XML request
+Legacy --> Adapter : SOAP response
+Adapter -> Adapter : Map SOAP → domain model
+Adapter --> Modern : Domain response
+
+@enduml
