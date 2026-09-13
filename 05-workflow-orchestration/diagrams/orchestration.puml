@@ -1,0 +1,30 @@
+@startuml
+
+actor Analyst
+participant "Workflow Engine" as WF
+participant "Service A" as A
+participant "Service B" as B
+participant "External System" as EXT
+
+Analyst -> WF: Start process
+
+WF -> A: Execute operation
+A --> WF: Success
+
+WF -> B: Execute operation
+B --> WF: Async processing
+
+WF -> EXT: External request
+
+alt Success
+    EXT --> WF: Success
+    WF -> B: Continue process
+else Timeout
+    EXT --> WF: Timeout
+    WF -> WF: Mark outcome UNKNOWN
+    WF -> Analyst: Manual review
+end
+
+WF --> Analyst: Process status
+
+@enduml
