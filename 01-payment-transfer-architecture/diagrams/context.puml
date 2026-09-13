@@ -1,27 +1,27 @@
 @startuml
-
-title Payment & Transfer - System Context
-
-actor Customer
-
-rectangle "Client Application" as Client
-rectangle "Transfer Service\n(Orchestrator)" as Transfer
-database "Operations DB" as DB
-rectangle "Core Banking System" as ABS
-rectangle "Payment Processing Network" as PSP
-rectangle "Audit Service" as Audit
-rectangle "Operations Console" as Ops
-
-Customer --> Client : Initiate transfer
-Client --> Transfer : Transfer request
-
-Transfer --> DB : Persist operation state
-Transfer --> ABS : Banking operation
-Transfer --> PSP : Payment request
-Transfer --> Audit : Audit events
-
-PSP --> Transfer : Processing result
-
-Ops --> Transfer : Investigate / reconcile
-
+title Payment & Transfer Architecture — System Context
+skinparam componentStyle rectangle
+skinparam shadowing false
+actor "Client Application" as Client
+rectangle "Transfer Service" as Transfer {
+    component "Transfer API" as API
+    component "Operation State" as State
+    component "Idempotency" as Idem
+}
+rectangle "Banking Systems" {
+    component "Core Banking / ABS" as ABS
+}
+rectangle "External Systems" {
+    component "Payment Network" as Network
+    component "Audit Service" as Audit
+}
+Client --> API : Create / Get operation
+API --> Idem : Check request
+API --> State : Create / update state
+Transfer --> ABS : Execute transfer
+ABS --> Transfer : Result / timeout / error
+Transfer --> Network : Payment instruction
+Network --> Transfer : Result / timeout / error
+Transfer --> Audit : Audit event
+State --> API : Current operation status
 @enduml
