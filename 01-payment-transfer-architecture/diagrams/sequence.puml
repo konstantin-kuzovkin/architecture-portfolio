@@ -1,0 +1,24 @@
+@startuml
+title Payment Transfer - Successful Flow
+actor Customer
+participant "Client Application" as Client
+participant "Transfer Service" as TS
+database "Operations DB" as DB
+participant "Core Banking" as ABS
+participant "Payment Network" as PSP
+participant "Audit Service" as Audit
+Customer -> Client : Initiate transfer
+Client -> TS : Create transfer\noperation_id
+TS -> DB : Create operation
+DB --> TS : Created
+TS -> DB : NEW → PROCESSING
+DB --> TS : Committed
+TS -> ABS : Execute banking operation
+ABS --> TS : Accepted
+TS -> PSP : Submit transfer
+PSP --> TS : Success
+TS -> DB : PROCESSING → COMPLETED
+DB --> TS : Committed
+TS -> Audit : Record completed operation
+TS --> Client : Completed
+@enduml
