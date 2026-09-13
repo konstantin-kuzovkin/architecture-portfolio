@@ -1,0 +1,18 @@
+@startuml
+
+title Asynchronous Kafka Integration
+
+participant "Producer Service" as Producer
+queue "Kafka Topic" as Kafka
+participant "Consumer A" as A
+participant "Consumer B" as B
+
+Producer -> Kafka : Publish event
+
+Kafka -> A : Event
+Kafka -> B : Event
+
+A -> A : Process
+B -> B : Process
+
+@enduml
