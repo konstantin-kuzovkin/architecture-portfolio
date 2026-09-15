@@ -39,6 +39,36 @@ How should the bank maintain a reliable operation state when different systems m
 
 ![Payment & Transfer Reconciliation](./diagrams/reconciliation.svg)
 
+## Architecture Highlights
+
+### 1. Explicit State Ownership
+
+Transfer Service owns the current operation state.
+
+### 2. Idempotency
+
+Repeated requests with the same idempotency key do not create duplicate operations.
+
+### 3. Unknown External Outcome
+
+A timeout does not automatically mean failure.
+
+The operation may enter an `UNKNOWN` state until the external result is confirmed.
+
+### 4. Reconciliation
+
+Unknown operations are resolved through a reconciliation process rather than by blindly retrying the original business operation.
+
+### 5. Separation of Concerns
+
+The architecture separates:
+
+- request processing;
+- operation state;
+- external execution;
+- audit;
+- reconciliation;
+- manual investigation.
 
 Architectural Goals
 
