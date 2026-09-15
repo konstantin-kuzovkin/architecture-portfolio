@@ -10,8 +10,6 @@ The primary focus is reliability, consistency, idempotency, controlled state tra
 
 Portfolio note: This is a sanitized and reconstructed architecture case. It does not contain confidential information, production endpoints, internal system names, customer data or proprietary implementation details.
 
-⸻
-
 ## Business Context
 
 A customer initiates a transfer through a client-facing channel.
@@ -24,7 +22,6 @@ This creates an important distributed-systems problem:
 
 How should the bank maintain a reliable operation state when different systems may temporarily have different views of the same transaction?
 
-⸻
 ## Architecture
 
 ### System Context
@@ -84,8 +81,6 @@ The solution must provide:
 * auditability;
 * operational recovery;
 * clear separation between internal operation state and client-facing status.
-
-⸻
 
 ## Main Components
 
@@ -160,8 +155,6 @@ flowchart TD
     K -->|Still unknown| I
 ```
 
-⸻
-
 ### High-Level Architecture
 
 ```mermaid
@@ -187,8 +180,6 @@ flowchart TB
     Recon --> DB
 ```
 
-⸻
-
 ## Core Architectural Principle
 
 The Transfer Service owns the internal lifecycle of the operation.
@@ -196,8 +187,6 @@ The Transfer Service owns the internal lifecycle of the operation.
 There must be exactly one authoritative current state for an operation.
 
 Client-facing applications may translate this state into their own user-oriented statuses, but they must not become an independent source of truth for the operation lifecycle.
-
-⸻
 
 ## State Management
 
@@ -210,8 +199,6 @@ A transition is valid only when:
 3. the required business and technical conditions are satisfied.
 
 Invalid transitions must return a deterministic business error.
-
-⸻
 
 ### Example State Model
 
@@ -226,8 +213,6 @@ stateDiagram-v2
     UNKNOWN --> FAILED: reconciliation confirms failure
 ```
 
-⸻
-
 ### Idempotency
 
 The operation is associated with an idempotency key / operation identifier.
@@ -240,8 +225,6 @@ The service must distinguish between:
 * a repeated request for an existing operation;
 * a request that conflicts with an existing operation;
 * an operation already in a terminal state.
-
-⸻
 
 ### Concurrency
 
@@ -262,8 +245,6 @@ Update state
 Persist
       ↓
 Commit
-
-⸻
 
 Unknown Result
 
@@ -291,8 +272,6 @@ The operation must not automatically be marked as failed solely because the resp
 
 This prevents an important class of financial consistency problems.
 
-⸻
-
 ### Reconciliation
 
 Operations in an uncertain state are reconciled using the authoritative status provided by the external payment network.
@@ -309,8 +288,6 @@ If the external status confirms unsuccessful processing, the operation transitio
 
 Manual intervention is subject to the same state-transition rules as automated processing.
 
-⸻
-
 ### Manual Investigation
 
 An operational investigation is required for cases where the final status cannot be determined automatically.
@@ -325,8 +302,6 @@ The operations user must:
 6. record the action in the audit trail.
 
 Manual intervention must not bypass the state machine.
-
-⸻
 
 ### Audit
 
@@ -344,8 +319,6 @@ Important lifecycle events are auditable, including:
 
 Audit records should contain sufficient correlation information to reconstruct the operation lifecycle.
 
-⸻
-
 ### Security
 
 The architecture assumes:
@@ -358,8 +331,6 @@ The architecture assumes:
 * auditability of privileged actions.
 
 Operational users must not be able to arbitrarily assign an operation state.
-
-⸻
 
 ### Observability
 
@@ -386,8 +357,6 @@ Metrics should allow operators to identify abnormal growth of:
 * processing latency;
 * downstream timeouts.
 
-⸻
-
 ### Key Design Decisions
 
 1. Transfer Service is the orchestration component.
@@ -400,8 +369,6 @@ Metrics should allow operators to identify abnormal growth of:
 8. Unknown results are represented explicitly rather than interpreted as failures.
 9. Reconciliation resolves uncertain operations.
 10. Manual intervention is controlled by the same state machine.
-
-⸻
 
 ### Trade-offs
 
@@ -421,8 +388,6 @@ Trade-offs
 * Need for reconciliation mechanisms.
 * Operational tooling is required.
 * The orchestration service becomes an important component of the overall solution.
-
-⸻
 
 ### What I Personally Contributed
 
@@ -456,8 +421,6 @@ Responsibilities
 • technical documentation;
 • architecture decision analysis.
 
-────────
-
 What This Case Demonstrates
 
 • Distributed transaction design
@@ -469,8 +432,6 @@ What This Case Demonstrates
 • Reconciliation
 • Reliability
 • Architecture trade-offs
-
-────────
 
 Portfolio Note
 
