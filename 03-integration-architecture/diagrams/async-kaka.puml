@@ -1,18 +1,27 @@
 @startuml
+title Integration Architecture — Asynchronous Kafka
 
-title Asynchronous Kafka Integration
+skinparam componentStyle rectangle
+skinparam shadowing false
 
 participant "Producer Service" as Producer
 queue "Kafka Topic" as Kafka
-participant "Consumer A" as A
-participant "Consumer B" as B
+participant "Consumer Service" as Consumer
+database "Consumer DB" as DB
 
 Producer -> Kafka : Publish event
 
-Kafka -> A : Event
-Kafka -> B : Event
+Kafka -> Consumer : Deliver event
 
-A -> A : Process
-B -> B : Process
+Consumer -> Consumer : Validate event
+
+alt Valid event
+    Consumer -> DB : Apply business effect
+    DB --> Consumer : Success
+    Consumer -> Kafka : Commit offset
+
+else Processing failure
+    Consumer -> Consumer : Retry / error handling
+end
 
 @enduml
