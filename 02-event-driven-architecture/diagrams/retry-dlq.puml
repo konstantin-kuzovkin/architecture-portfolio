@@ -1,0 +1,40 @@
+@startuml
+title Event-Driven Architecture — Retry and DLQ
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+queue "Kafka Topic" as Topic
+component "Consumer" as Consumer
+component "Business Processing" as Processing
+
+queue "Retry Topic" as Retry
+queue "Dead Letter Topic" as DLQ
+
+Consumer --> Processing : Process event
+
+Processing --> Consumer : Success
+Consumer --> Topic : Commit offset
+
+Processing --> Consumer : Temporary failure
+
+Consumer --> Retry : Retry event
+Retry --> Consumer : Retry attempt
+
+Processing --> Consumer : Permanent failure
+
+Consumer --> DLQ : Move to DLQ
+
+DLQ --> Consumer : Manual / controlled replay
+
+note right of Retry
+Retry with controlled attempts
+and backoff
+end note
+
+note right of DLQ
+Failed messages isolated
+from the main flow
+end note
+
+@enduml
