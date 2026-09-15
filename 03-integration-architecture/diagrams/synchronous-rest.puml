@@ -1,17 +1,34 @@
 @startuml
+title Integration Architecture — Synchronous REST
 
-title Synchronous REST Integration
+skinparam componentStyle rectangle
+skinparam shadowing false
 
 actor Client
-participant "Service A" as A
-participant "Service B" as B
-database "Service B DB" as DB
 
-Client -> A : Request
-A -> B : REST request
-B -> DB : Process
-DB --> B : Result
-B --> A : Response
-A --> Client : Response
+participant "API Gateway" as Gateway
+participant "Integration Service" as Integration
+participant "REST Service" as Service
+
+Client -> Gateway : HTTP request
+Gateway -> Integration : Validate / route
+
+Integration -> Service : REST request
+
+alt Successful response
+    Service --> Integration : 2xx + payload
+    Integration --> Gateway : Response
+    Gateway --> Client : 2xx + payload
+
+else Business error
+    Service --> Integration : 4xx + error contract
+    Integration --> Gateway : Normalized error
+    Gateway --> Client : 4xx
+
+else Technical failure
+    Service --> Integration : 5xx / timeout
+    Integration --> Gateway : Technical error
+    Gateway --> Client : 5xx / controlled error
+end
 
 @enduml
