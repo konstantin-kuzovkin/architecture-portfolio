@@ -33,7 +33,7 @@ This portfolio contains reconstructed and sanitised architecture case studies cr
 
 ────────
 
-Architecture Areas
+### Architecture Areas
 
 Distributed Systems
 
@@ -46,7 +46,7 @@ Distributed Systems
 • Reconciliation
 • Reliability
 
-Integration Architecture
+### Integration Architecture
 
 • REST
 • OpenAPI
@@ -58,7 +58,7 @@ Integration Architecture
 • Error Handling
 • Integration Security
 
-Platform Engineering
+### Platform Engineering
 
 • Architecture Standards
 • API Governance
@@ -68,7 +68,7 @@ Platform Engineering
 • Documentation Standards
 • Developer Enablement
 
-Process & Workflow Architecture
+### Process & Workflow Architecture
 
 • BPMN
 • Workflow Orchestration
@@ -78,7 +78,7 @@ Process & Workflow Architecture
 • Compensation
 • Recovery
 
-Security
+### Security
 
 • OAuth2
 • JWT
@@ -88,7 +88,7 @@ Security
 • Authorisation
 • Trust Boundaries
 
-AI-assisted Engineering
+### AI-assisted Engineering
 
 • LLM-based Analysis
 • AI Agents
@@ -109,7 +109,7 @@ A high-level view of the architecture domains, capabilities, technologies and cr
 
 ---
 
-Architecture Decision Records
+## Architecture Decision Records
 
 The portfolio also contains a separate collection of architecture decisions and trade-offs.
 
@@ -121,7 +121,7 @@ The ADRs demonstrate how architectural alternatives are evaluated, decisions are
 
 ────────
 
-How I Approach Architecture Problems
+## How I Approach Architecture Problems
 
 My typical approach is:
 
@@ -163,9 +163,9 @@ The goal is to make the architecture:
 
 ────────
 
-Professional Focus
+## Professional Focus
 
-Architecture
+### Architecture
 
 • Solution Architecture
 • Integration Architecture
@@ -174,7 +174,7 @@ Architecture
 • Architecture Governance
 • Architecture Decision Records
 
-System Analysis
+### System Analysis
 
 • Requirements Engineering
 • Functional Requirements
@@ -186,7 +186,7 @@ System Analysis
 • Sequence Diagrams
 • Data Modelling
 
-Integration
+### Integration
 
 • REST
 • OpenAPI
@@ -195,7 +195,7 @@ Integration
 • SOAP
 • Event-Driven Architecture
 
-Platform
+### Platform
 
 • Platform Engineering
 • API Governance
@@ -205,11 +205,11 @@ Platform
 
 ────────
 
-Career Direction
+## Career Direction
 
 Lead / Principal System Analyst → Solution / System Architect
 
-I am particularly interested in:
+### I am particularly interested in:
 
 • distributed systems;
 • integration architecture;
@@ -221,7 +221,7 @@ I am particularly interested in:
 
 ────────
 
-Contact
+## Contact
 
 • LinkedIn: [Add your LinkedIn profile]
 • Email: [kka89899599696@gmail.com]
@@ -229,6 +229,6 @@ Contact
 
 ────────
 
-Portfolio Status
+## Portfolio Status
 
 This repository is actively maintained and expanded with additional architecture case studies, ADRs, diagrams and analytical artifacts.
