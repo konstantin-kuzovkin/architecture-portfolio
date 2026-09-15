@@ -4,8 +4,6 @@ Lead / Principal System Analyst | Solution & Integration Architecture
 
 Banking · FinTech · Distributed Systems · Microservices · Kafka · Platform Engineering · AI-assisted Engineering
 
-────────
-
 ## About
 
 I am a Senior / Lead System Analyst focused on solution and integration architecture of distributed and microservice-based systems.
@@ -30,8 +28,6 @@ This portfolio contains reconstructed and sanitised architecture case studies cr
 |[04 — Platform Architecture](./04-platform-architecture/)                  |Platform engineering                |Standards, governance, reusable patterns             |
 |[05 — Workflow & Process Orchestration](./05-workflow-orchestration/)      |Long-running processes              |BPMN, state, recovery, compensation                  |
 |[06 — AI-Assisted System Analysis](./06-ai-assisted-system-analysis/)      |AI engineering                      |LLM, agents, tools, validation, hallucination control|
-
-────────
 
 ### Architecture Areas
 
@@ -99,15 +95,12 @@ Distributed Systems
 • Hallucination Control
 • Validation
 
-────────
-
 # Architecture Landscape
 
 A high-level view of the architecture domains, capabilities, technologies and cross-cutting concerns demonstrated by this portfolio.
 
 **[Explore the Architecture Landscape →](./architecture-landscape.md)**
 
----
 
 ## Architecture Decision Records
 
@@ -119,7 +112,6 @@ Architecture Decision Records →
 
 The ADRs demonstrate how architectural alternatives are evaluated, decisions are made and consequences are documented.
 
-────────
 
 ## How I Approach Architecture Problems
 
@@ -161,8 +153,6 @@ The goal is to make the architecture:
 • resilient to failures;
 • maintainable across teams.
 
-────────
-
 ## Professional Focus
 
 ### Architecture
@@ -203,8 +193,6 @@ The goal is to make the architecture:
 • Documentation Standards
 • Developer Enablement
 
-────────
-
 ## Career Direction
 
 Lead / Principal System Analyst → Solution / System Architect
@@ -219,15 +207,11 @@ Lead / Principal System Analyst → Solution / System Architect
 • architecture governance;
 • AI-assisted engineering.
 
-────────
-
 ## Contact
 
 • LinkedIn: [Add your LinkedIn profile]
 • Email: [kka89899599696@gmail.com]
 • Resume: [Add resume link]
-
-────────
 
 ## Portfolio Status
 
