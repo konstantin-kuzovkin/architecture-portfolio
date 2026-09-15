@@ -140,6 +140,30 @@ flowchart TD
     E --> H["Continue"]
 ```
 
+```markdown
+
+## Idempotent Consumer
+
+Because the delivery model is at-least-once, a consumer may receive the same event more than once.
+
+The consumer therefore needs a mechanism to detect already processed events before applying another business effect.
+
+```mermaid
+
+flowchart TD
+
+    A["Event received"] --> B{"Event already processed?"}
+
+    B -->|Yes| C["Ignore duplicate"]
+
+    B -->|No| D["Process business operation"]
+
+    D --> E["Store processed event ID"]
+
+    E --> F["Commit offset"]
+```
+The exact idempotency mechanism depends on the business operation and persistence model.
+
 ────────
 
 Ordering
@@ -246,6 +270,27 @@ Possible strategies include:
 • explicit event versions;
 • migration periods for consumers.
 
+## Event Lifecycle
+
+```mermaid
+flowchart TD
+    A["Define Event Contract"]
+    B["Validate Schema"]
+    C["Publish Event"]
+    D["Consume Event"]
+    E["Process Event"]
+    F["Monitor Processing"]
+    G["Evolve Schema"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> B
+```
+The lifecycle emphasizes that event contracts are part of the engineering process rather than a one-time implementation artifact.
 ────────
 
 Observability
@@ -282,6 +327,39 @@ Key Architectural Principles
 8. Failed messages require controlled dead-letter handling.
 9. Event contracts must support evolution.
 10. Operational visibility is part of the architecture.
+
+## Event Contract
+
+An event is treated as a versioned integration contract between the producer and its consumers.
+
+```mermaid
+flowchart LR
+    Producer["Producer Service"]
+    Contract["Event Contract"]
+    Kafka[("Kafka")]
+    ConsumerA["Consumer A"]
+    ConsumerB["Consumer B"]
+    Registry["Schema Registry"]
+
+    Producer -->|Create event| Contract
+    Contract -->|Publish| Kafka
+
+    Contract -->|Validate schema| Registry
+
+    Kafka -->|Deliver event| ConsumerA
+    Kafka -->|Deliver event| ConsumerB
+
+    ConsumerA -->|Validate / process| Registry
+    ConsumerB -->|Validate / process| Registry
+```
+Contract Principles
+
+* Event structure is explicitly defined.
+* Producers and consumers are decoupled through the event contract.
+* Schema changes must consider existing consumers.
+* Backward compatibility should be preferred where possible.
+* Breaking changes require an explicit migration strategy.
+* Consumers should not depend on undocumented producer implementation details.
 
 ## Architecture Highlights
 
