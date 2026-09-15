@@ -283,11 +283,7 @@ Responsibilities
 • Reliability patterns
 • Integration trade-offs
 
-Portfolio Note
-
-This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
-
-It is not a copy of a production system.
+> **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices. It is not a copy of a production system.
 
 ## Key Trade-offs
 
