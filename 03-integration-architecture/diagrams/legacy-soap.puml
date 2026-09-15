@@ -1,16 +1,26 @@
 @startuml
+title Integration Architecture — Legacy SOAP
 
-title Modern Service to Legacy SOAP Integration
+skinparam componentStyle rectangle
+skinparam shadowing false
 
 participant "Modern Service" as Modern
 participant "Integration Adapter" as Adapter
-participant "Legacy SOAP System" as Legacy
+participant "SOAP Service" as SOAP
+database "Legacy System" as Legacy
 
 Modern -> Adapter : Domain request
-Adapter -> Adapter : Map domain → SOAP model
-Adapter -> Legacy : SOAP/XML request
-Legacy --> Adapter : SOAP response
-Adapter -> Adapter : Map SOAP → domain model
+
+Adapter -> Adapter : Map domain → SOAP contract
+
+Adapter -> SOAP : SOAP / XML request
+SOAP -> Legacy : Legacy operation
+
+Legacy --> SOAP : Result
+SOAP --> Adapter : SOAP / XML response
+
+Adapter -> Adapter : Map SOAP → domain response
+
 Adapter --> Modern : Domain response
 
 @enduml
