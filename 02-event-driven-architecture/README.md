@@ -140,8 +140,6 @@ flowchart TD
     E --> H["Continue"]
 ```
 
-```markdown
-
 ## Idempotent Consumer
 
 Because the delivery model is at-least-once, a consumer may receive the same event more than once.
