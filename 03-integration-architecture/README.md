@@ -48,6 +48,65 @@ Integration Patterns
 |mTLS            |Strong service-to-service / external authentication|
 |JWT / OAuth/OIDC|Identity and access control                        |
 
+### Integration Pattern Selection
+
+```mermaid
+flowchart TD
+    A["Integration Requirement"] --> B{"Immediate response required?"}
+
+    B -->|Yes| C{"Legacy contract?"}
+    B -->|No| D["Asynchronous messaging"]
+
+    C -->|No| E["REST / HTTP"]
+    C -->|Yes| F["SOAP / Adapter"]
+
+    D --> G["Kafka / Event-Driven"]
+```
+## Integration Decision Matrix
+
+| Requirement | REST | SOAP | Kafka |
+|---|---:|---:|---:|
+| Immediate response | Yes | Yes | No |
+| Request / response | Yes | Yes | No |
+| Legacy integration | Sometimes | Yes | Rarely |
+| Asynchronous processing | No | Rarely | Yes |
+| Event distribution | No | No | Yes |
+| Loose coupling | Medium | Low / Medium | High |
+| Eventual consistency | Rare | Rare | Common |
+| Independent consumers | No | No | Yes |
+| Contract-based integration | Yes | Yes | Yes |
+
+## Architecture Highlights
+
+### 1. Pattern Selection Based on Requirements
+
+Integration technology is selected based on interaction characteristics rather than technology preference.
+
+### 2. REST for Synchronous APIs
+
+REST is appropriate when the caller requires an immediate response and the operation fits a request/response model.
+
+### 3. SOAP for Legacy or Contract-Heavy Integration
+
+SOAP can remain appropriate when integration with an existing enterprise or legacy system requires a stable XML/WSDL-based contract.
+
+### 4. Kafka for Asynchronous Communication
+
+Kafka is appropriate when the producer and consumer should be decoupled in time and the system benefits from event distribution and asynchronous processing.
+
+### 5. Adapter Around Legacy Systems
+
+Legacy protocols and data models should be isolated behind an adapter rather than propagated through the modern domain model.
+
+### 6. Explicit Error Contracts
+
+Business errors and technical failures should be represented separately.
+
+### 7. Security at Integration Boundaries
+
+Authentication, authorization and transport security should be considered at each integration boundary rather than treated as an afterthought.
+
+
 ────────
 
 High-Level Architecture
@@ -262,3 +321,81 @@ Portfolio Note
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
 It is not a copy of a production system.
+
+## Key Trade-offs
+
+### REST
+
+**Advantages:**
+
+- simple request/response model;
+- widely supported;
+- easy client integration.
+
+**Trade-offs:**
+
+- temporal coupling;
+- caller depends on service availability;
+- synchronous failures propagate to the caller.
+
+### SOAP
+
+**Advantages:**
+
+- explicit contract;
+- mature enterprise integration model;
+- suitable for legacy systems.
+
+**Trade-offs:**
+
+- verbose XML payloads;
+- tighter contract coupling;
+- additional transformation complexity.
+
+### Kafka
+
+**Advantages:**
+
+- asynchronous communication;
+- loose temporal coupling;
+- multiple independent consumers;
+- scalable event distribution.
+
+**Trade-offs:**
+
+- eventual consistency;
+- more complex failure handling;
+- duplicate processing must be considered;
+- end-to-end debugging is harder.
+
+## Interview Talking Points
+
+1. How do you choose between REST, SOAP and Kafka?
+
+2. When is synchronous communication preferable?
+
+3. When is asynchronous communication preferable?
+
+4. What are the consequences of temporal coupling?
+
+5. Why should a legacy SOAP contract be isolated behind an adapter?
+
+6. How would you normalize errors from different integration protocols?
+
+7. Where should authentication and authorization be enforced?
+
+8. When would mTLS be required?
+
+9. How do OAuth2, OIDC and JWT fit into an API integration architecture?
+
+10. What happens when a synchronous downstream service times out?
+
+11. What happens when a Kafka consumer fails after processing an event?
+
+12. How should API contracts evolve?
+
+13. How should event contracts evolve?
+
+14. What are the observability requirements for REST and Kafka integrations?
+
+15. What trade-offs would you present to an Architecture Review Board?
