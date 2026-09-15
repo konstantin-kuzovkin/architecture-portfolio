@@ -20,6 +20,20 @@ Direct synchronous communication between all participants would create tight cou
 
 An event-driven approach allows services to communicate asynchronously while remaining independently deployable.
 
+## Architecture Diagrams
+
+### System Context
+
+![Event-Driven Architecture Context](./diagrams/context.svg)
+
+### Event Flow
+
+![Event-Driven Architecture Flow](./diagrams/event-flow.svg)
+
+### Retry and DLQ
+
+![Retry and DLQ](./diagrams/retry-dlq.svg)
+
 ────────
 
 Architectural Goals
