@@ -1,4 +1,4 @@
-Event-Driven Architecture with Kafka
+## Event-Driven Architecture with Kafka
 
 Overview
 
@@ -10,9 +10,7 @@ The case addresses message delivery semantics, consumer behaviour, duplicate pro
 
 > **Portfolio note:** This is a sanitized and reconstructed architecture case. It does not contain confidential information, production topic names, customer data or proprietary implementation details.
 
-────────
-
-Business Problem
+## Business Problem
 
 A distributed platform contains multiple services that need to react to changes in business state.
 
@@ -34,9 +32,7 @@ An event-driven approach allows services to communicate asynchronously while rem
 
 ![Retry and DLQ](./diagrams/retry-dlq.svg)
 
-────────
-
-Architectural Goals
+## Architectural Goals
 
 The solution should provide:
 
@@ -51,9 +47,7 @@ The solution should provide:
 • schema evolution;
 • operational visibility.
 
-────────
-
-High-Level Architecture
+## High-Level Architecture
 
 ```mermaid
 flowchart LR
@@ -72,9 +66,7 @@ flowchart LR
     ConsumerB --> StateB
 ```
 
-────────
-
-Why Events?
+### Why Events?
 
 Events are used when the producer does not need to synchronously control the consumer’s processing.
 
@@ -92,9 +84,7 @@ The producer publishes the fact that something happened.
 
 Consumers independently decide whether and how they should react.
 
-────────
-
-Kafka Responsibilities
+## Kafka Responsibilities
 
 Kafka provides the transport and persistence mechanism for events.
 
@@ -109,9 +99,7 @@ The architecture relies on Kafka for:
 
 Kafka does not provide the business semantics of the event itself.
 
-────────
-
-Event Contract
+## Event Contract
 
 An event should contain a stable business contract.
 
@@ -131,9 +119,7 @@ Example:
 
 The exact payload is intentionally simplified for portfolio purposes.
 
-────────
-
-Delivery Semantics
+## Delivery Semantics
 
 The architecture assumes that consumers must be prepared for duplicate delivery.
 
@@ -178,9 +164,7 @@ flowchart TD
 ```
 The exact idempotency mechanism depends on the business operation and persistence model.
 
-────────
-
-Ordering
+## Ordering
 
 Kafka guarantees ordering within a partition.
 
@@ -203,9 +187,7 @@ preserved order
 
 Ordering across independent partitions is not assumed.
 
-────────
-
-Consumer Groups
+## Consumer Groups
 
 Each logical consuming application uses its own consumer group.
 
@@ -226,9 +208,7 @@ Group: analytics-service
 
 Each consumer group receives the event stream independently.
 
-────────
-
-Retry
+## Retry
 
 Temporary failures should not immediately result in message loss.
 
@@ -241,9 +221,7 @@ A retry strategy may use:
 
 Retries must be bounded.
 
-────────
-
-Dead Letter Queue
+## Dead Letter Queue
 
 Events that cannot be successfully processed after the configured retry policy may be redirected to a dead-letter flow.
 
@@ -267,9 +245,7 @@ flowchart TD
 ```
 The DLQ must be monitored and have an operational recovery process.
 
-────────
-
-Schema Evolution
+## Schema Evolution
 
 Event contracts evolve over time.
 
@@ -305,9 +281,8 @@ flowchart TD
     G --> B
 ```
 The lifecycle emphasizes that event contracts are part of the engineering process rather than a one-time implementation artifact.
-────────
 
-Observability
+## Observability
 
 Each event should be traceable using identifiers such as:
 
@@ -327,9 +302,7 @@ Important metrics include:
 • DLQ volume;
 • duplicate event rate.
 
-────────
-
-Key Architectural Principles
+## Key Architectural Principles
 
 1. Kafka is treated as an event transport platform, not as business logic.
 2. Events represent facts that have occurred.
@@ -418,9 +391,7 @@ Production readiness requires visibility into:
 - DLQ volume;
 - event throughput.
 
-────────
-
-What I Personally Contributed
+## What I Personally Contributed
 
 The case reflects my experience and approach to designing Kafka-based integration solutions.
 
@@ -438,7 +409,7 @@ Key areas include:
 • observability requirements;
 • technical documentation and integration standards.
 
-My Role
+## My Role
 
 Role: System Analyst / Architecture-oriented System Analyst
 
@@ -453,9 +424,7 @@ Responsibilities
 • idempotent consumer analysis;
 • schema evolution analysis.
 
-────────
-
-What This Case Demonstrates
+## What This Case Demonstrates
 
 • Event-Driven Architecture
 • Kafka architecture
@@ -470,7 +439,7 @@ What This Case Demonstrates
 
 ────────
 
-Portfolio Note
+## Portfolio Note
 
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
