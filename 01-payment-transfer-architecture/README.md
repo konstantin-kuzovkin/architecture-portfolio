@@ -139,39 +139,32 @@ Provides controlled access for authorised operational staff to investigate opera
 ⸻
 
 High-Level Architecture
+### High-Level Architecture
 
-                         ┌──────────────────┐
-                         │ Client Application│
-                         └────────┬─────────┘
-                                  │
-                                  ▼
-                       ┌────────────────────┐
-                       │   Transfer Service │
-                       │    Orchestrator    │
-                       └───────┬───┬────────┘
-                               │   │
-                  ┌────────────┘   └─────────────┐
-                  ▼                              ▼
-          ┌───────────────┐              ┌───────────────┐
-          │ Operations DB │              │  Audit Service │
-          └───────────────┘              └───────────────┘
-                  │
-                  │
-        ┌─────────┴──────────┐
-        ▼                    ▼
-┌───────────────┐    ┌────────────────────┐
-│ Core Banking  │    │ Payment Processing │
-│    System     │    │      Network       │
-└───────────────┘    └────────────────────┘
-                              │
-                              ▼
-                       External Result
-                              │
-                              ▼
-                    Reconciliation Process
-                              │
-                              ▼
-                     Operations Console
+### High-Level Architecture
+
+```mermaid
+flowchart TB
+    Client["Client Application"]
+    Transfer["Transfer Service / Orchestrator"]
+    DB[("Operations DB")]
+    Audit["Audit Service"]
+    Core["Core Banking System"]
+    Network["Payment Processing Network"]
+    External["External Result"]
+    Recon["Reconciliation Process"]
+    Console["Operations Console"]
+
+    Client --> Transfer
+    Transfer --> DB
+    Transfer --> Audit
+    Transfer --> Core
+    Transfer --> Network
+    Network --> External
+    External --> Recon
+    Recon --> Console
+    Recon --> DB
+```
 
 ⸻
 
@@ -201,22 +194,18 @@ Invalid transitions must return a deterministic business error.
 
 Example State Model
 
-NEW
- │
- │ start
- ▼
-PROCESSING
- │
- ├──────────── success ───────────► COMPLETED
- │
- ├──────────── business error ────► FAILED
- │
- └──────────── timeout/unknown ───► UNKNOWN
-                                      │
-                                      │ reconciliation
-                              ┌───────┴───────┐
-                              ▼               ▼
-                         COMPLETED          FAILED
+### Example State Model
+
+```mermaid
+stateDiagram-v2
+    [*] --> NEW
+    NEW --> PROCESSING: start
+    PROCESSING --> COMPLETED: success
+    PROCESSING --> FAILED: business error
+    PROCESSING --> UNKNOWN: timeout / unknown
+    UNKNOWN --> COMPLETED: reconciliation confirms success
+    UNKNOWN --> FAILED: reconciliation confirms failure
+```
 
 ⸻
 
