@@ -1,21 +1,33 @@
 @startuml
+title Event-Driven Architecture — Event Flow
 
-title Event-Driven Architecture
+skinparam componentStyle rectangle
+skinparam shadowing false
 
-rectangle "Service A\nProducer" as Producer
-queue "Kafka\nTopic" as Kafka
-rectangle "Consumer A" as ConsumerA
-rectangle "Consumer B" as ConsumerB
-rectangle "Consumer C" as ConsumerC
-database "Consumer A\nState" as DB
+component "Producer Service" as Producer
+component "Event Publisher" as Publisher
 
-Producer -> Kafka : Publish Event
+queue "Kafka Topic" as Kafka
 
-Kafka -> ConsumerA : Event
-Kafka -> ConsumerB : Event
-Kafka -> ConsumerC : Event
+component "Consumer A" as ConsumerA
+component "Consumer B" as ConsumerB
 
-ConsumerA -> DB : Process / persist
-ConsumerA -> Kafka : Commit offset
+database "Consumer A State" as StateA
+database "Consumer B State" as StateB
+
+Producer --> Publisher : Create event
+Publisher --> Kafka : Publish event
+
+Kafka --> ConsumerA : Event
+Kafka --> ConsumerB : Event
+
+ConsumerA --> StateA : Process event
+ConsumerB --> StateB : Process event
+
+note right of Kafka
+Partitioned event stream
+At-least-once delivery
+Ordering within partition
+end note
 
 @enduml
