@@ -1,0 +1,36 @@
+@startuml
+title Integration Architecture — System Context
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Client / Channel" as Client
+
+rectangle "Integration Layer" {
+    component "API Gateway" as Gateway
+    component "Integration Service" as Integration
+}
+
+rectangle "Modern Services" {
+    component "REST API" as REST
+}
+
+rectangle "Legacy Systems" {
+    component "SOAP Service" as SOAP
+}
+
+rectangle "Event-Driven Systems" {
+    queue "Kafka" as Kafka
+    component "Async Consumer" as Consumer
+}
+
+Client --> Gateway : HTTPS / REST
+Gateway --> Integration : API request
+
+Integration --> REST : Synchronous request
+Integration --> SOAP : Legacy integration
+Integration --> Kafka : Publish event
+
+Kafka --> Consumer : Event
+
+@enduml
