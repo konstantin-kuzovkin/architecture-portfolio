@@ -1,4 +1,4 @@
-Integration Architecture
+## Integration Architecture
 
 Overview
 
@@ -8,9 +8,7 @@ The objective is to demonstrate how integration patterns are selected according 
 
 > **Portfolio note:** This is a sanitized and reconstructed architecture case. It does not contain confidential information, production endpoints, internal system names, credentials or proprietary implementation details.
 
-────────
-
-Business Context
+## Business Context
 
 A modern microservice platform often needs to integrate with systems based on different technologies and communication models.
 
@@ -24,9 +22,7 @@ A single business process may therefore involve:
 
 The architecture must provide a consistent integration approach despite these technical differences.
 
-────────
-
-Architectural Problem
+## Architectural Problem
 
 The main question is not:
 
@@ -36,9 +32,7 @@ The main question is:
 
 > Which interaction pattern best matches the business and technical requirements of a particular integration?
 
-────────
-
-Integration Patterns
+## Integration Patterns
 
 |Pattern         |Typical Use                                        |
 |----------------|---------------------------------------------------|
@@ -106,10 +100,7 @@ Business errors and technical failures should be represented separately.
 
 Authentication, authorization and transport security should be considered at each integration boundary rather than treated as an afterthought.
 
-
-────────
-
-High-Level Architecture
+## High-Level Architecture
 
 ```text
                          ┌─────────────────────┐
@@ -135,9 +126,7 @@ High-Level Architecture
                          └─────────────────────┘
 ```
 
-────────
-
-REST Integration
+## REST Integration
 
 REST is appropriate when the caller requires a synchronous response.
 
@@ -149,9 +138,7 @@ Typical characteristics:
 • HTTP status codes;
 • synchronous error handling.
 
-────────
-
-SOAP Integration
+## SOAP Integration
 
 SOAP may be appropriate when integrating with legacy or contract-oriented systems.
 
@@ -164,9 +151,7 @@ Typical characteristics:
 
 The architecture should isolate legacy-specific concerns from modern domain services where practical.
 
-────────
-
-Kafka Integration
+## Kafka Integration
 
 Kafka is appropriate when:
 
@@ -176,9 +161,7 @@ Kafka is appropriate when:
 • event replay is useful;
 • producer availability should not depend on immediate consumer availability.
 
-────────
-
-Security
+## Security
 
 The architecture may use different security mechanisms depending on the integration boundary.
 
@@ -189,9 +172,7 @@ Examples:
 • mTLS for strong service-to-service authentication;
 • certificate-based authentication for selected external integrations.
 
-────────
-
-Error Handling
+## Error Handling
 
 Errors are classified into:
 
@@ -205,9 +186,7 @@ Errors are classified into:
 
 The error model should be consistent at the API boundary even when downstream systems use different technical error representations.
 
-────────
-
-Reliability
+## Reliability
 
 Integration reliability is addressed through:
 
@@ -218,9 +197,7 @@ Integration reliability is addressed through:
 • asynchronous processing;
 • reconciliation where the final outcome is uncertain.
 
-────────
-
-API Contract
+## API Contract
 
 The API contract should define:
 
@@ -235,9 +212,7 @@ The API contract should define:
 
 OpenAPI can be used as the formal API contract.
 
-────────
-
-Observability
+## Observability
 
 Each integration should support correlation across participating systems.
 
@@ -248,9 +223,7 @@ Recommended identifiers:
 • operation ID;
 • trace ID.
 
-────────
-
-Key Architectural Principles
+## Key Architectural Principles
 
 1. Select integration patterns based on business requirements.
 2. Keep synchronous and asynchronous responsibilities explicit.
@@ -263,9 +236,7 @@ Key Architectural Principles
 9. Avoid technology-driven architecture decisions.
 10. Document significant integration decisions through ADRs.
 
-────────
-
-What I Personally Contributed
+## What I Personally Contributed
 
 The case reflects my approach to integration architecture and system analysis.
 
@@ -284,7 +255,7 @@ Key areas include:
 • OpenAPI-oriented technical documentation;
 • integration standards.
 
-My Role
+## My Role
 
 Role: System Analyst / Integration-oriented System Analyst
 
@@ -299,9 +270,7 @@ Responsibilities
 • error handling;
 • reliability analysis.
 
-────────
-
-What This Case Demonstrates
+## What This Case Demonstrates
 
 • REST integration
 • OpenAPI contracts
@@ -313,8 +282,6 @@ What This Case Demonstrates
 • mTLS
 • Reliability patterns
 • Integration trade-offs
-
-────────
 
 Portfolio Note
 
