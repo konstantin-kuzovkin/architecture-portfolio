@@ -1,4 +1,4 @@
-Konstantin Kuzovkin
+# Konstantin Kuzovkin
 
 Lead / Principal System Analyst | Solution & Integration Architecture
 
@@ -6,7 +6,7 @@ Banking · FinTech · Distributed Systems · Microservices · Kafka · Platform 
 
 ────────
 
-About
+## About
 
 I am a Senior / Lead System Analyst focused on solution and integration architecture of distributed and microservice-based systems.
 
@@ -20,7 +20,7 @@ This portfolio contains reconstructed and sanitised architecture case studies cr
 
 ────────
 
-Architecture Portfolio
+# Architecture Portfolio
 
 |Case                                                                       |Architecture Focus                  |Key Topics                                           |
 |---------------------------------------------------------------------------|------------------------------------|-----------------------------------------------------|
@@ -224,7 +224,7 @@ I am particularly interested in:
 Contact
 
 • LinkedIn: [Add your LinkedIn profile]
-• Email: [Add professional email]
+• Email: [kka89899599696@gmail.com]
 • Resume: [Add resume link]
 
 ────────
