@@ -209,27 +209,24 @@ Dead Letter Queue
 
 Events that cannot be successfully processed after the configured retry policy may be redirected to a dead-letter flow.
 
-```text id="48wv5m"
-Kafka
- │
- ▼
-Consumer
- │
- ├── success ───────► commit
- │
- └── failure
-       │
-       ▼
-    retry
-       │
-       ├── success ──► commit
-       │
-       └── exhausted
-               │
-               ▼
-              DLQ
-```
+### Retry and Dead Letter Queue
 
+```mermaid
+flowchart TD
+    A["Kafka Topic"] --> B["Consumer"]
+    B --> C{"Processing result"}
+
+    C -->|Success| D["Commit offset"]
+    C -->|Temporary failure| E["Retry"]
+    C -->|Permanent failure| F["Dead Letter Topic"]
+
+    E --> G{"Retry successful?"}
+
+    G -->|Yes| D
+    G -->|No| F
+
+    F --> H["Controlled replay / investigation"]
+```
 The DLQ must be monitored and have an operational recovery process.
 
 ────────
@@ -386,6 +383,59 @@ Portfolio Note
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
 It is not a copy of a production system.
+
+## Architecture Highlights
+
+```markdown
+
+## Architecture Highlights
+
+### 1. Event Contract Ownership
+
+Events are treated as explicit integration contracts rather than implementation details.
+
+### 2. At-Least-Once Delivery
+
+The architecture assumes that an event may be delivered more than once.
+
+Consumers therefore need idempotent processing.
+
+### 3. Partition-Level Ordering
+
+Ordering is guaranteed only within a Kafka partition.
+
+The partitioning strategy must therefore be aligned with the business ordering requirement.
+
+### 4. Retry Isolation
+
+Retry processing is separated from the main event flow.
+
+Temporary failures should not block healthy events indefinitely.
+
+### 5. Dead Letter Queue
+
+Messages that cannot be processed successfully are isolated in a DLQ rather than repeatedly blocking the main processing flow.
+
+### 6. Schema Evolution
+
+Event schemas must evolve in a controlled and backward-compatible way.
+
+### 7. Observability
+
+Production readiness requires visibility into:
+
+- consumer lag;
+
+- processing latency;
+
+- processing failures;
+
+- retry volume;
+
+- DLQ volume;
+
+- event throughput.
+```
 
 ## Key Trade-offs
 
