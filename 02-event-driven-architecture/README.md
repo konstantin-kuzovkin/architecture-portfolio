@@ -41,25 +41,21 @@ The solution should provide:
 
 High-Level Architecture
 
-```text id="35n3yq"
-                    ┌──────────────────┐
-                    │   Service A      │
-                    │    Producer      │
-                    └────────┬─────────┘
-                             │
-                             │ Event
-                             ▼
-                    ┌──────────────────┐
-                    │      Kafka       │
-                    │                  │
-                    │     Topic        │
-                    └───────┬──────────┘
-                            │
-              ┌─────────────┼─────────────┐
-              ▼             ▼             ▼
-       ┌────────────┐ ┌────────────┐ ┌────────────┐
-       │ Consumer A │ │ Consumer B │ │ Consumer C │
-       └────────────┘ └────────────┘ └────────────┘
+```mermaid
+flowchart LR
+    Producer["Producer Service"]
+    Kafka[("Kafka Topic")]
+    ConsumerA["Consumer A"]
+    ConsumerB["Consumer B"]
+    StateA[("Consumer A State")]
+    StateB[("Consumer B State")]
+
+    Producer -->|Publish event| Kafka
+    Kafka -->|Event| ConsumerA
+    Kafka -->|Event| ConsumerB
+
+    ConsumerA --> StateA
+    ConsumerB --> StateB
 ```
 
 ────────
@@ -129,17 +125,19 @@ The architecture assumes that consumers must be prepared for duplicate delivery.
 
 Therefore, consumers should be designed to process events idempotently.
 
-Conceptually:
+```mermaid
+flowchart TD
+    A["Producer publishes event"] --> B["Kafka stores event"]
+    B --> C["Consumer receives event"]
+    C --> D{"Processing successful?"}
 
-```text id="k9qv0p"
-Event
-  │
-  ▼
-Consumer
-  │
-  ├── first delivery ──► process
-  │
-  └── duplicate ───────► ignore / return existing result
+    D -->|Yes| E["Commit offset"]
+    D -->|No| F["Do not commit offset"]
+
+    F --> G["Retry"]
+    G --> C
+
+    E --> H["Continue"]
 ```
 
 ────────
@@ -288,6 +286,49 @@ Key Architectural Principles
 9. Event contracts must support evolution.
 10. Operational visibility is part of the architecture.
 
+## Architecture Highlights
+
+### 1. Event Contract Ownership
+
+Events are treated as explicit integration contracts rather than implementation details.
+
+### 2. At-Least-Once Delivery
+
+The architecture assumes that an event may be delivered more than once.
+
+Consumers therefore need idempotent processing.
+
+### 3. Partition-Level Ordering
+
+Ordering is guaranteed only within a Kafka partition.
+
+The partitioning strategy must therefore be aligned with the business ordering requirement.
+
+### 4. Retry Isolation
+
+Retry processing is separated from the main event flow.
+
+Temporary failures should not block healthy events indefinitely.
+
+### 5. Dead Letter Queue
+
+Messages that cannot be processed successfully are isolated in a DLQ rather than repeatedly blocking the main processing flow.
+
+### 6. Schema Evolution
+
+Event schemas must evolve in a controlled and backward-compatible way.
+
+### 7. Observability
+
+Production readiness requires visibility into:
+
+- consumer lag;
+- processing latency;
+- processing failures;
+- retry volume;
+- DLQ volume;
+- event throughput.
+
 ────────
 
 What I Personally Contributed
@@ -345,3 +386,71 @@ Portfolio Note
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
 It is not a copy of a production system.
+
+## Key Trade-offs
+
+### Event-Driven vs. Synchronous Communication
+
+**Benefits:**
+
+- loose coupling;
+- asynchronous processing;
+- independent consumers;
+- scalable event distribution.
+
+**Trade-offs:**
+
+- eventual consistency;
+- more complex error handling;
+- harder end-to-end debugging;
+- additional operational complexity.
+
+### At-Least-Once vs. Exactly-Once
+
+The architecture prefers at-least-once delivery combined with idempotent consumers.
+
+This avoids relying on exactly-once semantics as the primary business guarantee.
+
+**Trade-off:**
+
+Consumers must explicitly handle duplicate events.
+
+### Retry vs. Immediate Failure
+
+Temporary failures should be retried.
+
+Permanent failures should eventually be isolated in a DLQ.
+
+This requires distinguishing transient failures from non-retryable business or contract errors.
+
+## Interview Talking Points
+
+1. Why was event-driven communication selected?
+
+2. Why is Kafka used as the event backbone?
+
+3. What does at-least-once delivery mean?
+
+4. Why can duplicate events occur?
+
+5. How does an idempotent consumer prevent duplicate business effects?
+
+6. What determines Kafka partitioning?
+
+7. What does ordering mean in Kafka?
+
+8. Why should retry processing be isolated?
+
+9. When should a message go to the DLQ?
+
+10. How should DLQ messages be replayed?
+
+11. How can event schemas evolve without breaking consumers?
+
+12. How do you monitor consumer lag?
+
+13. What happens if a consumer crashes after processing an event but before committing the offset?
+
+14. When would synchronous REST communication be preferable to Kafka?
+
+15. What are the consistency implications of event-driven architecture?
