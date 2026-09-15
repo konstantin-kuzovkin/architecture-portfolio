@@ -1,0 +1,32 @@
+@startuml
+title Event-Driven Architecture — System Context
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Business System" as Business
+
+rectangle "Event-Driven Platform" {
+
+    component "Producer Services" as Producers
+    queue "Kafka Event Backbone" as Kafka
+    component "Consumer Services" as Consumers
+}
+
+rectangle "Supporting Services" {
+    component "Schema Registry" as Schema
+    component "Monitoring / Observability" as Monitoring
+}
+
+Business --> Producers : Business operation
+Producers --> Kafka : Publish events
+
+Kafka --> Consumers : Deliver events
+
+Producers --> Schema : Validate event contract
+Consumers --> Schema : Validate event contract
+
+Kafka --> Monitoring : Metrics / lag / errors
+Consumers --> Monitoring : Processing metrics
+
+@enduml
