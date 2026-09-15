@@ -136,10 +136,31 @@ Operations Console
 
 Provides controlled access for authorised operational staff to investigate operations requiring manual reconciliation.
 
-⸻
+## Architecture Decision Flow
 
-High-Level Architecture
-### High-Level Architecture
+```mermaid
+flowchart TD
+    A["Client sends transfer request"] --> B{"Duplicate request?"}
+
+    B -->|Yes| C["Return existing operation"]
+    B -->|No| D["Create operation"]
+
+    D --> E["Set status: PROCESSING"]
+    E --> F{"External system result"}
+
+    F -->|Success| G["Set status: COMPLETED"]
+    F -->|Business failure| H["Set status: FAILED"]
+    F -->|Timeout / unknown| I["Set status: UNKNOWN"]
+
+    I --> J["Reconciliation"]
+    J --> K{"External status confirmed?"}
+
+    K -->|Success| G
+    K -->|Failure| H
+    K -->|Still unknown| I
+```
+
+⸻
 
 ### High-Level Architecture
 
@@ -191,8 +212,6 @@ A transition is valid only when:
 Invalid transitions must return a deterministic business error.
 
 ⸻
-
-Example State Model
 
 ### Example State Model
 
@@ -458,3 +477,70 @@ Portfolio Note
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
 It is not a copy of a production system.
+
+## Key Trade-offs
+
+### Explicit State vs. Implicit Status
+
+The operation state is stored explicitly in the Transfer Service rather than being inferred from external system responses.
+
+**Benefit:**
+- single source of truth for the current operation state;
+- deterministic state transitions;
+- easier recovery and reconciliation.
+
+**Trade-off:**
+- additional persistence and state-management logic.
+
+### Reconciliation vs. Blind Retry
+
+Unknown external outcomes are resolved through reconciliation rather than blindly retrying the original business operation.
+
+**Benefit:**
+- reduces the risk of duplicate financial operations;
+- separates technical uncertainty from business failure.
+
+**Trade-off:**
+- requires a separate reconciliation mechanism;
+- some operations may remain in `UNKNOWN` temporarily.
+
+### Centralized Orchestration vs. Choreography
+
+The Transfer Service coordinates the critical business flow.
+
+**Benefit:**
+- explicit process ownership;
+- easier control of state transitions;
+- easier operational support.
+
+**Trade-off:**
+- increased responsibility of the orchestration service;
+- potential centralization of business-flow logic.
+
+## Interview Talking Points
+
+This case can be discussed through the following architecture questions:
+
+1. Why is the Transfer Service responsible for operation state?
+
+2. Why is `UNKNOWN` different from `FAILED`?
+
+3. Why is blind retry dangerous for financial operations?
+
+4. How does idempotency prevent duplicate operations?
+
+5. What happens if the external system completed the operation but the response was lost?
+
+6. Why is reconciliation separated from the main transaction flow?
+
+7. Where should transaction boundaries exist?
+
+8. How should concurrent requests for the same operation be handled?
+
+9. When would orchestration be preferable to choreography?
+
+10. What observability signals are required for production support?
+
+11. Which components should own business state?
+
+12. What are the main failure scenarios and recovery mechanisms?
