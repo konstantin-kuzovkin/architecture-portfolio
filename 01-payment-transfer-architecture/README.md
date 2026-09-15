@@ -1,4 +1,4 @@
-Payment & Transfer Architecture
+## Payment & Transfer Architecture
 
 Overview
 
@@ -12,7 +12,7 @@ Portfolio note: This is a sanitized and reconstructed architecture case. It does
 
 ⸻
 
-Business Context
+## Business Context
 
 A customer initiates a transfer through a client-facing channel.
 
@@ -70,7 +70,7 @@ The architecture separates:
 - reconciliation;
 - manual investigation.
 
-Architectural Goals
+## Architectural Goals
 
 The solution must provide:
 
@@ -87,13 +87,13 @@ The solution must provide:
 
 ⸻
 
-Main Components
+## Main Components
 
 Client Application
 
 Initiates the transfer and displays a customer-facing representation of the operation state.
 
-Transfer Service
+### Transfer Service
 
 Acts as the orchestration layer and the single source of truth for the internal operation state.
 
@@ -107,7 +107,7 @@ Responsible for:
 * handling technical and business failures;
 * initiating reconciliation.
 
-Operations Database
+### Operations Database
 
 Persistent storage of operation state and technical processing information.
 
@@ -120,19 +120,19 @@ Used for:
 * audit correlation;
 * reconciliation support.
 
-Core Banking System
+### Core Banking System
 
 Responsible for banking-account operations and the corresponding financial processing within the bank.
 
-Payment Processing Network
+### Payment Processing Network
 
 External processing component responsible for processing the transfer outside the immediate transaction boundary of the Transfer Service.
 
-Audit Service
+### Audit Service
 
 Stores auditable information about important business and technical events.
 
-Operations Console
+### Operations Console
 
 Provides controlled access for authorised operational staff to investigate operations requiring manual reconciliation.
 
@@ -189,7 +189,7 @@ flowchart TB
 
 ⸻
 
-Core Architectural Principle
+## Core Architectural Principle
 
 The Transfer Service owns the internal lifecycle of the operation.
 
@@ -199,7 +199,7 @@ Client-facing applications may translate this state into their own user-oriented
 
 ⸻
 
-State Management
+## State Management
 
 The operation lifecycle is represented as an explicit state machine.
 
@@ -228,7 +228,7 @@ stateDiagram-v2
 
 ⸻
 
-Idempotency
+### Idempotency
 
 The operation is associated with an idempotency key / operation identifier.
 
@@ -243,7 +243,7 @@ The service must distinguish between:
 
 ⸻
 
-Concurrency
+### Concurrency
 
 Concurrent updates to the same operation must not result in lost updates or invalid state transitions.
 
@@ -293,7 +293,7 @@ This prevents an important class of financial consistency problems.
 
 ⸻
 
-Reconciliation
+### Reconciliation
 
 Operations in an uncertain state are reconciled using the authoritative status provided by the external payment network.
 
@@ -311,7 +311,7 @@ Manual intervention is subject to the same state-transition rules as automated p
 
 ⸻
 
-Manual Investigation
+### Manual Investigation
 
 An operational investigation is required for cases where the final status cannot be determined automatically.
 
@@ -328,7 +328,7 @@ Manual intervention must not bypass the state machine.
 
 ⸻
 
-Audit
+### Audit
 
 Important lifecycle events are auditable, including:
 
@@ -346,7 +346,7 @@ Audit records should contain sufficient correlation information to reconstruct t
 
 ⸻
 
-Security
+### Security
 
 The architecture assumes:
 
@@ -361,7 +361,7 @@ Operational users must not be able to arbitrarily assign an operation state.
 
 ⸻
 
-Observability
+### Observability
 
 The operation should be traceable across participating components using a correlation identifier.
 
@@ -388,7 +388,7 @@ Metrics should allow operators to identify abnormal growth of:
 
 ⸻
 
-Key Design Decisions
+### Key Design Decisions
 
 1. Transfer Service is the orchestration component.
 2. Transfer Service owns the authoritative operation state.
@@ -403,7 +403,7 @@ Key Design Decisions
 
 ⸻
 
-Trade-offs
+### Trade-offs
 
 Advantages
 
@@ -424,7 +424,7 @@ Trade-offs
 
 ⸻
 
-What I Personally Contributed
+### What I Personally Contributed
 
 The case reflects my approach to system analysis and architecture of integration-heavy banking processes.
 
@@ -440,7 +440,7 @@ The key areas of contribution include:
 * definition of integration and audit requirements;
 * preparation of technical documentation and architecture models.
 
-My Role
+### My Role
 
 Role: System Analyst / Architecture-oriented System Analyst
 
