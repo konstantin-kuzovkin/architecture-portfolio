@@ -435,9 +435,7 @@ Responsibilities
 • Schema evolution
 • Observability
 
-────────
-
-## Portfolio Note
+Portfolio Note
 
 This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
 
