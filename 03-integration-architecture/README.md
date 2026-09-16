@@ -22,6 +22,24 @@ A single business process may therefore involve:
 
 The architecture must provide a consistent integration approach despite these technical differences.
 
+## Architecture Diagrams
+
+### System Context
+
+![Integration Architecture Context](./diagrams/context.svg)
+
+### Synchronous REST
+
+![Synchronous REST Integration](./diagrams/synchronous-rest.svg)
+
+### Legacy SOAP
+
+![Legacy SOAP Integration](./diagrams/legacy-soap.svg)
+
+### Asynchronous Kafka
+
+![Asynchronous Kafka Integration](./diagrams/async-kafka.svg)
+
 ## Architectural Problem
 
 The main question is not:
