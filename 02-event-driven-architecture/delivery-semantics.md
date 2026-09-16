@@ -1,6 +1,6 @@
-Message Delivery Semantics
+# Message Delivery Semantics
 
-At-Most-Once
+## At-Most-Once
 
 The message may be delivered zero or one time.
 
@@ -14,9 +14,7 @@ Potential risk:
 
 This model is appropriate only when occasional loss is acceptable.
 
-────────
-
-At-Least-Once
+## At-Least-Once
 
 The message is delivered one or more times.
 
@@ -32,9 +30,7 @@ Therefore:
 
 > **At-least-once delivery requires idempotent consumers.**
 
-────────
-
-Exactly-Once
+## Exactly-Once
 
 Exactly-once semantics can refer to different guarantees at different boundaries.
 
@@ -44,9 +40,7 @@ It should not automatically be interpreted as:
 
 Application-level business effects may still require explicit idempotency and transactional design.
 
-────────
-
-Recommended Approach
+## Recommended Approach
 
 For a general event-driven business integration:
 
@@ -60,9 +54,7 @@ Durable processing state
 
 provides a practical reliability model.
 
-────────
-
-Duplicate Processing
+## Duplicate Processing
 
 Example:
 
@@ -86,9 +78,7 @@ Consumer again
 
 The consumer must detect that the business event has already been processed.
 
-────────
-
-Idempotency Record
+## Idempotency Record
 
 Conceptually:
 
@@ -108,9 +98,7 @@ process skip
 
 The exact implementation may use a database, transactional storage or another durable mechanism appropriate to the architecture.
 
-────────
-
-Important Distinction
+## Important Distinction
 
 Kafka offset management and business idempotency are related but not identical.
 
