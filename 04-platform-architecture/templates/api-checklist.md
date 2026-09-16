@@ -1,6 +1,6 @@
-API Design Checklist
+# API Design Checklist
 
-Contract
+## Contract
 
 ☐ API purpose defined
 ☐ Endpoint defined
@@ -10,7 +10,7 @@ Contract
 ☐ Mandatory fields defined
 ☐ Validation rules defined
 
-Errors
+## Errors
 
 ☐ HTTP status mapping defined
 ☐ Business error codes defined
@@ -18,27 +18,27 @@ Errors
 ☐ Error response schema defined
 ☐ Correlation ID available
 
-Security
+## Security
 
 ☐ Authentication defined
 ☐ Authorisation defined
 ☐ Required scopes/roles defined
 ☐ Sensitive data identified
 
-Reliability
+## Reliability
 
 ☐ Timeout defined
 ☐ Retry behaviour defined
 ☐ Idempotency requirement defined
 ☐ Duplicate request behaviour defined
 
-Evolution
+## Evolution
 
 ☐ Versioning strategy defined
 ☐ Backward compatibility considered
 ☐ Breaking changes identified
 
-Documentation
+## Documentation
 
 ☐ OpenAPI specification available
 ☐ Examples provided
