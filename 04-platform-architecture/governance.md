@@ -1,12 +1,10 @@
-Architecture Governance
+# Architecture Governance
 
-Purpose
+## Purpose
 
 Architecture governance exists to provide consistency and reduce architectural risk without unnecessarily slowing development teams.
 
-────────
-
-Governance Model
+## Governance Model
 
 ```text
 Team
@@ -29,31 +27,27 @@ Operational Feedback
   └──────────────► Standards Evolution
 ```
 
-────────
+## Review Levels
 
-Review Levels
-
-Level 1 — Standard Change
+### Level 1 — Standard Change
 
 The solution follows existing platform patterns.
 
 Review should be lightweight.
 
-Level 2 — Significant Change
+### Level 2 — Significant Change
 
 The solution introduces meaningful integration, data or operational complexity.
 
 A deeper technical review is appropriate.
 
-Level 3 — Architectural Change
+### Level 3 — Architectural Change
 
 The solution introduces a new platform pattern or significant architectural deviation.
 
 An explicit architecture decision should be documented.
 
-────────
-
-ADR
+## ADR
 
 Important architectural decisions should be recorded as ADRs.
 
@@ -65,14 +59,38 @@ An ADR should explain:
 • decision;
 • consequences.
 
-────────
+## Governance Model
 
-Governance Principle
+Platform governance defines how standards and architectural decisions are introduced, reviewed and evolved.
 
-Governance should answer:
+```mermaid
+flowchart TD
+    A["Architecture Requirement"] --> B["Platform Standard"]
 
-> “Are we making a sound architectural decision?”
+    B --> C["Reusable Template / Checklist"]
 
-rather than:
+    C --> D["Team Adoption"]
 
-> “Did every team fill in every document?”
+    D --> E{"Architecture Review Required?"}
+
+    E -->|No| F["Implementation"]
+    E -->|Yes| G["Architecture Review"]
+
+    G --> H{"Approved?"}
+
+    H -->|Yes| F
+    H -->|No| I["Update Solution"]
+
+    I --> G
+
+    F --> J["Operational Validation"]
+    J --> K["Production"]
+```
+## Governance Principles
+
+* Standards should be explicit and versioned.
+* Reusable templates should reduce interpretation differences.
+* Architecture reviews should focus on material architectural risks.
+* Governance should not become a mandatory approval step for every technical change.
+* Exceptions should be documented rather than silently bypassing standards.
+* Standards should evolve based on recurring engineering problems.
