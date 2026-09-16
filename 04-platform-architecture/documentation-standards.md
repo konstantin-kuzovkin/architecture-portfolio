@@ -1,6 +1,6 @@
-Documentation Standards
+# Documentation Standards
 
-Documentation Structure
+## Documentation Structure
 
 A service documentation set may contain:
 
@@ -17,9 +17,7 @@ README
 └── Operations
 ```
 
-────────
-
-README
+## README
 
 The README should answer:
 
@@ -29,9 +27,7 @@ The README should answer:
 • Where is the detailed documentation?
 • What are the main operational characteristics?
 
-────────
-
-Architecture
+## Architecture
 
 Should describe:
 
@@ -41,15 +37,11 @@ Should describe:
 • integration patterns;
 • important decisions.
 
-────────
-
-API
+## API
 
 Should contain the OpenAPI contract and relevant usage information.
 
-────────
-
-Kafka
+## Kafka
 
 Should describe:
 
@@ -61,9 +53,7 @@ Should describe:
 • partitioning;
 • delivery semantics.
 
-────────
-
-Database
+## Database
 
 Should describe:
 
@@ -73,9 +63,7 @@ Should describe:
 • important constraints;
 • retention/archival.
 
-────────
-
-Security
+## Security
 
 Should describe:
 
@@ -85,9 +73,7 @@ Should describe:
 • trust boundaries;
 • sensitive information.
 
-────────
-
-Metrics
+## Metrics
 
 Should describe:
 
@@ -96,9 +82,7 @@ Should describe:
 • alerts;
 • SLO-related indicators where applicable.
 
-────────
-
-Documentation Quality
+## Documentation Quality
 
 Documentation should be:
 
