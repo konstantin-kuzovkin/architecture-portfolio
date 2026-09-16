@@ -1,6 +1,6 @@
-Failure Scenarios
+# Failure Scenarios
 
-Purpose
+## Purpose
 
 This document describes the main technical and business failure scenarios for the payment/transfer process.
 
@@ -12,9 +12,7 @@ The objective is to distinguish between:
 • duplicate processing;
 • recoverable operational conditions.
 
-────────
-
-Failure Matrix
+## Failure Matrix
 
 |# |Scenario                                          |Internal State                 |Expected Behaviour                   |
 |--|--------------------------------------------------|-------------------------------|-------------------------------------|
@@ -33,9 +31,7 @@ Failure Matrix
 |13|Invalid manual transition                         |Current state                  |Reject operation                     |
 |14|Audit service temporarily unavailable             |Depends on criticality         |Apply defined audit failure policy   |
 
-────────
-
-Critical Scenario: Lost Response
+## Critical Scenario: Lost Response
 
 One of the most important scenarios is when the external payment network successfully processes the transaction but the response does not reach the Transfer Service.
 
@@ -66,9 +62,7 @@ Therefore:
 
 > **Technical timeout must not automatically be interpreted as business failure.**
 
-────────
-
-Duplicate Request
+## Duplicate Request
 
 A client may retry because the original response was lost.
 
@@ -94,9 +88,7 @@ Existing operation
 
 The second request must not create another financial operation.
 
-────────
-
-Database Failure
+## Database Failure
 
 If persistence fails during a state transition:
 
@@ -114,9 +106,7 @@ ROLLBACK
 
 The system must not expose a partially committed lifecycle transition.
 
-────────
-
-Invalid State Transition
+## Invalid State Transition
 
 Example:
 
@@ -128,9 +118,7 @@ This is not a technical failure.
 
 It is an invalid business operation and should return a deterministic business error.
 
-────────
-
-Design Principle
+## Design Principle
 
 Failures must be classified before determining the next state.
 
