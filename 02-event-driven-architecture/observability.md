@@ -1,6 +1,6 @@
-Event-Driven Observability
+# Event-Driven Observability
 
-Required Correlation
+## Required Correlation
 
 An event should be traceable through the system using:
 
@@ -9,9 +9,7 @@ An event should be traceable through the system using:
 • correlation ID;
 • trace ID.
 
-────────
-
-Consumer Metrics
+## Consumer Metrics
 
 Recommended metrics:
 
@@ -23,9 +21,7 @@ Recommended metrics:
 • DLQ count;
 • duplicate event count.
 
-────────
-
-Producer Metrics
+## Producer Metrics
 
 Recommended metrics:
 
@@ -34,9 +30,7 @@ Recommended metrics:
 • publish latency;
 • retry count.
 
-────────
-
-Alerts
+## Alerts
 
 Potential alerts:
 
@@ -54,9 +48,7 @@ Unexpected duplicate rate
 Consumer group unavailable
 ```
 
-────────
-
-Operational Question
+## Operational Question
 
 The monitoring system should make it possible to answer:
 
@@ -64,9 +56,7 @@ The monitoring system should make it possible to answer:
 
 This distinction significantly reduces troubleshooting time.
 
-────────
-
-Distributed Trace
+## Distributed Trace
 
 Example:
 
