@@ -1,14 +1,12 @@
-Integration Reliability
+# Integration Reliability
 
-Timeout
+## Timeout
 
 Every synchronous integration should have an explicit timeout policy.
 
 Without a timeout, a failed dependency can consume resources indefinitely.
 
-────────
-
-Retry
+## Retry
 
 Retry should be used only when the operation is safely retryable.
 
@@ -21,9 +19,7 @@ Before retrying, evaluate:
 • backoff;
 • downstream capacity.
 
-────────
-
-Retry Amplification
+## Retry Amplification
 
 Uncontrolled retries can make an outage worse.
 
@@ -43,9 +39,7 @@ Dependency becomes more overloaded
 
 Therefore, retry must be bounded.
 
-────────
-
-Circuit Breaker
+## Circuit Breaker
 
 Where appropriate, a circuit breaker can prevent repeated calls to an unhealthy dependency.
 
@@ -66,9 +60,7 @@ HALF-OPEN
   └── failure → OPEN
 ```
 
-────────
-
-Idempotency
+## Idempotency
 
 Retry without idempotency can create duplicate business operations.
 
@@ -76,9 +68,7 @@ Therefore:
 
 > Retry policy and idempotency strategy must be designed together.
 
-────────
-
-Reconciliation
+## Reconciliation
 
 If a timeout creates uncertainty about the final business outcome, reconciliation should be preferred over blind retry.
 
