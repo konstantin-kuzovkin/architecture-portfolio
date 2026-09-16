@@ -1,12 +1,12 @@
-Architecture Review Checklist
+# Architecture Review Checklist
 
-Business
+## Business
 
 ☐ Business objective defined
 ☐ Scope defined
 ☐ Key business scenarios identified
 
-Architecture
+## Architecture
 
 ☐ Context diagram available
 ☐ Main components identified
@@ -14,13 +14,13 @@ Architecture
 ☐ Dependencies documented
 ☐ Integration patterns justified
 
-Data
+## Data
 
 ☐ Data ownership defined
 ☐ Persistence requirements defined
 ☐ Retention requirements defined
 
-Integration
+## Integration
 
 ☐ REST/SOAP/Kafka usage justified
 ☐ Contracts defined
@@ -28,14 +28,14 @@ Integration
 ☐ Timeout/retry behaviour defined
 ☐ Idempotency considered
 
-Security
+## Security
 
 ☐ Trust boundaries identified
 ☐ Authentication defined
 ☐ Authorisation defined
 ☐ Sensitive data identified
 
-Operations
+## Operations
 
 ☐ Logging defined
 ☐ Metrics defined
@@ -43,7 +43,7 @@ Operations
 ☐ Failure scenarios documented
 ☐ Recovery process defined
 
-Architecture Decisions
+## Architecture Decisions
 
 ☐ Important decisions documented
 ☐ Alternatives considered
