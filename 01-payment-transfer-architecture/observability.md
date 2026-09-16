@@ -1,6 +1,6 @@
-Observability
+# Observability
 
-Objective
+## Objective
 
 The operation must be traceable across the distributed components involved in processing.
 
@@ -14,9 +14,7 @@ Observability should allow engineers and operations teams to answer:
 
 > How long has the operation remained unresolved?
 
-────────
-
-Correlation
+## Correlation
 
 The operation should be associated with:
 
@@ -25,9 +23,7 @@ The operation should be associated with:
 • request ID;
 • trace ID where distributed tracing is available.
 
-────────
-
-Recommended Log Fields
+## Recommended Log Fields
 
 ```text
 operation_id
@@ -44,9 +40,7 @@ error_category
 retry_number
 ```
 
-────────
-
-Metrics
+## Metrics
 
 Processing
 
@@ -71,9 +65,7 @@ Reconciliation
 • reconciliation latency;
 • manual investigation count.
 
-────────
-
-Alerts
+## Alerts
 
 Potential alerts include:
 
@@ -91,9 +83,7 @@ Duplicate request rate anomaly
 Manual investigation backlog > threshold
 ```
 
-────────
-
-Distributed Tracing
+## Distributed Tracing
 
 A distributed trace should allow the operation to be followed through:
 
@@ -113,9 +103,7 @@ Audit
 
 The trace must not expose sensitive financial information.
 
-────────
-
-Operational Dashboard
+## Operational Dashboard
 
 A useful operational dashboard could contain:
 
@@ -130,9 +118,7 @@ A useful operational dashboard could contain:
 |External timeout rate       |Dependency health          |
 |Manual investigation backlog|Operational risk           |
 
-────────
-
-Principle
+## Principle
 
 Observability is part of the architecture rather than an afterthought.
 
