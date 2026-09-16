@@ -1,6 +1,6 @@
-Integration Patterns
+# Integration Patterns
 
-Pattern Selection
+## Pattern Selection
 
 Integration technology should be selected according to the required interaction semantics.
 
@@ -16,9 +16,7 @@ The main decision factors are:
 • replay requirements;
 • contract complexity.
 
-────────
-
-REST
+## REST
 
 Use when
 
@@ -43,9 +41,7 @@ Risks
 • downstream availability affects the caller;
 • retry may create duplicate operations.
 
-────────
-
-SOAP
+## SOAP
 
 Use when
 
@@ -73,9 +69,7 @@ Risks
 • tighter coupling to legacy contracts;
 • more complex error handling.
 
-────────
-
-Kafka
+## Kafka
 
 Use when
 
@@ -108,9 +102,7 @@ Risks
 • ordering considerations;
 • more complex operational model.
 
-────────
-
-Decision Matrix
+## Decision Matrix
 
 |Requirement                   |REST   |SOAP    |Kafka|
 |------------------------------|------:|-------:|----:|
@@ -120,8 +112,6 @@ Decision Matrix
 |Multiple independent consumers|limited|limited |✓    |
 |Strong synchronous coupling   |✓      |✓       |—    |
 |Replayable event stream       |—      |—       |✓    |
-
-────────
 
 Principle
 
