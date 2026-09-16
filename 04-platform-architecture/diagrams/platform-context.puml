@@ -1,0 +1,43 @@
+@startuml
+title Platform Architecture — System Context
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Product / Development Teams" as Teams
+
+rectangle "Platform" {
+
+    component "Platform Capabilities" as Capabilities
+
+    rectangle "Engineering Standards" {
+        component "API Standards" as API
+        component "Event Standards" as Events
+        component "Security Standards" as Security
+        component "Observability Standards" as Observability
+        component "Documentation Standards" as Documentation
+    }
+
+    component "Platform Services" as Services
+}
+
+rectangle "Architecture Governance" {
+    component "Architecture Review" as Review
+    component "Architecture Decisions" as Decisions
+}
+
+Teams --> Capabilities : Consume reusable capabilities
+Teams --> Services : Use platform services
+
+Teams --> API : Follow API standards
+Teams --> Events : Follow event standards
+Teams --> Security : Apply security standards
+Teams --> Observability : Apply observability standards
+Teams --> Documentation : Follow documentation standards
+
+Capabilities --> Review : Architectural changes
+Services --> Review : Material changes
+
+Review --> Decisions : Record decisions
+
+@enduml
