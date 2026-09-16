@@ -1,6 +1,6 @@
-Structured Output Contract
+# Structured Output Contract
 
-Analysis Result
+## Analysis Result
 
 ```json
 {
@@ -13,47 +13,33 @@ Analysis Result
 }
 ```
 
-────────
-
-Facts
+## Facts
 
 Information directly supported by source artefacts.
 
-────────
-
-Inferences
+## Inferences
 
 Conclusions derived from available information.
 
-────────
-
-Unknowns
+## Unknowns
 
 Required information that was not found.
 
-────────
-
-Open Questions
+## Open Questions
 
 Questions requiring clarification from a system owner, product owner, architect or another stakeholder.
 
-────────
-
-Risks
+## Risks
 
 Potential problems identified during analysis.
 
-────────
-
-Recommendations
+## Recommendations
 
 Potential improvements proposed by the agent.
 
 Recommendations must not be presented as existing system behaviour.
 
-────────
-
-Example
+## Example
 
 ```json
 {
