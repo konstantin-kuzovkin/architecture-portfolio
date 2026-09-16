@@ -1,6 +1,6 @@
-Security
+# Security
 
-Authentication
+## Authentication
 
 All client and service interactions must be authenticated.
 
@@ -11,9 +11,7 @@ Depending on the integration boundary, the architecture may use:
 • mutual TLS;
 • certificate-based authentication.
 
-────────
-
-Authorisation
+## Authorisation
 
 Authentication alone is not sufficient.
 
@@ -24,9 +22,7 @@ The Transfer Service must verify whether the caller is authorised to:
 • perform operational actions;
 • initiate manual reconciliation.
 
-────────
-
-Operational Access
+## Operational Access
 
 Manual investigation is a privileged operation.
 
@@ -38,9 +34,7 @@ The Operations Console must enforce:
 • audit logging;
 • controlled state-changing operations.
 
-────────
-
-State Modification
+## State Modification
 
 Operators must not receive unrestricted access to the underlying operation database.
 
@@ -48,17 +42,13 @@ State changes should be performed through a controlled application interface tha
 
 This prevents accidental or unauthorised modification of financial operation states.
 
-────────
-
-Transport Security
+## Transport Security
 
 Communication between trusted components should use encrypted transport.
 
 For external integrations requiring stronger mutual authentication, mutual TLS may be used.
 
-────────
-
-Sensitive Data
+## Sensitive Data
 
 The portfolio architecture intentionally avoids:
 
@@ -70,9 +60,7 @@ The portfolio architecture intentionally avoids:
 • internal network addresses;
 • proprietary endpoint names.
 
-────────
-
-Security Principle
+## Security Principle
 
 Security controls must protect not only access to the system but also the integrity of the operation lifecycle.
 
