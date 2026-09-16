@@ -20,6 +20,8 @@ The focus is not on a specific workflow product but on architectural decisions a
 
 ## Architecture Context
 
+> A workflow engine should orchestrate business processes without becoming the owner of business capabilities implemented by domain services.
+
 Long-running business processes require explicit management of process state, retries, timeouts, failures and recovery.
 
 The workflow engine is treated as an infrastructure component responsible for process execution and orchestration.
@@ -331,10 +333,6 @@ The analysis should consider:
 • compatibility;
 • team skills;
 • target architecture.
-
-## Architectural Principle
-
-> A workflow engine should orchestrate business processes without becoming the owner of business capabilities implemented by domain services.
 
 ## Result
 
