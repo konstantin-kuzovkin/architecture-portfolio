@@ -1,18 +1,12 @@
-ADR-001: Use Event-Driven Communication
+# ADR-001: Use Event-Driven Communication
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Multiple services need to react to business events without requiring synchronous availability of every consumer.
 
 Direct synchronous integration would increase coupling between services.
 
-────────
-
-Options
+## Options
 
 Option 1 — Synchronous REST
 
@@ -22,15 +16,11 @@ Option 2 — Event-Driven Communication
 
 Producer publishes a business event and consumers independently process it.
 
-────────
-
-Decision
+## Decision
 
 Use event-driven communication for scenarios where asynchronous processing is acceptable and consumers do not need to synchronously participate in the producer’s transaction.
 
-────────
-
-Rationale
+## Rationale
 
 Benefits include:
 
@@ -41,9 +31,7 @@ Benefits include:
 • asynchronous processing;
 • replay capability where supported by the event-retention strategy.
 
-────────
-
-Consequences
+## Consequences
 
 Positive
 
@@ -62,8 +50,6 @@ Additional concerns include:
 • observability;
 • operational recovery.
 
-────────
-
-Principle
+## Principle
 
 Asynchronous communication should be selected because of the required business interaction model, not simply because Kafka is available.
