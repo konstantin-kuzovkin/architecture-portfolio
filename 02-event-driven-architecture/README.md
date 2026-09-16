@@ -1,14 +1,12 @@
-## Event-Driven Architecture with Kafka
+# Event-Driven Architecture with Kafka
 
-Overview
+## Overview
 
 This case study demonstrates the design of an event-driven integration architecture using Apache Kafka as the messaging platform.
 
 The architecture focuses on reliable asynchronous communication between independently deployed services.
 
 The case addresses message delivery semantics, consumer behaviour, duplicate processing, ordering, retries, dead-letter handling, schema evolution and observability.
-
-> **Portfolio note:** This is a sanitized and reconstructed architecture case. It does not contain confidential information, production topic names, customer data or proprietary implementation details.
 
 ## Business Problem
 
@@ -421,21 +419,6 @@ Responsibilities
 • retry and DLQ design;
 • idempotent consumer analysis;
 • schema evolution analysis.
-
-## What This Case Demonstrates
-
-• Event-Driven Architecture
-• Kafka architecture
-• Delivery semantics
-• Partitioning
-• Ordering
-• Idempotent consumers
-• Retry strategies
-• Dead-letter queues
-• Schema evolution
-• Observability
-
-> **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices. It is not a copy of a production system.
 
 ## Key Trade-offs
 
