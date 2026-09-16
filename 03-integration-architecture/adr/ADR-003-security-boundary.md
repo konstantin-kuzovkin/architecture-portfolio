@@ -1,18 +1,12 @@
-ADR-003: Explicit Security at Integration Boundaries
+# ADR-003: Explicit Security at Integration Boundaries
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Distributed systems contain multiple trust boundaries.
 
 Authentication and authorisation requirements may differ between client-facing, internal and external integrations.
 
-────────
-
-Decision
+## Decision
 
 Define security requirements explicitly for every integration boundary.
 
@@ -23,15 +17,11 @@ Depending on the boundary, use appropriate mechanisms such as:
 • mTLS;
 • certificate-based authentication.
 
-────────
-
-Rationale
+## Rationale
 
 Security should be part of the integration contract rather than an implementation detail added after the API has been designed.
 
-────────
-
-Consequences
+## Consequences
 
 Every integration specification must identify:
 
@@ -41,8 +31,6 @@ Every integration specification must identify:
 • trust boundary;
 • security failure behaviour.
 
-────────
-
-Principle
+## Principle
 
 Every integration boundary must have an explicit security model.
