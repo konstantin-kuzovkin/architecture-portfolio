@@ -1,18 +1,12 @@
-ADR-001: Integration Pattern Selection
+# ADR-001: Integration Pattern Selection
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Different business interactions require different communication semantics.
 
 A single integration technology should not be used for every interaction.
 
-────────
-
-Decision
+## Decision
 
 Use:
 
@@ -20,9 +14,7 @@ Use:
 • SOAP where legacy contract compatibility is required;
 • Kafka for asynchronous event-driven interactions.
 
-────────
-
-Rationale
+## Rationale
 
 The selection is based on:
 
@@ -34,16 +26,12 @@ The selection is based on:
 • replay requirements;
 • failure semantics.
 
-────────
-
-Consequences
+## Consequences
 
 The platform must support multiple integration patterns and provide consistent standards for each.
 
 This increases technical diversity but better matches business requirements.
 
-────────
-
-Principle
+## Principle
 
 Technology selection follows interaction semantics rather than technology preference.
