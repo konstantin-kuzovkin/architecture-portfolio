@@ -1,6 +1,6 @@
-Idempotency
+# Idempotency
 
-Problem
+## Problem
 
 Distributed systems commonly retry requests because of network failures, timeouts or temporary unavailability.
 
@@ -8,9 +8,7 @@ A retry may reach the Transfer Service after the original request has already be
 
 Without idempotency, the same business operation could potentially be executed more than once.
 
-────────
-
-Idempotency Model
+## Idempotency Model
 
 Each logical transfer operation has a unique operation identifier.
 
@@ -27,9 +25,7 @@ Operations DB
 
 The identifier is persisted before the operation proceeds into the processing lifecycle.
 
-────────
-
-Request Scenarios
+## Request Scenarios
 
 Scenario 1 — New Operation
 
@@ -62,9 +58,7 @@ Scenario 3 — Conflicting Request
 
 If the same operation identifier is reused with incompatible business parameters, the request must be rejected rather than interpreted as a new operation.
 
-────────
-
-Idempotency Storage
+## Idempotency Storage
 
 The Operations Database stores the operation identity together with the information required to determine whether a request represents:
 
@@ -76,9 +70,7 @@ The Operations Database stores the operation identity together with the informat
 
 A uniqueness constraint on the operation identifier can provide an additional protection against duplicate creation.
 
-────────
-
-Important Principle
+## Important Principle
 
 Idempotency is not the same as simply checking whether an operation exists.
 
@@ -102,9 +94,7 @@ UNKNOWN
 
 The exact client-facing representation may differ from the internal operation state.
 
-────────
-
-Idempotency and State Machine
+## Idempotency and State Machine
 
 Idempotency and state management work together.
 
