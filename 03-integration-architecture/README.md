@@ -1,12 +1,10 @@
-## Integration Architecture
+# Integration Architecture
 
-Overview
+## Overview
 
 This case study demonstrates an integration architecture combining synchronous REST APIs, legacy SOAP integrations and asynchronous event-driven communication.
 
 The objective is to demonstrate how integration patterns are selected according to business requirements, consistency needs, latency expectations and characteristics of downstream systems.
-
-> **Portfolio note:** This is a sanitized and reconstructed architecture case. It does not contain confidential information, production endpoints, internal system names, credentials or proprietary implementation details.
 
 ## Business Context
 
@@ -287,21 +285,6 @@ Responsibilities
 • security boundary analysis;
 • error handling;
 • reliability analysis.
-
-## What This Case Demonstrates
-
-• REST integration
-• OpenAPI contracts
-• SOAP/XML integration
-• Kafka integration
-• API versioning
-• Error taxonomy
-• Authentication and authorisation
-• mTLS
-• Reliability patterns
-• Integration trade-offs
-
-> **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices. It is not a copy of a production system.
 
 ## Key Trade-offs
 
