@@ -1,6 +1,6 @@
-Schema Evolution
+# Schema Evolution
 
-Problem
+## Problem
 
 Events are long-lived contracts between independently deployed producers and consumers.
 
@@ -8,9 +8,7 @@ A producer may evolve faster than its consumers.
 
 A breaking schema change can therefore disrupt otherwise healthy services.
 
-────────
-
-Compatibility Principles
+## Compatibility Principles
 
 Prefer additive changes.
 
@@ -41,9 +39,7 @@ Version 2
 
 Adding optional information is generally less disruptive than removing or changing the meaning of existing fields.
 
-────────
-
-Breaking Changes
+## Breaking Changes
 
 Potential breaking changes include:
 
@@ -55,9 +51,7 @@ Potential breaking changes include:
 
 Such changes require explicit migration planning.
 
-────────
-
-Versioning
+## Versioning
 
 Event versioning may be represented by:
 
@@ -69,9 +63,7 @@ or by another agreed contract-versioning mechanism.
 
 The chosen strategy should be consistent across the platform.
 
-────────
-
-Consumer Compatibility
+## Consumer Compatibility
 
 Before publishing a breaking change:
 
@@ -82,8 +74,6 @@ Before publishing a breaking change:
 5. migrate producers;
 6. remove obsolete contract only after consumers have migrated.
 
-────────
-
-Principle
+## Principle
 
 Event schemas are integration contracts, not internal DTOs.
