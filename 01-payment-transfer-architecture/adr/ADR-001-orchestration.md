@@ -1,9 +1,5 @@
 # ADR-001: Use Orchestration for Transfer Processing
 
-Status
-
-Accepted
-
 Context
 
 The transfer process involves multiple components with different responsibilities and processing semantics.
