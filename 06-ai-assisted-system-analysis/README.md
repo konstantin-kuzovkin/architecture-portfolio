@@ -1,6 +1,6 @@
-AI-Assisted System Analysis Agent
+# AI-Assisted System Analysis Agent
 
-Overview
+## Overview
 
 This case study demonstrates the architecture of an AI-assisted system analysis agent designed to support software analysts during requirements analysis, architecture analysis and technical documentation.
 
@@ -10,9 +10,7 @@ The primary design principle is:
 
 > **The agent must distinguish between facts obtained from source artefacts and its own analytical conclusions.**
 
-────────
-
-Problem
+## Problem
 
 System analysts regularly perform repetitive activities:
 
@@ -27,9 +25,7 @@ System analysts regularly perform repetitive activities:
 
 These activities consume significant analyst time while often following repeatable patterns.
 
-────────
-
-Objective
+## Objective
 
 Create an AI-assisted workflow that can:
 
@@ -41,24 +37,45 @@ Create an AI-assisted workflow that can:
 6. avoid inventing technical facts;
 7. generate reusable documentation.
 
-────────
+## Core Principle
 
-Core Principle
+> **The agent is a detective, not an architect.**
 
-The agent follows a strict rule:
+The agent must analyse available evidence and identify what is explicitly present in the source material.
 
-> **If information is not present in the available source artefacts, the agent must not present it as a fact.**
+It must not invent:
 
-Instead it should:
+• APIs;
+• endpoints;
+• Kafka topics;
+• database tables;
+• BPMN processes;
+• business rules;
+• metrics;
+• configuration values;
+• architecture components.
 
-• state that information is missing;
-• identify the affected area;
-• formulate a question or assumption;
-• wait for confirmation where required.
+When information cannot be established from the available sources, the agent must explicitly report:
 
-────────
+```text
+НЕ НАЙДЕНО
+```
 
-High-Level Architecture
+or
+
+```text
+ОТСУТСТВУЕТ
+```
+
+The system distinguishes between:
+
+• FACT — explicitly supported by source material;
+• INFERENCE — reasoned interpretation;
+• UNKNOWN — cannot be established from available evidence.
+
+This separation is a core hallucination-control mechanism.
+
+## High-Level Architecture
 
 ```text
                     ┌────────────────────┐
@@ -100,9 +117,7 @@ High-Level Architecture
                     └────────────────────┘
 ```
 
-────────
-
-Tools
+## Tools
 
 The agent can operate through controlled tools such as:
 
@@ -115,9 +130,7 @@ The agent can operate through controlled tools such as:
 
 Tools are invoked explicitly rather than allowing the LLM to assume access to unavailable information.
 
-────────
-
-Specialised Subagents
+## Specialised Subagents
 
 Different analytical domains are delegated to specialised components:
 
@@ -130,9 +143,7 @@ Different analytical domains are delegated to specialised components:
 
 This allows domain-specific instructions and validation rules to be isolated.
 
-────────
-
-Typical Workflow
+## Typical Workflow
 
 ```text
 Source Artefacts
@@ -154,9 +165,7 @@ Structured Result
 Documentation
 ```
 
-────────
-
-Example Tasks
+## Example Tasks
 
 The agent can assist with:
 
@@ -197,9 +206,7 @@ Database
 • document ownership;
 • identify retention considerations.
 
-────────
-
-Hallucination Control
+## Hallucination Control
 
 The architecture explicitly separates:
 
@@ -219,9 +226,7 @@ Information not available
 
 The agent must not silently convert UNKNOWN into FACT.
 
-────────
-
-Output
+## Output
 
 The preferred output is structured.
 
@@ -239,9 +244,7 @@ Example:
 
 This makes the result easier to validate and consume programmatically.
 
-────────
-
-Security
+## Security
 
 The agent must not expose confidential information unnecessarily.
 
@@ -255,17 +258,13 @@ Production implementations should consider:
 • secret handling;
 • logging policy.
 
-────────
-
-Limitations
+## Limitations
 
 The agent does not replace architectural ownership or business decision-making.
 
 LLM output must be treated as an analytical aid and validated against source artefacts.
 
-────────
-
-Personal Contribution
+## Personal Contribution
 
 The case reflects my experience designing AI-assisted analytical workflows and adapting LLM-based tooling to system analysis tasks.
 
@@ -280,7 +279,7 @@ Key areas include:
 • analytical workflow design;
 • technical documentation automation.
 
-My Role
+## My Role
 
 Role: System Analyst / AI-assisted Engineering Designer
 
@@ -299,59 +298,7 @@ Responsibilities
 • documentation generation;
 • definition of AI limitations and boundaries.
 
-What This Case Demonstrates
-
-• LLM Engineering
-• AI Agents
-• Tool Calling
-• Agent Orchestration
-• Specialist Agents
-• Structured Outputs
-• Source-grounded Analysis
-• Validation
-• Hallucination Control
-• AI-assisted System Analysis
-• Engineering Workflow Design
-
-Core Principle
-
-> **The agent is a detective, not an architect.**
-
-The agent must analyse available evidence and identify what is explicitly present in the source material.
-
-It must not invent:
-
-• APIs;
-• endpoints;
-• Kafka topics;
-• database tables;
-• BPMN processes;
-• business rules;
-• metrics;
-• configuration values;
-• architecture components.
-
-When information cannot be established from the available sources, the agent must explicitly report:
-
-```text
-НЕ НАЙДЕНО
-```
-
-or
-
-```text
-ОТСУТСТВУЕТ
-```
-
-The system distinguishes between:
-
-• FACT — explicitly supported by source material;
-• INFERENCE — reasoned interpretation;
-• UNKNOWN — cannot be established from available evidence.
-
-This separation is a core hallucination-control mechanism.
-
-Portfolio Note
+## Portfolio Note
 
 This is a reconstructed and sanitised portfolio case based on an AI-assisted system analysis approach.
 
