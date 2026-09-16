@@ -1,6 +1,6 @@
-Microservice Standards
+# Microservice Standards
 
-Service Identity
+## Service Identity
 
 Every service should have:
 
@@ -10,9 +10,7 @@ Every service should have:
 • technical purpose;
 • lifecycle status.
 
-────────
-
-API
+## API
 
 Where a service exposes synchronous functionality, its API should define:
 
@@ -26,9 +24,7 @@ Where a service exposes synchronous functionality, its API should define:
 • idempotency;
 • versioning.
 
-────────
-
-Events
+## Events
 
 Where a service publishes or consumes events, documentation should define:
 
@@ -43,9 +39,7 @@ Where a service publishes or consumes events, documentation should define:
 • delivery semantics;
 • retry/DLQ behaviour.
 
-────────
-
-Database
+## Database
 
 Database documentation should define:
 
@@ -57,9 +51,7 @@ Database documentation should define:
 • archival/cleanup;
 • access patterns.
 
-────────
-
-Security
+## Security
 
 The service should document:
 
@@ -69,9 +61,7 @@ The service should document:
 • external integration security;
 • sensitive data.
 
-────────
-
-Observability
+## Observability
 
 The service should provide:
 
@@ -81,9 +71,7 @@ The service should provide:
 • health checks;
 • relevant alerts.
 
-────────
-
-Documentation
+## Documentation
 
 Minimum documentation should include:
 
@@ -99,9 +87,7 @@ Observability
 
 The exact set may be adapted according to service complexity.
 
-────────
-
-Operational Readiness
+## Operational Readiness
 
 Before production release, the team should be able to answer:
 
