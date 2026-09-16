@@ -1,6 +1,6 @@
-ADR-002 — Durable Process State
+# ADR-002 — Durable Process State
 
-Context
+## Context
 
 Long-running processes cannot rely on in-memory state.
 
