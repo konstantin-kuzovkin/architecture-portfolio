@@ -1,6 +1,6 @@
-Agent Tools
+# Agent Tools
 
-File Tools
+## File Tools
 
 list_files
 
@@ -14,9 +14,7 @@ write_file
 
 Used to generate structured documentation.
 
-────────
-
-Execution Tool
+## Execution Tool
 
 run_command
 
@@ -29,9 +27,7 @@ Used for controlled technical operations such as:
 
 The agent must not claim that a command succeeded unless execution actually returned a successful result.
 
-────────
-
-Web Tools
+## Web Tools
 
 search_web
 
@@ -41,17 +37,13 @@ fetch_url
 
 Used to retrieve a known external source.
 
-────────
-
-Tool Security
+## Tool Security
 
 Tools should follow the principle of least privilege.
 
 An agent should only receive the permissions required for the current task.
 
-────────
-
-Tool Failure
+## Tool Failure
 
 If a tool fails:
 
@@ -63,8 +55,6 @@ Report failure
 Do not fabricate result
 ```
 
-────────
-
-Principle
+## Principle
 
 Tools extend the agent’s capabilities but do not automatically make their results authoritative.
