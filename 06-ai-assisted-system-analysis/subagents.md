@@ -1,6 +1,6 @@
-Specialist Agents
+# Specialist Agents
 
-API Specialist
+## API Specialist
 
 Focus:
 
@@ -12,9 +12,7 @@ Focus:
 • error models;
 • security requirements.
 
-────────
-
-BPMN Specialist
+## BPMN Specialist
 
 Focus:
 
@@ -25,9 +23,7 @@ Focus:
 • business rules;
 • process inconsistencies.
 
-────────
-
-Kafka Specialist
+## Kafka Specialist
 
 Focus:
 
@@ -40,9 +36,7 @@ Focus:
 • retry/DLQ;
 • event contracts.
 
-────────
-
-Data Specialist
+## Data Specialist
 
 Focus:
 
@@ -53,9 +47,7 @@ Focus:
 • retention;
 • data dependencies.
 
-────────
-
-Metrics Specialist
+## Metrics Specialist
 
 Focus:
 
@@ -65,9 +57,7 @@ Focus:
 • alerts;
 • operational visibility.
 
-────────
-
-Java Specialist
+## Java Specialist
 
 Focus:
 
@@ -76,9 +66,7 @@ Focus:
 • application structure;
 • technical constraints.
 
-────────
-
-Delegation Principle
+## Delegation Principle
 
 The orchestrator should delegate only when specialist knowledge materially improves the result.
 
