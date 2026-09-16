@@ -1,18 +1,12 @@
-ADR-003: Explicit UNKNOWN State
+# ADR-003: Explicit UNKNOWN State
 
-Status
-
-Accepted
-
-Context
+## Context
 
 A synchronous request to an external payment network may fail with a timeout even though the external system has already accepted the operation.
 
 Therefore, a technical timeout does not necessarily indicate a business failure.
 
-────────
-
-Problem
+## Problem
 
 Consider:
 
@@ -31,9 +25,7 @@ Response lost
 
 The Transfer Service does not know the final result.
 
-────────
-
-Options
+## Options
 
 Option 1
 
@@ -47,15 +39,11 @@ Option 3
 
 Set operation to UNKNOWN and initiate reconciliation.
 
-────────
-
-Decision
+## Decision
 
 Use an explicit UNKNOWN state.
 
-────────
-
-Rationale
+## Rationale
 
 UNKNOWN accurately represents the information available to the system.
 
@@ -63,9 +51,7 @@ It avoids incorrectly declaring a financial operation failed when the external s
 
 It also creates an explicit trigger for reconciliation.
 
-────────
-
-Consequences
+## Consequences
 
 Positive
 
@@ -80,9 +66,7 @@ Negative
 • Introduces an additional lifecycle state.
 • Operations must monitor unresolved transactions.
 
-────────
-
-Principle
+## Principle
 
 The system must distinguish:
 
