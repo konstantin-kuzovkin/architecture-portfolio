@@ -77,6 +77,16 @@ The platform approach consists of four layers.
 
 # Architecture Principles
 
+## Architecture Diagrams
+
+### Platform Context
+
+![Platform Architecture Context](./diagrams/platform-context.svg)
+
+### Governance Model
+
+![Platform Governance Model](./diagrams/governance-model.svg)
+
 ## Architecture Highlights
 
 ### 1. Platform as an Enabler
@@ -275,36 +285,21 @@ Architecture governance should reduce material architectural risk without turnin
 
 Technical capabilities can be shared while business rules remain owned by the corresponding product domains.
 
-# My Role
+## My Role
 
-Role: Platform / System Analyst
+**Role:** System Analyst / Architecture-oriented System Analyst
 
-## Responsibilities
+In this case, I focused on:
 
-• platform architecture analysis;
-• definition of reusable engineering standards;
-• API governance;
-• event governance;
-• documentation standards;
-• architecture review preparation;
-• reusable templates and checklists;
-• cross-team technical enablement;
-• analysis of platform capabilities;
-• architecture decision documentation.
-
-## What This Case Demonstrates
-
-• Platform Engineering
-• Architecture Governance
-• Reusable Engineering Standards
-• API Governance
-• Event Governance
-• Documentation as an Engineering Practice
-• Architecture Reviews
-• Cross-team Enablement
-• Reusable Templates
-• Architecture Decision Records
-• Platform Capability Thinking
+- platform architecture analysis;
+- engineering standards;
+- reusable API and event standards;
+- architecture governance;
+- architecture review practices;
+- documentation standards;
+- reusable templates and checklists;
+- platform onboarding;
+- architecture decision-making.
 
 > **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning, platform engineering practices and system analysis skills. It is not a copy of a production platform or internal documentation.
 
