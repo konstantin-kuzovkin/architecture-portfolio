@@ -1,22 +1,14 @@
-ADR-003: Bounded Retry and Dead-Letter Processing
+# ADR-003: Bounded Retry and Dead-Letter Processing
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Temporary processing failures should be retried, but indefinite retries can block processing and create operational instability.
 
-────────
-
-Decision
+## Decision
 
 Use bounded retries followed by a dead-letter flow for messages that cannot be successfully processed.
 
-────────
-
-Rationale
+## Rationale
 
 This approach:
 
@@ -25,9 +17,7 @@ This approach:
 • protects normal processing;
 • creates an explicit operational recovery path.
 
-────────
-
-Consequences
+## Consequences
 
 A DLQ introduces operational responsibilities:
 
@@ -39,8 +29,6 @@ A DLQ introduces operational responsibilities:
 
 A DLQ without an operational process simply moves the problem rather than solving it.
 
-────────
-
-Principle
+## Principle
 
 Failure handling must include both technical isolation and business recovery.
