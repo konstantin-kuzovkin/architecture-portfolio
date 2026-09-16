@@ -1,0 +1,40 @@
+@startuml
+title Platform Architecture — Governance Model
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "Development Team" as Team
+
+rectangle "Architecture Governance" {
+
+    component "Engineering Standards" as Standards
+    component "Templates / Checklists" as Templates
+    component "Architecture Review" as Review
+    component "Architecture Decision" as Decision
+    component "Exception Management" as Exception
+}
+
+rectangle "Platform Lifecycle" {
+    component "Implementation" as Implementation
+    component "Operational Validation" as Operations
+    component "Production" as Production
+}
+
+Team --> Standards : Adopt
+Standards --> Templates : Supported by
+
+Team --> Review : Submit solution
+
+Review --> Decision : Approved / rejected
+Review --> Exception : Exception required
+
+Decision --> Implementation : Approved solution
+Exception --> Implementation : Accepted exception
+
+Implementation --> Operations : Validate readiness
+Operations --> Production : Release
+
+Production --> Review : Lessons / recurring issues
+
+@enduml
