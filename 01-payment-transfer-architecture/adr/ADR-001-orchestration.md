@@ -1,4 +1,4 @@
-ADR-001: Use Orchestration for Transfer Processing
+# ADR-001: Use Orchestration for Transfer Processing
 
 Status
 
@@ -10,9 +10,7 @@ The transfer process involves multiple components with different responsibilitie
 
 The operation requires controlled sequencing, explicit state management, error handling and reconciliation.
 
-────────
-
-Options
+## Options
 
 Option 1 — Orchestration
 
@@ -37,15 +35,11 @@ Service A → Event → Service B
           Service C
 ```
 
-────────
-
-Decision
+## Decision
 
 Use orchestration for the core transfer lifecycle.
 
-────────
-
-Rationale
+## Rationale
 
 Orchestration provides:
 
@@ -58,9 +52,7 @@ Orchestration provides:
 
 The process has a business lifecycle that benefits from an explicit coordinator.
 
-────────
-
-Consequences
+## Consequences
 
 Positive
 
@@ -75,8 +67,6 @@ Negative
 • Additional coordination logic is required.
 • Care must be taken to avoid turning the service into an oversized business monolith.
 
-────────
-
-Rejected Alternative
+## Rejected Alternative
 
 Pure choreography was not selected for the core transaction lifecycle because it would distribute process ownership across multiple components and make global lifecycle management and operational investigation more complex.
