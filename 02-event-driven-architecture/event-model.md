@@ -1,6 +1,6 @@
-Event Model
+# Event Model
 
-Event as a Business Fact
+## Event as a Business Fact
 
 An event represents something that has already happened.
 
@@ -16,9 +16,7 @@ DocumentSigned
 
 An event should not be treated as a remote command disguised as an event.
 
-────────
-
-Event Envelope
+## Event Envelope
 
 A common event envelope may contain:
 
@@ -33,17 +31,13 @@ A common event envelope may contain:
 |traceId      |Distributed tracing           |
 |payload      |Business data                 |
 
-────────
-
-Event ID
+## Event ID
 
 The event ID must uniquely identify a published event.
 
 Consumers can use it as one of the inputs for duplicate detection.
 
-────────
-
-Partition Key
+## Partition Key
 
 The partition key should be selected according to business ordering requirements.
 
@@ -55,9 +49,7 @@ operation_id
 
 can ensure that events for the same operation are routed to the same partition.
 
-────────
-
-Consumer Responsibility
+## Consumer Responsibility
 
 Consumers should:
 
@@ -68,9 +60,7 @@ Consumers should:
 • record processing outcome;
 • commit offsets only according to the processing strategy.
 
-────────
-
-Producer Responsibility
+## Producer Responsibility
 
 Producers should:
 
