@@ -1,6 +1,6 @@
-Security & Confidentiality
+# Security & Confidentiality
 
-Portfolio Sanitisation
+## Portfolio Sanitisation
 
 This repository is a public professional portfolio.
 
@@ -22,9 +22,7 @@ The repository must not contain:
 • internal business identifiers;
 • confidential architecture documentation.
 
-────────
-
-Reconstruction Principle
+## Reconstruction Principle
 
 Portfolio cases are designed to demonstrate architectural thinking and system analysis skills.
 
@@ -32,9 +30,7 @@ They are not copies of production documentation.
 
 Where a case is based on professional experience, implementation-specific details are intentionally generalised or reconstructed.
 
-────────
-
-Sensitive Information
+## Sensitive Information
 
 Before publishing any new artefact, verify that it does not expose:
 
@@ -47,10 +43,8 @@ Before publishing any new artefact, verify that it does not expose:
 7. Proprietary source code.
 8. Confidential business logic.
 
-────────
-
-Reporting a Problem
+## Reporting a Problem
 
 If a security or confidentiality issue is discovered in this repository, please contact:
 
-[Professional email]
+kka89899599696@gmail.com
