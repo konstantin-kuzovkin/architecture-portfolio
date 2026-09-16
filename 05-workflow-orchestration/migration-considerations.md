@@ -1,6 +1,6 @@
-Workflow Platform Migration Considerations
+# Workflow Platform Migration Considerations
 
-Problem
+## Problem
 
 Migration from an existing workflow platform may be triggered by:
 
@@ -13,11 +13,9 @@ Migration from an existing workflow platform may be triggered by:
 
 The migration should be evaluated as an architectural transformation rather than a simple software upgrade.
 
-────────
+## Migration Dimensions
 
-Migration Dimensions
-
-1. Process Definitions
+### 1. Process Definitions
 
 Analyse:
 
@@ -27,7 +25,7 @@ Analyse:
 • custom extensions;
 • external task integrations.
 
-2. Runtime State
+### 2. Runtime State
 
 Identify:
 
@@ -38,7 +36,7 @@ Identify:
 • human tasks;
 • recovery scenarios.
 
-3. Integrations
+### 3. Integrations
 
 Analyse:
 
@@ -49,7 +47,7 @@ Analyse:
 • authentication;
 • callbacks.
 
-4. Operations
+### 4. Operations
 
 Compare:
 
@@ -60,7 +58,7 @@ Compare:
 • process inspection;
 • manual recovery.
 
-5. Development Model
+### 5. Development Model
 
 Compare:
 
@@ -71,7 +69,7 @@ Compare:
 • local development;
 • debugging.
 
-6. Migration Strategy
+### 6. Migration Strategy
 
 Potential strategies include:
 
@@ -93,9 +91,7 @@ Strangler
 
 The appropriate strategy depends on the number of active workflows, business criticality and compatibility requirements.
 
-────────
-
-Key Question
+## Key Question
 
 The most important migration question is not:
 
