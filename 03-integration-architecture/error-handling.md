@@ -1,6 +1,6 @@
-Integration Error Handling
+# Integration Error Handling
 
-Error Classification
+## Error Classification
 
 Integration errors should be classified before defining the recovery strategy.
 
@@ -14,7 +14,7 @@ Action:
 Reject
 ```
 
-Authentication Error
+## Authentication Error
 
 The caller cannot be authenticated.
 
@@ -24,7 +24,7 @@ Action:
 Reject
 ```
 
-Authorisation Error
+## Authorisation Error
 
 The caller is authenticated but lacks permission.
 
@@ -34,7 +34,7 @@ Action:
 Reject
 ```
 
-Business Error
+## Business Error
 
 The request is valid technically but cannot be processed according to business rules.
 
@@ -44,7 +44,7 @@ Action:
 Return deterministic business error
 ```
 
-Technical Error
+## Technical Error
 
 A downstream or infrastructure component fails.
 
@@ -56,13 +56,13 @@ Retry / fallback / fail
 
 depending on the failure and operation semantics.
 
-Timeout
+## Timeout
 
 No response was received within the defined timeout.
 
 Action depends on whether the operation is safely retryable.
 
-Unknown Result
+## Unknown Result
 
 The request may have been accepted by the downstream system, but the result is unknown.
 
@@ -72,9 +72,7 @@ Action:
 Reconciliation
 ```
 
-────────
-
-Error Mapping
+## Error Mapping
 
 Different downstream systems may use different technical error formats.
 
@@ -88,9 +86,7 @@ REST 5xx ────────┼──► Integration Error Model
 Kafka failure ───┘
 ```
 
-────────
-
-Error Code
+## Error Code
 
 Business errors should use stable machine-readable codes.
 
@@ -105,8 +101,6 @@ DOWNSTREAM_UNAVAILABLE
 DOWNSTREAM_TIMEOUT
 UNKNOWN_RESULT
 ```
-
-────────
 
 Principle
 
