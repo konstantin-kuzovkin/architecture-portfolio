@@ -1,14 +1,12 @@
-Reconciliation
+# Reconciliation
 
-Purpose
+## Purpose
 
 Reconciliation resolves operations for which the final processing result cannot be reliably determined from the initial synchronous interaction.
 
 The primary example is an external timeout after the request may already have been accepted by the payment network.
 
-────────
-
-Reconciliation Flow
+## Reconciliation Flow
 
 ```text
 UNKNOWN
@@ -26,9 +24,7 @@ Payment Network
    └──── UNKNOWN ────► remain unresolved
 ```
 
-────────
-
-Reconciliation Sources
+## Reconciliation Sources
 
 An operation may enter reconciliation because of:
 
@@ -38,9 +34,7 @@ An operation may enter reconciliation because of:
 • inconsistent technical responses;
 • operational investigation.
 
-────────
-
-Automatic Reconciliation
+## Automatic Reconciliation
 
 Automatic reconciliation may periodically identify unresolved operations and request their external status.
 
@@ -59,9 +53,7 @@ Request external status
 Apply valid transition
 ```
 
-────────
-
-Manual Reconciliation
+## Manual Reconciliation
 
 If automatic reconciliation cannot determine the final outcome, an authorised operator may investigate the operation.
 
@@ -74,9 +66,7 @@ The operator should:
 5. perform an allowed transition;
 6. record the action in the audit trail.
 
-────────
-
-Manual Actions
+## Manual Actions
 
 The operator must not be able to arbitrarily set a status.
 
@@ -96,17 +86,13 @@ UNKNOWN
            FAILED
 ```
 
-────────
-
-Reconciliation Idempotency
+## Reconciliation Idempotency
 
 Repeated reconciliation requests must be safe.
 
 If an operation has already transitioned to a terminal state, subsequent reconciliation attempts must not modify the result unless an explicitly defined correction process exists.
 
-────────
-
-Reconciliation Metrics
+## Reconciliation Metrics
 
 Recommended metrics:
 
@@ -118,9 +104,7 @@ Recommended metrics:
 • manual investigation backlog;
 • number of manually resolved operations.
 
-────────
-
-Key Principle
+## Key Principle
 
 Reconciliation is not an exceptional workaround.
 
