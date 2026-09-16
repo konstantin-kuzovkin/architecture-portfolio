@@ -1,10 +1,8 @@
-Interview Guide
+# Interview Guide
 
 This document contains typical architecture and system analysis questions related to the portfolio cases.
 
-────────
-
-01 — Payment & Transfer Architecture
+## 01 — Payment & Transfer Architecture
 
 Typical Questions
 
@@ -20,39 +18,29 @@ Therefore the system should distinguish:
 • confirmed failure;
 • unknown external outcome.
 
-────────
-
-Where should idempotency be implemented?
+### Where should idempotency be implemented?
 
 Idempotency should be implemented at the business operation boundary.
 
 The system should persist the operation identifier and prevent duplicate processing of the same logical request.
 
-────────
-
-Who owns the operation state?
+### Who owns the operation state?
 
 The service responsible for the business operation should own the authoritative state.
 
 Client applications may display their own labels, but the backend service should remain the source of truth.
 
-────────
-
-How is concurrency controlled?
+### How is concurrency controlled?
 
 State changes are performed within transactional boundaries with appropriate database locking or optimistic concurrency mechanisms.
 
-────────
-
-Why is reconciliation required?
+### Why is reconciliation required?
 
 Because distributed systems can produce situations where the local state and external state temporarily disagree.
 
 Reconciliation restores consistency without blindly repeating the original operation.
 
-────────
-
-02 — Event-Driven Architecture
+## 02 — Event-Driven Architecture
 
 Typical Questions
 
@@ -62,31 +50,23 @@ Transport-level semantics should not be confused with business-level exactly-onc
 
 A practical design often uses at-least-once delivery together with idempotent consumers.
 
-────────
-
-Where is ordering guaranteed?
+### Where is ordering guaranteed?
 
 Kafka ordering is guaranteed within a partition.
 
 Therefore the partition key should be selected according to the business entity for which ordering matters.
 
-────────
-
-Why use a DLQ?
+### Why use a DLQ?
 
 A dead-letter queue provides controlled isolation of messages that cannot be successfully processed after the allowed retry policy.
 
-────────
-
-How are duplicate events handled?
+### How are duplicate events handled?
 
 Consumers should be designed to be idempotent.
 
 The business event identifier or another deterministic deduplication key can be used to prevent repeated business effects.
 
-────────
-
-03 — Integration Architecture
+## 03 — Integration Architecture
 
 Typical Questions
 
@@ -96,15 +76,11 @@ REST is appropriate when the caller requires an immediate response.
 
 Kafka is appropriate when asynchronous communication, decoupling or event-driven processing is required.
 
-────────
-
-Why keep SOAP?
+### Why keep SOAP?
 
 SOAP can remain appropriate for legacy or contract-heavy integrations where replacing the existing interface would introduce unnecessary risk.
 
-────────
-
-What should an API contract contain?
+### What should an API contract contain?
 
 At minimum:
 
@@ -118,9 +94,7 @@ At minimum:
 • idempotency;
 • versioning.
 
-────────
-
-04 — Platform Architecture
+## 04 — Platform Architecture
 
 Typical Questions
 
@@ -128,9 +102,7 @@ Why create platform standards?
 
 To reduce repeated architectural decisions and improve consistency across multiple teams.
 
-────────
-
-What should be standardised?
+### What should be standardised?
 
 Typical areas:
 
@@ -142,9 +114,7 @@ Typical areas:
 • service ownership;
 • operational readiness.
 
-────────
-
-05 — Workflow & Process Orchestration
+## 05 — Workflow & Process Orchestration
 
 Typical Questions
 
@@ -152,9 +122,7 @@ Why use workflow orchestration?
 
 When a business process spans multiple systems, events, long-running operations and potentially human tasks, explicit orchestration can provide durable state and controlled recovery.
 
-────────
-
-Is compensation the same as database rollback?
+### Is compensation the same as database rollback?
 
 No.
 
@@ -162,15 +130,11 @@ A database rollback reverses a local transaction.
 
 Compensation is a business operation that attempts to semantically reverse or correct a previously completed business action.
 
-────────
-
-Who owns workflow state?
+### Who owns workflow state?
 
 The workflow engine or orchestration component should own process execution state, while individual services remain responsible for their own business data.
 
-────────
-
-06 — AI-Assisted System Analysis
+## 06 — AI-Assisted System Analysis
 
 Typical Questions
 
@@ -190,9 +154,7 @@ The agent uses controlled source access, specialised tools, structured outputs a
 
 If information is unavailable, the system should return UNKNOWN rather than inventing an endpoint, Kafka topic, database table or business rule.
 
-────────
-
-Why use specialised agents?
+### Why use specialised agents?
 
 Different technical domains require different analysis rules.
 
@@ -207,9 +169,7 @@ Examples:
 
 Specialisation allows each agent to focus on a defined analytical responsibility.
 
-────────
-
-Leadership Questions
+### Leadership Questions
 
 How do you lead without formal people management?
 
@@ -225,9 +185,7 @@ I focus on technical influence:
 
 The objective is to improve engineering consistency rather than manage people administratively.
 
-────────
-
-Architecture Interview Principle
+### Architecture Interview Principle
 
 When answering architecture questions:
 
