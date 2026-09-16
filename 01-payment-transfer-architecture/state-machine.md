@@ -1,14 +1,12 @@
-State Machine
+# State Machine
 
-Purpose
+## Purpose
 
 The operation state machine defines the only valid lifecycle transitions for a transfer operation.
 
 The state machine prevents arbitrary status changes and provides deterministic behaviour for both automated and manual processing.
 
-⸻
-
-States
+## States
 
 |State               |Type        |Description                                                   |
 |--------------------|------------|--------------------------------------------------------------|
@@ -19,9 +17,7 @@ States
 |UNKNOWN             |Recovery    |Final outcome cannot currently be determined                  |
 |MANUAL_INVESTIGATION|Operational |Operation requires controlled investigation                   |
 
-⸻
-
-Transition Rules
+## Transition Rules
 
 |Current State       |Event                     |Next State          |Allowed|
 |--------------------|--------------------------|--------------------|-------|
@@ -34,9 +30,8 @@ Transition Rules
 |UNKNOWN             |Investigation required    |MANUAL_INVESTIGATION|Yes    |
 |MANUAL_INVESTIGATION|Success confirmed         |COMPLETED           |Yes    |
 |MANUAL_INVESTIGATION|Failure confirmed         |FAILED              |Yes    |
-⸻
 
-Invalid Transitions
+## Invalid Transitions
 
 Examples:
 
@@ -53,9 +48,7 @@ These transitions must be rejected.
 
 The service should return a deterministic business error indicating that the requested state transition is not allowed.
 
-⸻
-
-Transition Atomicity
+## Transition Atomicity
 
 A state transition must be performed atomically with the corresponding persistence operation.
 
@@ -75,9 +68,7 @@ COMMIT
 
 If any required operation fails, the transaction must not leave a partially applied state transition.
 
-⸻
-
-Concurrency
+## Concurrency
 
 Two concurrent transition attempts for the same operation must not both succeed when they conflict with the state machine.
 
@@ -96,8 +87,6 @@ Example:
                    control
 
 Only one valid transition may commit according to the transaction and locking strategy.
-
-⸻
 
 Principle
 
