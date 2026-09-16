@@ -1,6 +1,6 @@
-Workflow Technology Decision Matrix
+# Workflow Technology Decision Matrix
 
-Evaluation Criteria
+## Evaluation Criteria
 
 A workflow technology should be evaluated against the following criteria.
 
@@ -22,9 +22,7 @@ A workflow technology should be evaluated against the following criteria.
 |Extensibility           |Medium     |
 |Operational cost        |Medium     |
 
-────────
-
-Evaluation Approach
+## Evaluation Approach
 
 Each candidate technology should be evaluated using the same criteria.
 
@@ -56,9 +54,7 @@ Team Capability
 Technology Decision
 ```
 
-────────
-
-Important Consideration
+## Important Consideration
 
 A technology with more features is not automatically a better architectural choice.
 
