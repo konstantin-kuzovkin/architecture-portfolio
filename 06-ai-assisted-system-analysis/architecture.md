@@ -1,6 +1,6 @@
-Agent Architecture
+# Agent Architecture
 
-Architectural Components
+## Architectural Components
 
 The solution consists of several logical components:
 
@@ -12,9 +12,7 @@ The solution consists of several logical components:
 6. Validation layer
 7. Output formatter
 
-────────
-
-Agent Orchestrator
+## Agent Orchestrator
 
 The orchestrator is responsible for:
 
@@ -26,9 +24,7 @@ The orchestrator is responsible for:
 • invoking validation;
 • producing the final response.
 
-────────
-
-Tool Layer
+## Tool Layer
 
 Tools provide controlled access to external information.
 
@@ -45,9 +41,7 @@ fetch_url
 
 The LLM should not assume that information exists simply because it would be useful.
 
-────────
-
-Specialist Agents
+## Specialist Agents
 
 The orchestrator delegates domain-specific tasks.
 
@@ -66,9 +60,7 @@ The orchestrator delegates domain-specific tasks.
                       Validator
 ```
 
-────────
-
-Separation of Responsibilities
+## Separation of Responsibilities
 
 The orchestrator should not contain every domain-specific rule.
 
@@ -86,9 +78,7 @@ Presentation
 
 This separation makes the system easier to evolve.
 
-────────
-
-Source of Truth
+## Source of Truth
 
 The system should define an explicit hierarchy:
 
@@ -104,9 +94,7 @@ Recommendation
 
 A recommendation must not be represented as an authoritative technical fact.
 
-────────
-
-Failure Handling
+## Failure Handling
 
 The agent should explicitly handle:
 
@@ -118,8 +106,6 @@ The agent should explicitly handle:
 • invalid generated output;
 • unsupported tasks.
 
-────────
-
-Principle
+## Principle
 
 The agent should fail transparently rather than silently fabricate missing information.
