@@ -210,7 +210,7 @@ Lead / Principal System Analyst → Solution / System Architect
 ## Contact
 
 • LinkedIn: [Add your LinkedIn profile]
-• Email: [kka89899599696@gmail.com]
+• Email: kka89899599696@gmail.com
 • Resume: [Add resume link]
 
 ## Portfolio Status
