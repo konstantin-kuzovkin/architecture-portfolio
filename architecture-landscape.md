@@ -1,6 +1,6 @@
-Architecture Landscape
+# Architecture Landscape
 
-Overview
+## Overview
 
 This portfolio demonstrates an architecture-oriented approach to designing and analysing distributed, integration-heavy and platform-based systems.
 
@@ -48,11 +48,9 @@ The cases cover several complementary architecture areas:
                     AI-assisted Engineering
 ```
 
-────────
+## 1. Architecture Domains
 
-1. Architecture Domains
-
-1.1 Distributed Systems
+### 1.1 Distributed Systems
 
 The portfolio demonstrates analysis and design of distributed systems where multiple services must coordinate while operating independently.
 
@@ -74,9 +72,7 @@ Primary case:
 
 01 — Payment & Transfer Architecture
 
-────────
-
-1.2 Integration Architecture
+### 1.2 Integration Architecture
 
 Integration architecture focuses on selecting and designing appropriate communication mechanisms between systems.
 
@@ -102,9 +98,7 @@ Related case:
 
 02 — Event-Driven Architecture
 
-────────
-
-1.3 Event-Driven Architecture
+### 1.3 Event-Driven Architecture
 
 Event-driven communication is treated as an architectural model rather than simply a Kafka implementation detail.
 
@@ -127,9 +121,7 @@ Primary case:
 
 02 — Event-Driven Architecture
 
-────────
-
-1.4 Workflow & Process Architecture
+### 1.4 Workflow & Process Architecture
 
 Long-running business processes require explicit process state, recovery mechanisms and clear ownership.
 
@@ -151,9 +143,7 @@ Primary case:
 
 05 — Workflow & Process Orchestration
 
-────────
-
-1.5 Platform Architecture
+### 1.5 Platform Architecture
 
 Platform architecture focuses on reusable capabilities, standards and engineering practices that support multiple development teams.
 
@@ -173,9 +163,7 @@ Primary case:
 
 04 — Platform Architecture
 
-────────
-
-1.6 AI-assisted Engineering
+### 1.6 AI-assisted Engineering
 
 AI is treated as an engineering capability integrated into the system-analysis workflow.
 
@@ -197,9 +185,7 @@ Primary case:
 
 06 — AI-Assisted System Analysis
 
-────────
-
-2. Cross-Cutting Architecture Concerns
+## 2. Cross-Cutting Architecture Concerns
 
 The cases are connected by several cross-cutting concerns.
 
@@ -218,9 +204,7 @@ Topics include:
 • trust boundaries;
 • credential protection.
 
-────────
-
-Reliability
+## Reliability
 
 Reliability is analysed through failure scenarios rather than treated as a generic non-functional requirement.
 
@@ -234,9 +218,7 @@ Typical questions include:
 • Who owns the final state?
 • How is an inconsistent state detected?
 
-────────
-
-Observability
+## Observability
 
 Observability is treated as part of architecture rather than an operational afterthought.
 
@@ -251,9 +233,7 @@ Typical concerns:
 • audit events;
 • monitoring of retries and DLQs.
 
-────────
-
-State Ownership
+## State Ownership
 
 A recurring architectural principle across the portfolio is explicit ownership of state.
 
@@ -273,9 +253,7 @@ How is the state recovered?
 How is the state observed?
 ```
 
-────────
-
-3. Architecture Decision Thinking
+## 3. Architecture Decision Thinking
 
 The portfolio uses Architecture Decision Records to make important technical decisions explicit.
 
@@ -307,9 +285,7 @@ See:
 
 Architecture Decision Records
 
-────────
-
-4. Architecture Layers
+## 4. Architecture Layers
 
 The portfolio can be viewed as several architectural layers.
 
@@ -385,9 +361,7 @@ Defines:
 • validation;
 • uncertainty management.
 
-────────
-
-5. Technology Perspective
+## 5. Technology Perspective
 
 The portfolio demonstrates experience analysing systems involving technologies and standards such as:
 
@@ -406,9 +380,7 @@ The portfolio demonstrates experience analysing systems involving technologies a
 
 Technology selection is driven by architectural requirements and constraints rather than by technology preference alone.
 
-────────
-
-6. Case-to-Capability Mapping
+## 6. Case-to-Capability Mapping
 
 |Case                            |Primary Capability                    |
 |--------------------------------|--------------------------------------|
@@ -421,9 +393,7 @@ Technology selection is driven by architectural requirements and constraints rat
 
 Together the cases demonstrate a progression from individual system analysis and integration design to broader architecture and engineering concerns.
 
-────────
-
-7. Architecture Thinking Model
+## 7. Architecture Thinking Model
 
 The portfolio follows a consistent problem-solving model:
 
@@ -461,9 +431,7 @@ This approach is intentionally technology-neutral at the beginning of the analys
 
 Technology decisions should follow the understanding of the problem and constraints.
 
-────────
-
-8. Portfolio Philosophy
+## 8. Portfolio Philosophy
 
 The portfolio is based on several principles.
 
@@ -503,9 +471,7 @@ AI must remain evidence-based
 
 AI-assisted engineering should distinguish facts from inference and explicitly report uncertainty.
 
-────────
-
-9. Final Principle
+## 9. Final Principle
 
 A good architecture is not the architecture with the most technologies.
 
