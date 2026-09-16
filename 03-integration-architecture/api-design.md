@@ -1,6 +1,6 @@
-API Design
+# API Design
 
-API as a Contract
+## API as a Contract
 
 An API should be treated as an explicit contract between independently developed components.
 
@@ -17,9 +17,7 @@ The contract defines:
 • idempotency;
 • versioning.
 
-────────
-
-Example
+## Example
 
 A simplified transfer API:
 
@@ -49,9 +47,7 @@ Response:
 
 The example is intentionally generic and contains no real banking data.
 
-────────
-
-HTTP Semantics
+## HTTP Semantics
 
 HTTP status codes should represent the result of the API interaction rather than expose arbitrary downstream codes.
 
@@ -73,9 +69,7 @@ For example:
 
 The exact mapping should be defined consistently across the platform.
 
-────────
-
-Business Errors
+## Business Errors
 
 Business errors should contain stable machine-readable codes.
 
@@ -91,9 +85,7 @@ Example:
 
 The human-readable message should help the operator or client understand the problem.
 
-────────
-
-Idempotency
+## Idempotency
 
 For operations that may be retried, an idempotency mechanism should be explicitly defined.
 
@@ -103,9 +95,7 @@ Possible approaches include:
 • operation ID;
 • request ID combined with durable operation state.
 
-────────
-
-Versioning
+## Versioning
 
 API evolution should avoid unexpected breaking changes.
 
@@ -117,9 +107,7 @@ Possible strategies:
 
 The platform should select and consistently apply one strategy where possible.
 
-────────
-
-OpenAPI
+## OpenAPI
 
 The API contract should be maintained in OpenAPI.
 
