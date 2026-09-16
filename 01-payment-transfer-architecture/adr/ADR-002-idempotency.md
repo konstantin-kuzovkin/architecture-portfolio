@@ -1,32 +1,22 @@
-ADR-002: Persistent Idempotency
+# ADR-002: Persistent Idempotency
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Clients and infrastructure may retry requests when responses are delayed or lost.
 
 A financial operation must not be executed multiple times because of a technical retry.
 
-────────
-
-Options
+## Options
 
 1. In-memory idempotency.
 2. Distributed cache only.
 3. Persistent database-backed idempotency.
 
-────────
-
-Decision
+## Decision
 
 Use persistent operation identity stored in the Operations Database.
 
-────────
-
-Rationale
+## Rationale
 
 The operation lifecycle is business-critical and must survive:
 
@@ -38,9 +28,7 @@ The operation lifecycle is business-critical and must survive:
 
 The database provides durable state and can enforce uniqueness at the persistence layer.
 
-────────
-
-Consequences
+## Consequences
 
 Positive
 
@@ -55,8 +43,6 @@ Negative
 • Requires transaction and concurrency management.
 • Database availability becomes part of the processing design.
 
-────────
-
-Principle
+## Principle
 
 Idempotency is treated as a business reliability requirement rather than merely an API convenience.
