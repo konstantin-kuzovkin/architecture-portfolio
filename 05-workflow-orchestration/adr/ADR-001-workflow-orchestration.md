@@ -1,10 +1,6 @@
-ADR-001 — Workflow Orchestration
+# ADR-001 — Workflow Orchestration
 
-Status
-
-Accepted
-
-Context
+## Context
 
 A distributed business process spans multiple independent services and external systems.
 
@@ -19,13 +15,13 @@ The process requires:
 
 Implementing the complete process lifecycle independently inside each service would make the global process difficult to observe and maintain.
 
-Decision
+## Decision
 
 Use an explicit orchestration model for long-running business processes.
 
 The workflow component coordinates the process while individual services remain responsible for their own business capabilities.
 
-Consequences
+## Consequences
 
 Positive
 
