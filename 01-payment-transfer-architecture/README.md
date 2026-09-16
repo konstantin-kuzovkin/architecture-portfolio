@@ -1,6 +1,6 @@
-## Payment & Transfer Architecture
+# Payment & Transfer Architecture
 
-Overview
+## Overview
 
 This case study presents a reference architecture for a payment/transfer operation involving a client application, an orchestration service, core banking systems, an audit service and an external payment processing network.
 
@@ -420,20 +420,6 @@ Responsibilities
 • reconciliation design;
 • technical documentation;
 • architecture decision analysis.
-
-What This Case Demonstrates
-
-• Distributed transaction design
-• State ownership
-• Idempotency
-• ACID transaction boundaries
-• Failure handling
-• Unknown external outcomes
-• Reconciliation
-• Reliability
-• Architecture trade-offs
-
-> **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices. It is not a copy of a production system.
 
 ## Key Trade-offs
 
