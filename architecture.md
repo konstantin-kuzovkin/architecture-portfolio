@@ -1,14 +1,12 @@
-Architecture Approach
+# Architecture Approach
 
-Purpose
+## Purpose
 
 This document describes the architecture and system analysis approach used throughout this portfolio.
 
 The portfolio focuses on architecture problems rather than implementation-specific details.
 
-────────
-
-1. Problem First
+## 1. Problem First
 
 Architecture starts with the problem.
 
@@ -24,9 +22,7 @@ Before selecting technologies or patterns, I identify:
 • failure scenarios;
 • security requirements.
 
-────────
-
-2. Context
+## 2. Context
 
 The first architectural question is:
 
@@ -43,9 +39,7 @@ I typically model:
 • workflow engines;
 • security boundaries.
 
-────────
-
-3. Requirements
+## 3. Requirements
 
 Requirements are separated into:
 
@@ -68,9 +62,7 @@ Examples:
 • observability;
 • maintainability.
 
-────────
-
-4. Architecture
+## 4. Architecture
 
 The architecture defines:
 
@@ -85,9 +77,7 @@ The architecture defines:
 
 Architecture decisions should be traceable to requirements and constraints.
 
-────────
-
-5. Integration
+## 5. Integration
 
 Integration is selected according to the interaction semantics.
 
@@ -103,9 +93,7 @@ Technology selection is not the goal.
 
 The goal is to select an interaction model appropriate for the business and technical requirements.
 
-────────
-
-6. Failure Scenarios
+## 6. Failure Scenarios
 
 Every distributed architecture should consider what happens when dependencies fail.
 
@@ -123,9 +111,7 @@ Typical scenarios:
 
 Failure handling is part of the architecture, not an afterthought.
 
-────────
-
-7. State Ownership
+## 7. State Ownership
 
 For business-critical processes, the architecture should explicitly define:
 
@@ -139,9 +125,7 @@ The owner should provide:
 • auditability;
 • recovery mechanisms.
 
-────────
-
-8. Reliability
+## 8. Reliability
 
 Reliability mechanisms may include:
 
@@ -156,9 +140,7 @@ Reliability mechanisms may include:
 
 Each mechanism should have a defined purpose and operational consequence.
 
-────────
-
-9. Security
+## 9. Security
 
 Security is considered at architecture boundaries.
 
@@ -174,9 +156,7 @@ Typical concerns:
 • trust boundaries;
 • sensitive data handling.
 
-────────
-
-10. Observability
+## 10. Observability
 
 A production-oriented architecture should provide sufficient information to answer:
 
@@ -195,9 +175,7 @@ Typical mechanisms:
 • correlation IDs;
 • audit events.
 
-────────
-
-11. Architecture Decisions
+## 11. Architecture Decisions
 
 Important decisions are documented as ADRs.
 
@@ -214,9 +192,7 @@ The purpose of an ADR is not to prove that one solution is universally correct.
 
 The purpose is to preserve the reasoning behind a decision.
 
-────────
-
-12. Trade-offs
+## 12. Trade-offs
 
 Architecture is a sequence of trade-offs.
 
@@ -231,9 +207,7 @@ Typical trade-offs include:
 
 The selected solution should make these trade-offs explicit.
 
-────────
-
-13. Documentation
+## 13. Documentation
 
 Architecture documentation is treated as an engineering artifact.
 
@@ -249,9 +223,7 @@ Typical artefacts:
 • ADR;
 • operational documentation.
 
-────────
-
-14. AI-assisted Analysis
+## 14. AI-assisted Analysis
 
 The AI-assisted system analysis case follows the same architecture principles.
 
@@ -275,9 +247,7 @@ required information is unavailable
 
 The system should report uncertainty instead of inventing technical details.
 
-────────
-
-Final Principle
+## Final Principle
 
 A good architecture is not the architecture with the most technologies.
 
