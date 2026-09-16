@@ -1,6 +1,6 @@
-Event Design Checklist
+# Event Design Checklist
 
-Event Contract
+## Event Contract
 
 ☐ Event name defined
 ☐ Event purpose defined
@@ -10,7 +10,7 @@ Event Contract
 ☐ Correlation ID defined
 ☐ Payload schema defined
 
-Kafka
+## Kafka
 
 ☐ Topic purpose defined
 ☐ Producer identified
@@ -19,7 +19,7 @@ Kafka
 ☐ Ordering requirements defined
 ☐ Retention requirements defined
 
-Reliability
+## Reliability
 
 ☐ Delivery semantics defined
 ☐ Consumer idempotency considered
@@ -27,13 +27,13 @@ Reliability
 ☐ DLQ strategy defined
 ☐ Replay procedure defined where required
 
-Evolution
+## Evolution
 
 ☐ Schema compatibility considered
 ☐ Breaking changes identified
 ☐ Versioning strategy defined
 
-Operations
+## Operations
 
 ☐ Consumer lag monitored
 ☐ Processing failures monitored
