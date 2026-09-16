@@ -1,6 +1,6 @@
-Workflow & Process Orchestration Architecture
+# Workflow & Process Orchestration Architecture
 
-Overview
+## Overview
 
 This case study explores the architecture of long-running business processes in distributed systems.
 
@@ -18,9 +18,25 @@ The focus is not on a specific workflow product but on architectural decisions a
 • workflow engine selection;
 • migration from legacy workflow platforms.
 
-────────
+## Architecture Context
 
-Problem
+Long-running business processes require explicit management of process state, retries, timeouts, failures and recovery.
+
+The workflow engine is treated as an infrastructure component responsible for process execution and orchestration.
+
+Business services remain responsible for their own business operations and domain rules.
+
+The architecture therefore separates:
+
+- process orchestration;
+- business logic;
+- process state;
+- technical failure handling;
+- compensation;
+- human tasks;
+- observability.
+
+## Problem
 
 Modern distributed systems frequently contain business processes that span multiple services and may run for seconds, minutes, hours or days.
 
@@ -37,9 +53,7 @@ A process can involve:
 
 A simple synchronous request/response model is insufficient for these scenarios.
 
-────────
-
-Objective
+## Objective
 
 Design an architecture that provides:
 
@@ -53,9 +67,7 @@ Design an architecture that provides:
 8. human task support;
 9. controlled evolution of process definitions.
 
-────────
-
-Core Concept
+## Core Concept
 
 The workflow engine is responsible for the lifecycle of the process.
 
@@ -72,9 +84,7 @@ Workflow Engine
 
 The engine coordinates the process but should not become a replacement for domain services.
 
-────────
-
-Orchestration vs Choreography
+## Orchestration vs Choreography
 
 Orchestration
 
@@ -99,8 +109,6 @@ Potential disadvantages:
 
 • orchestration component can become a bottleneck;
 • excessive centralization may increase coupling.
-
-────────
 
 Choreography
 
@@ -133,9 +141,49 @@ Potential disadvantages:
 • operational troubleshooting becomes more difficult;
 • global process state may be difficult to reconstruct.
 
-────────
+## Decision Principle
 
-State Management
+Workflow describes the execution of a business process.
+
+Orchestration defines how multiple services and process steps are coordinated to achieve the business outcome.
+
+The workflow engine should coordinate the process without becoming the owner of domain business rules.
+
+```mermaid
+flowchart LR
+    A["Business Process"] --> B["Workflow"]
+
+    B --> C["Orchestration"]
+
+    C --> D["Service A"]
+    C --> E["Service B"]
+    C --> F["Service C"]
+
+    D --> G["Business Logic"]
+    E --> H["Business Logic"]
+    F --> I["Business Logic"]
+```
+Responsibility Boundary
+
+Workflow / Orchestrator:
+
+* process sequencing;
+* state transitions;
+* retries;
+* timeouts;
+* waiting;
+* compensation coordination;
+* human task coordination.
+
+Business Services:
+
+* business rules;
+* validation;
+* domain operations;
+* persistence of domain data;
+* domain-specific decisions.
+
+## State Management
 
 A long-running workflow requires durable state.
 
@@ -165,9 +213,7 @@ IN_PROGRESS
      └── FAILURE → FAILED
 ```
 
-────────
-
-Failure Handling
+## Failure Handling
 
 A workflow should distinguish between:
 
@@ -181,9 +227,7 @@ A timeout does not necessarily mean that the business operation failed.
 
 This is particularly important when external systems may have processed a request before the response was lost.
 
-────────
-
-Compensation
+## Compensation
 
 Distributed workflows cannot rely on a traditional ACID transaction across all services.
 
@@ -213,9 +257,7 @@ Release Resource
 
 Compensation is a business operation, not a database rollback.
 
-────────
-
-Human Tasks
+## Human Tasks
 
 Some processes require manual intervention.
 
@@ -237,9 +279,7 @@ The operator should not be allowed to arbitrarily modify process state.
 
 Allowed transitions must be explicitly defined.
 
-────────
-
-Observability
+## Observability
 
 A workflow platform should provide visibility into:
 
@@ -254,9 +294,7 @@ A workflow platform should provide visibility into:
 
 Correlation identifiers should allow a process instance to be traced across services.
 
-────────
-
-Workflow Engine Selection
+## Workflow Engine Selection
 
 Technology selection should consider:
 
@@ -276,9 +314,7 @@ Technology selection should consider:
 • team expertise;
 • licensing and support.
 
-────────
-
-Migration
+## Migration
 
 When migrating from an existing workflow platform, the migration should not be treated as a simple technical version upgrade.
 
@@ -296,21 +332,17 @@ The analysis should consider:
 • team skills;
 • target architecture.
 
-────────
-
-Architectural Principle
+## Architectural Principle
 
 > A workflow engine should orchestrate business processes without becoming the owner of business capabilities implemented by domain services.
 
-────────
-
-Result
+## Result
 
 The architecture provides a structured approach for designing, evaluating and evolving workflow orchestration in distributed systems.
 
 The case demonstrates understanding of both business-process modelling and distributed-system reliability.
 
-My Role
+## My Role
 
 Role: System Analyst / Architecture-oriented System Analyst
 
@@ -328,22 +360,3 @@ Responsibilities
 • architecture decision analysis;
 • technical documentation.
 
-What This Case Demonstrates
-
-• Workflow Orchestration
-• BPMN
-• Long-running Processes
-• Durable Process State
-• Failure Recovery
-• Retry and Timeout Handling
-• Compensation
-• Human Tasks
-• Process Observability
-• Workflow Engine Evaluation
-• Architecture Trade-offs
-
-Portfolio Note
-
-This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning and system analysis practices.
-
-It is not a copy of a production workflow implementation.
