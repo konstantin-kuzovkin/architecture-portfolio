@@ -1,10 +1,6 @@
-ADR-001: Common Platform Standards
+# ADR-001: Common Platform Standards
 
-Status
-
-Accepted
-
-Context
+## Context
 
 The platform contains multiple development teams and a large number of microservices.
 
@@ -12,9 +8,7 @@ Without common standards, services can evolve using inconsistent approaches.
 
 This increases integration and operational complexity.
 
-────────
-
-Decision
+## Decision
 
 Establish a common baseline for:
 
@@ -25,9 +19,7 @@ Establish a common baseline for:
 • observability;
 • operational readiness.
 
-────────
-
-Rationale
+## Rationale
 
 Common standards provide:
 
@@ -37,9 +29,7 @@ Common standards provide:
 • easier architecture review;
 • more consistent operational practices.
 
-────────
-
-Consequences
+## Consequences
 
 Positive
 
@@ -51,8 +41,6 @@ Standards require maintenance and governance.
 
 They must evolve as platform technology and business requirements change.
 
-────────
-
-Principle
+## Principle
 
 Standards should provide a useful engineering baseline rather than become rigid bureaucracy.
