@@ -1,24 +1,16 @@
-ADR-002: Documentation as an Engineering Artefact
+# ADR-002: Documentation as an Engineering Artefact
 
-Status
-
-Accepted
-
-Context
+## Context
 
 Documentation becomes difficult to maintain when it exists separately from engineering processes.
 
-────────
-
-Decision
+## Decision
 
 Treat technical documentation as a versioned engineering artefact.
 
 Where practical, documentation should be stored alongside the relevant service or maintained through a controlled versioning process.
 
-────────
-
-Rationale
+## Rationale
 
 This improves:
 
@@ -28,14 +20,10 @@ This improves:
 • consistency;
 • ownership.
 
-────────
-
-Consequences
+## Consequences
 
 Developers and analysts must consider documentation as part of delivery rather than a post-release activity.
 
-────────
-
-Principle
+## Principle
 
 A service that cannot be understood, operated and integrated without undocumented tribal knowledge is not fully documented.
