@@ -1,6 +1,6 @@
 # Platform Architecture & Engineering Standards
 
-Overview
+## Overview
 
 This case study demonstrates the design and adoption of common architectural and engineering standards across a large microservice platform.
 
@@ -8,7 +8,7 @@ The objective is to reduce architectural inconsistency between development teams
 
 > **Portfolio note:** This is a sanitized representation of platform practices. Numbers and examples are intentionally generalized and no proprietary standards, internal service names or confidential information are included.
 
-# Platform Context
+## Platform Context
 
 The platform supports multiple product domains and development teams.
 
@@ -25,7 +25,7 @@ The scale creates a challenge that cannot be solved by reviewing every individua
 
 A reusable standards-based approach is required.
 
-# Problem
+## Problem
 
 As the number of teams and services grows, several problems may appear:
 
@@ -41,7 +41,7 @@ As the number of teams and services grows, several problems may appear:
 
 The platform therefore requires a common engineering baseline.
 
-# Objective
+## Objective
 
 Create a reusable set of architectural standards and templates that can be applied by multiple development teams.
 
@@ -59,7 +59,7 @@ Service
   └── Operational readiness
 ```
 
-# Approach
+## Approach
 
 The platform approach consists of four layers.
 
@@ -74,8 +74,6 @@ The platform approach consists of four layers.
 │ Review / Governance           │
 └───────────────────────────────┘
 ```
-
-# Architecture Principles
 
 ## Architecture Diagrams
 
@@ -201,7 +199,7 @@ flowchart LR
     K --> H
 ```
 
-# Standards
+## Standards
 
 Standards define the expected baseline for:
 
@@ -214,7 +212,7 @@ Standards define the expected baseline for:
 • documentation;
 • service structure.
 
-# Templates
+## Templates
 
 Templates convert abstract standards into practical development artefacts.
 
@@ -226,13 +224,13 @@ Examples:
 • architecture review template;
 • operational readiness checklist.
 
-# Governance
+## Governance
 
 Governance should not become a bureaucratic approval process.
 
 The objective is to identify important architectural risks early and provide reusable guidance to teams.
 
-# Personal Contribution
+## Personal Contribution
 
 My contribution to this type of platform work includes:
 
@@ -257,7 +255,7 @@ A common platform standard can provide:
 • easier architecture review;
 • improved operational readiness.
 
-# Key Principle
+## Key Principle
 
 > **At platform scale, architecture is not only about designing systems. It is also about creating mechanisms that allow many teams to design systems consistently.**
 
@@ -300,8 +298,6 @@ In this case, I focused on:
 - reusable templates and checklists;
 - platform onboarding;
 - architecture decision-making.
-
-> **Portfolio note:** This is a reconstructed and sanitised portfolio case created to demonstrate architectural reasoning, platform engineering practices and system analysis skills. It is not a copy of a production platform or internal documentation.
 
 ## Interview Talking Points
 
