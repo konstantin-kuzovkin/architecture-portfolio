@@ -1,0 +1,75 @@
+@startuml
+
+title AI-Assisted System Analysis Agent Architecture
+
+actor "System Analyst" as ANALYST
+
+rectangle "AI Analysis Environment" {
+
+    component "Agent Orchestrator" as AGENT
+
+    component "Task Classification" as CLASSIFIER
+
+    package "Controlled Tools" {
+        component "Files Tool" as FILES
+        component "Web Search" as WEB
+        component "Command Tool" as CMD
+    }
+
+    package "Specialised Analysis" {
+        component "API Specialist" as API
+        component "BPMN Specialist" as BPMN
+        component "Kafka Specialist" as KAFKA
+        component "Data Specialist" as DATA
+        component "Metrics Specialist" as METRICS
+        component "Java Specialist" as JAVA
+    }
+
+    component "Evidence / Source Validation" as VALIDATION
+    component "Structured Output" as OUTPUT
+}
+
+database "Source Artefacts" as SOURCES
+
+ANALYST --> AGENT : Analysis request
+
+AGENT --> CLASSIFIER : Classify task
+CLASSIFIER --> AGENT : Task type
+
+AGENT --> FILES : Inspect source files
+AGENT --> WEB : Retrieve approved sources
+AGENT --> CMD : Execute controlled analysis
+
+FILES --> SOURCES : Read evidence
+WEB --> SOURCES : Retrieve evidence
+CMD --> SOURCES : Process artefacts
+
+AGENT --> API : Delegate API analysis
+AGENT --> BPMN : Delegate BPMN analysis
+AGENT --> KAFKA : Delegate Kafka analysis
+AGENT --> DATA : Delegate data analysis
+AGENT --> METRICS : Delegate metrics analysis
+AGENT --> JAVA : Delegate Java analysis
+
+API --> VALIDATION
+BPMN --> VALIDATION
+KAFKA --> VALIDATION
+DATA --> VALIDATION
+METRICS --> VALIDATION
+JAVA --> VALIDATION
+
+SOURCES --> VALIDATION : Source evidence
+
+VALIDATION --> OUTPUT : Validated result
+
+OUTPUT --> ANALYST : Structured analysis
+
+note right of VALIDATION
+  Evidence must be traceable
+  to source artefacts.
+
+  LLM knowledge is not
+  treated as source of truth.
+end note
+
+@enduml
