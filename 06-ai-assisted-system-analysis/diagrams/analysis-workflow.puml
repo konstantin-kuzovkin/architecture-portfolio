@@ -1,0 +1,54 @@
+@startuml
+
+title AI-Assisted System Analysis Workflow
+
+actor "System Analyst" as ANALYST
+participant "AI Agent" as AGENT
+participant "Source Repository" as SOURCE
+participant "Specialist Agent" as SPECIALIST
+participant "Validation Layer" as VALIDATION
+participant "Structured Output" as OUTPUT
+
+ANALYST -> AGENT : Submit analysis request
+
+AGENT -> SOURCE : Inspect available artefacts
+SOURCE --> AGENT : Source content
+
+AGENT -> AGENT : Identify relevant information
+AGENT -> AGENT : Classify analysis task
+
+AGENT -> SPECIALIST : Delegate specialised analysis
+
+SPECIALIST -> SOURCE : Read relevant evidence
+SOURCE --> SPECIALIST : Source evidence
+
+SPECIALIST -> SPECIALIST : Analyse evidence
+
+SPECIALIST --> AGENT : Analysis result + evidence
+
+AGENT -> VALIDATION : Cross-check result
+
+alt Evidence supports conclusion
+
+    VALIDATION --> AGENT : Valid
+
+    AGENT -> OUTPUT : Build structured result
+    OUTPUT --> ANALYST : FACT / INFERENCE / risks / questions
+
+else Evidence is insufficient
+
+    VALIDATION --> AGENT : UNKNOWN
+
+    AGENT -> OUTPUT : Mark information as UNKNOWN
+    OUTPUT --> ANALYST : Missing information / open question
+
+else Result contradicts source
+
+    VALIDATION --> AGENT : Validation failure
+
+    AGENT -> OUTPUT : Reject unsupported result
+    OUTPUT --> ANALYST : Validation issue
+
+end
+
+@enduml
