@@ -1,0 +1,63 @@
+@startuml
+
+title Source-Grounded Analysis and Hallucination Control
+
+actor "System Analyst" as ANALYST
+
+rectangle "Source Artefacts" as SOURCE
+
+rectangle "Evidence Extraction" as EXTRACTION
+
+rectangle "Evidence Classification" as CLASSIFICATION
+
+rectangle "FACT" as FACT
+rectangle "INFERENCE" as INFERENCE
+rectangle "UNKNOWN" as UNKNOWN
+
+rectangle "Validation" as VALIDATION
+
+rectangle "Structured Result" as RESULT
+
+ANALYST --> SOURCE : Analysis request
+
+SOURCE --> EXTRACTION : Available evidence
+
+EXTRACTION --> CLASSIFICATION : Extracted information
+
+CLASSIFICATION --> FACT : Explicitly supported
+
+CLASSIFICATION --> INFERENCE : Reasonable conclusion
+
+CLASSIFICATION --> UNKNOWN : Evidence unavailable
+
+FACT --> VALIDATION
+INFERENCE --> VALIDATION
+UNKNOWN --> VALIDATION
+
+VALIDATION --> RESULT : Approved result
+
+note right of FACT
+  Directly supported
+  by source artefacts.
+end note
+
+note right of INFERENCE
+  Analytical conclusion.
+  Must not be presented
+  as source-backed fact.
+end note
+
+note right of UNKNOWN
+  Information cannot be
+  established from available
+  evidence.
+
+  Do not invent.
+end note
+
+note bottom of VALIDATION
+  UNKNOWN must never be
+  silently converted into FACT.
+end note
+
+@enduml
