@@ -5,24 +5,20 @@ title Workflow Platform Migration
 actor "Architecture Team" as ARCH
 actor "Migration Team" as TEAM
 
-rectangle "Legacy Workflow Platform" as LEGACY {
-    component "BPMN Models" as BPMN
-    component "Runtime State" as STATE
-    component "Active Instances" as INST
-    component "Custom Extensions" as EXT
-    component "Integrations" as INT
-    component "History / Audit" as AUDIT
-    component "Operational Tooling" as OPS
-}
+participant "Legacy BPMN\nModels" as BPMN
+participant "Legacy Runtime\nState" as STATE
+participant "Active Workflow\nInstances" as INST
+participant "Custom\nExtensions" as EXT
+participant "External\nIntegrations" as INT
+participant "History /\nAudit" as AUDIT
+participant "Operational\nTooling" as OPS
 
-rectangle "Target Workflow Platform" as TARGET {
-    component "Target Process Models" as TBPMN
-    component "Target Runtime" as TSTATE
-    component "Target Integrations" as TINT
-    component "Target Operations" as TOPS
-}
+participant "Target Process\nModels" as TBPMN
+participant "Target Runtime\nState" as TSTATE
+participant "Target\nIntegrations" as TINT
+participant "Target\nOperations" as TOPS
 
-ARCH -> LEGACY: Inventory and analysis
+== Discovery ==
 
 ARCH -> BPMN: Analyse process definitions
 ARCH -> STATE: Analyse runtime state
@@ -32,31 +28,49 @@ ARCH -> INT: Analyse integrations
 ARCH -> AUDIT: Analyse history / audit
 ARCH -> OPS: Analyse operational capabilities
 
-ARCH -> TARGET: Define target architecture
+== Target Architecture ==
 
-ARCH -> TBPMN: Map / redesign processes
-ARCH -> TINT: Define integration changes
-ARCH -> TOPS: Define operational model
+ARCH -> TBPMN: Define target process models
+ARCH -> TINT: Define target integrations
+ARCH -> TOPS: Define target operational model
+
+== Runtime State Migration ==
 
 TEAM -> STATE: Determine state migration strategy
 TEAM -> INST: Determine active-instance strategy
 
 alt Compatible runtime state
-    STATE -> TSTATE: Migrate state
+
+    STATE -> TSTATE: Migrate runtime state
     INST -> TSTATE: Resume active instances
+
 else State incompatible
-    STATE -> TEAM: Transformation / conversion
+
+    STATE -> TEAM: Transform / convert state
     TEAM -> TSTATE: Create compatible state
     INST -> TEAM: Controlled migration
+
 end
 
-BPMN -> TBPMN: Model migration
-EXT -> TBPMN: Replace / redesign extensions
-INT -> TINT: Integration migration
+== Process Migration ==
+
+BPMN -> TBPMN: Map / redesign processes
+
+EXT -> TBPMN: Replace or redesign extensions
+
+INT -> TINT: Migrate integrations
+
 AUDIT -> TOPS: Preserve required audit data
+
 OPS -> TOPS: Replace operational tooling
 
-TARGET -> TARGET: Validation
-TARGET -> TARGET: Controlled rollout
+== Validation and Rollout ==
+
+TEAM -> TSTATE: Validate migrated state
+TEAM -> TBPMN: Validate process models
+TEAM -> TINT: Validate integrations
+TEAM -> TOPS: Validate operational tooling
+
+TEAM -> TEAM: Controlled rollout
 
 @enduml
