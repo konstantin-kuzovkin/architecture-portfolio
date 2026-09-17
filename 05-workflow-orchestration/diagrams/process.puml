@@ -1,0 +1,66 @@
+@startuml
+
+title Long-Running Business Process
+
+actor "Client / Initiator" as CLIENT
+participant "Workflow Engine" as WF
+participant "Service A" as A
+participant "Service B" as B
+participant "External System" as EXT
+actor "Operator" as OP
+
+CLIENT -> WF: Start process
+WF -> WF: State = STARTED
+
+WF -> A: Execute operation
+A --> WF: Success
+WF -> WF: State = IN_PROGRESS
+
+WF -> B: Execute operation
+B --> WF: Processing
+
+WF -> WF: State = WAITING
+
+WF -> EXT: External request
+
+alt External success
+    EXT --> WF: Success
+    WF -> WF: State = IN_PROGRESS
+
+    WF -> B: Continue process
+    B --> WF: Success
+
+    WF -> WF: State = COMPLETED
+
+else Technical failure
+    EXT --> WF: Error
+
+    WF -> WF: Retry
+
+    alt Retry successful
+        EXT --> WF: Success
+        WF -> WF: State = IN_PROGRESS
+    else Retry exhausted
+        WF -> WF: State = FAILED
+    end
+
+else Timeout
+    EXT --> WF: Timeout
+
+    WF -> WF: State = RECOVERY
+
+    WF -> OP: Create manual review task
+    OP --> WF: Resolve outcome
+
+    alt Process can continue
+        WF -> WF: State = IN_PROGRESS
+        WF -> B: Continue process
+        B --> WF: Success
+        WF -> WF: State = COMPLETED
+    else Process cannot continue
+        WF -> WF: State = FAILED
+    end
+
+end
+
+@enduml
