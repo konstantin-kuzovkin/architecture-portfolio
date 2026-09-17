@@ -1,0 +1,62 @@
+@startuml
+
+title Workflow Platform Migration
+
+actor "Architecture Team" as ARCH
+actor "Migration Team" as TEAM
+
+rectangle "Legacy Workflow Platform" as LEGACY {
+    component "BPMN Models" as BPMN
+    component "Runtime State" as STATE
+    component "Active Instances" as INST
+    component "Custom Extensions" as EXT
+    component "Integrations" as INT
+    component "History / Audit" as AUDIT
+    component "Operational Tooling" as OPS
+}
+
+rectangle "Target Workflow Platform" as TARGET {
+    component "Target Process Models" as TBPMN
+    component "Target Runtime" as TSTATE
+    component "Target Integrations" as TINT
+    component "Target Operations" as TOPS
+}
+
+ARCH -> LEGACY: Inventory and analysis
+
+ARCH -> BPMN: Analyse process definitions
+ARCH -> STATE: Analyse runtime state
+ARCH -> INST: Identify active instances
+ARCH -> EXT: Analyse custom extensions
+ARCH -> INT: Analyse integrations
+ARCH -> AUDIT: Analyse history / audit
+ARCH -> OPS: Analyse operational capabilities
+
+ARCH -> TARGET: Define target architecture
+
+ARCH -> TBPMN: Map / redesign processes
+ARCH -> TINT: Define integration changes
+ARCH -> TOPS: Define operational model
+
+TEAM -> STATE: Determine state migration strategy
+TEAM -> INST: Determine active-instance strategy
+
+alt Compatible runtime state
+    STATE -> TSTATE: Migrate state
+    INST -> TSTATE: Resume active instances
+else State incompatible
+    STATE -> TEAM: Transformation / conversion
+    TEAM -> TSTATE: Create compatible state
+    INST -> TEAM: Controlled migration
+end
+
+BPMN -> TBPMN: Model migration
+EXT -> TBPMN: Replace / redesign extensions
+INT -> TINT: Integration migration
+AUDIT -> TOPS: Preserve required audit data
+OPS -> TOPS: Replace operational tooling
+
+TARGET -> TARGET: Validation
+TARGET -> TARGET: Controlled rollout
+
+@enduml
