@@ -85,7 +85,41 @@ Workflow Engine
 ```
 
 The engine coordinates the process but should not become a replacement for domain services.
+## Architecture Diagrams
 
+The case includes the following architecture diagrams:
+
+### 1. Workflow Orchestration
+
+Shows the central workflow engine coordinating business services and external systems, including timeout handling and transition to manual review.
+
+![Workflow Orchestration](diagrams/orchestration.svg)
+
+Source: [orchestration.puml](diagrams/orchestration.puml)
+
+### 2. Long-Running Process
+
+Shows the lifecycle of a long-running business process, including process states, retries, timeout recovery and manual intervention.
+
+![Long-Running Business Process](diagrams/process.svg)
+
+Source: [process.puml](diagrams/process.puml)
+
+### 3. Failure Handling
+
+Shows the distinction between business failure, technical failure, dependency unavailability and unknown external outcome.
+
+![Workflow Failure Handling](diagrams/failure-handling.svg)
+
+Source: [failure-handling.puml](diagrams/failure-handling.puml)
+
+### 4. Workflow Platform Migration
+
+Shows the analysis and migration path from a legacy workflow platform to a target platform, including runtime state, active instances, integrations, extensions, audit and operational tooling.
+
+![Workflow Platform Migration](diagrams/migration.svg)
+
+Source: [migration.puml](diagrams/migration.puml)
 ## Orchestration vs Choreography
 
 Orchestration
