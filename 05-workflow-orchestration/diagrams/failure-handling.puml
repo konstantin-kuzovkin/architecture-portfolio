@@ -1,0 +1,71 @@
+@startuml
+
+title Workflow Failure Handling
+
+participant "Workflow Engine" as WF
+participant "Business Service" as SVC
+participant "External System" as EXT
+actor "Operator" as OP
+
+WF -> SVC: Execute business operation
+
+alt Business failure
+    SVC --> WF: Business error
+    WF -> WF: Mark process FAILED
+    WF --> OP: Notify / expose failure
+
+else Technical failure
+    SVC --> WF: Technical error
+
+    WF -> WF: Retry
+
+    alt Retry successful
+        WF -> SVC: Retry operation
+        SVC --> WF: Success
+        WF -> WF: Continue process
+    else Retry exhausted
+        WF -> WF: Mark process FAILED
+        WF --> OP: Notify / expose failure
+    end
+
+else Dependency unavailable
+    SVC --> WF: Dependency unavailable
+
+    WF -> WF: Retry with backoff
+
+    alt Dependency recovered
+        WF -> SVC: Retry operation
+        SVC --> WF: Success
+        WF -> WF: Continue process
+    else Dependency remains unavailable
+        WF -> WF: Move to recovery
+        WF --> OP: Manual intervention
+    end
+
+else External timeout
+    EXT --> WF: Timeout
+
+    note right of WF
+      Timeout does not necessarily
+      mean business operation failed.
+      External system may have
+      processed the request.
+    end note
+
+    WF -> WF: Mark outcome UNKNOWN
+    WF --> OP: Manual review
+
+    OP -> EXT: Check actual outcome
+    EXT --> OP: Actual status
+
+    alt Operation succeeded
+        OP --> WF: Approve continuation
+        WF -> WF: Continue process
+    else Operation failed
+        OP --> WF: Approve failure
+        WF -> WF: Mark process FAILED
+    end
+
+end
+
+@enduml
