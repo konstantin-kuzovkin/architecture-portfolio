@@ -1,34 +1,69 @@
 @startuml
+
 title Payment & Transfer — Reconciliation Flow
+
 participant "Transfer Service" as Transfer
 database "Operations DB" as DB
 participant "Payment Network" as Network
 participant "Reconciliation Process" as Recon
 participant "Operations / Support" as Support
+participant "Audit Service" as Audit
+
 Transfer -> DB : Operation = UNKNOWN
+
 ... External status unavailable ...
+
 Recon -> DB : Find UNKNOWN operations
 DB --> Recon : Operation list
+
 loop For each UNKNOWN operation
+
     Recon -> Network : Query operation status
+
     alt Operation completed
+
         Network --> Recon : COMPLETED
-        Recon -> DB : Update status = COMPLETED
+        Recon -> Transfer : Request state transition\nUNKNOWN -> COMPLETED
+        Transfer -> DB : Apply validated transition
+        Transfer -> Audit : Record reconciliation result
+
     else Operation declined
+
         Network --> Recon : DECLINED
-        Recon -> DB : Update status = DECLINED
+        Recon -> Transfer : Request state transition\nUNKNOWN -> FAILED
+        Transfer -> DB : Apply validated transition
+        Transfer -> Audit : Record reconciliation result
+
     else Status still unavailable
+
         Network --> Recon : UNKNOWN
-        Recon -> DB : Keep UNKNOWN
+        Recon -> Transfer : Keep operation UNKNOWN
+
     end
+
 end
+
 alt Manual investigation required
+
     Recon -> Support : Create investigation task
     Support -> Network : Manual status check
+
     alt Confirmed success
-        Support -> DB : Mark COMPLETED
+
+        Network --> Support : COMPLETED
+        Support -> Transfer : Request state transition\nUNKNOWN -> COMPLETED
+        Transfer -> DB : Apply validated transition
+        Transfer -> Audit : Record manual reconciliation
+
     else Confirmed failure
-        Support -> DB : Mark DECLINED
+
+        Network --> Support : DECLINED
+        Support -> Transfer : Request state transition\nUNKNOWN -> FAILED
+        Transfer -> DB : Apply validated transition
+        Transfer -> Audit : Record manual reconciliation
+
     end
+
 end
+
 @enduml
