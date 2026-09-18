@@ -1,32 +1,52 @@
 @startuml
+
 title Payment & Transfer — Main Processing Flow
+
 actor Client
-participant "Transfer API" as API
+participant "Transfer Service" as Transfer
 database "Operations DB" as DB
 participant "Core Banking / ABS" as ABS
 participant "Payment Network" as Network
 participant "Audit Service" as Audit
-Client -> API : Create transfer\n(requestId)
-API -> DB : Check idempotency key
+
+Client -> Transfer : Create transfer\n(requestId)
+
+Transfer -> DB : Check idempotency key
+
 alt Request already processed
-    DB --> API : Existing operation
-    API --> Client : Return current result
+
+    DB --> Transfer : Existing operation
+    Transfer --> Client : Return current operation
+
 else New request
-    API -> DB : Create operation\nstatus = NEW
-    DB --> API : Operation created
-    API -> DB : status = PROCESSING
-    API -> ABS : Execute transfer
+
+    Transfer -> DB : Create operation\nstatus = NEW
+    DB --> Transfer : Operation created
+
+    Transfer -> DB : status = PROCESSING
+
+    Transfer -> ABS : Execute transfer
+
     alt ABS confirms success
-        ABS --> API : SUCCESS
-        API -> DB : status = COMPLETED
+
+        ABS --> Transfer : SUCCESS
+        Transfer -> DB : status = COMPLETED
+
     else ABS returns business failure
-        ABS --> API : DECLINED
-        API -> DB : status = DECLINED
+
+        ABS --> Transfer : DECLINED
+        Transfer -> DB : status = FAILED
+
     else Timeout / unknown result
-        ABS --> API : TIMEOUT / UNKNOWN
-        API -> DB : status = UNKNOWN
+
+        ABS --> Transfer : TIMEOUT / UNKNOWN
+        Transfer -> DB : status = UNKNOWN
+
     end
-    API -> Audit : Publish audit event
-    API --> Client : Operation status
+
+    Transfer -> Audit : Publish audit event
+    Transfer --> Client : Operation status
+
 end
+
 @enduml
