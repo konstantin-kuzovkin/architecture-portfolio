@@ -30,6 +30,14 @@ An event-driven approach allows services to communicate asynchronously while rem
 
 ![Retry and DLQ](./diagrams/retry-dlq.svg)
 
+## Analytical Artifacts
+
+### AsyncAPI Event Contract
+
+A sanitised AsyncAPI 3.1.0 contract demonstrates the formal definition of the `TransferCompleted` event, including event identity, versioning, correlation and payload schema.
+
+[View AsyncAPI 3.1.0 Contract](./artifacts/asyncapi-example.yaml)
+
 ## Architectural Goals
 
 The solution should provide:
