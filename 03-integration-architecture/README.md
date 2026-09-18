@@ -38,6 +38,14 @@ The architecture must provide a consistent integration approach despite these te
 
 ![Asynchronous Kafka Integration](./diagrams/async-kafka.svg)
 
+## Analytical Artifacts
+
+### OpenAPI API Contract
+
+A sanitised OpenAPI 3.1 contract demonstrates synchronous API design, idempotency, correlation, authentication, request validation and explicit error handling.
+
+[View OpenAPI Contract](./artifacts/openapi-example.yaml)
+
 ## Architectural Problem
 
 The main question is not:
