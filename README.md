@@ -111,7 +111,7 @@ See:
 Architecture Decision Records →
 
 The ADRs demonstrate how architectural alternatives are evaluated, decisions are made and consequences are documented.
-
+[Architecture Decision Records](adr/README.md)
 
 ## How I Approach Architecture Problems
 
