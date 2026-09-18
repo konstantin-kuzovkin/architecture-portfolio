@@ -1,0 +1,109 @@
+asyncapi: 3.1.0
+
+info:
+  title: Transfer Events API
+  version: 1.0.0
+  description: |
+    Sanitised AsyncAPI 3.1.0 example demonstrating
+    a versioned event contract for a transfer platform.
+
+defaultContentType: application/json
+
+servers:
+  production:
+    host: kafka.example.internal:9092
+    protocol: kafka
+    description: Example Kafka environment
+
+channels:
+  transferCompleted:
+    address: transfer.completed
+    messages:
+      TransferCompleted:
+        $ref: '#/components/messages/TransferCompleted'
+
+operations:
+  publishTransferCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/transferCompleted'
+    summary: Publish transfer completion event
+    description: |
+      Published when the transfer service has confirmed
+      successful completion of a transfer operation.
+    messages:
+      - $ref: '#/channels/transferCompleted/messages/TransferCompleted'
+
+components:
+
+  messages:
+
+    TransferCompleted:
+      name: TransferCompleted
+      title: Transfer Completed
+      summary: Transfer completion event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/TransferCompletedPayload'
+
+  schemas:
+
+    TransferCompletedPayload:
+      type: object
+      required:
+        - eventId
+        - eventType
+        - eventVersion
+        - occurredAt
+        - operationId
+        - correlationId
+        - status
+      properties:
+
+        eventId:
+          type: string
+          description: Unique identifier of the event.
+
+        eventType:
+          type: string
+          const: TransferCompleted
+          description: Business event type.
+
+        eventVersion:
+          type: integer
+          minimum: 1
+          description: Version of the event contract.
+
+        occurredAt:
+          type: string
+          format: date-time
+          description: Time when the business event occurred.
+
+        operationId:
+          type: string
+          description: Identifier of the business operation.
+
+        correlationId:
+          type: string
+          description: Identifier used to correlate processing across systems.
+
+        status:
+          type: string
+          enum:
+            - COMPLETED
+          description: Confirmed operation status.
+
+        amount:
+          type: number
+          format: double
+          description: Transfer amount.
+
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: ISO 4217 currency code.
+
+        occurredBy:
+          type: string
+          description: Component that produced the event.
