@@ -85,6 +85,7 @@ Workflow Engine
 ```
 
 The engine coordinates the process but should not become a replacement for domain services.
+
 ## Architecture Diagrams
 
 The case includes the following architecture diagrams:
@@ -120,6 +121,15 @@ Shows the analysis and migration path from a legacy workflow platform to a targe
 ![Workflow Platform Migration](diagrams/migration.svg)
 
 Source: [migration.puml](diagrams/migration.puml)
+
+## Analytical Artifacts
+
+### BPMN Workflow Model
+
+A sanitised BPMN 2.0 process model demonstrates workflow orchestration, processing outcomes, retry, timeout, reconciliation and manual review.
+
+[View BPMN Workflow Model](./artifacts/workflow-example.bpmn)
+
 ## Orchestration vs Choreography
 
 Orchestration
