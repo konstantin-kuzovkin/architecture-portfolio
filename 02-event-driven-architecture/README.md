@@ -125,6 +125,37 @@ Example:
 
 The exact payload is intentionally simplified for portfolio purposes.
 
+An event is treated as a versioned integration contract between the producer and its consumers.
+
+```mermaid
+flowchart LR
+    Producer["Producer Service"]
+    Contract["Event Contract"]
+    Kafka[("Kafka")]
+    ConsumerA["Consumer A"]
+    ConsumerB["Consumer B"]
+    Registry["Schema Registry"]
+
+    Producer -->|Create event| Contract
+    Contract -->|Publish| Kafka
+
+    Contract -->|Validate schema| Registry
+
+    Kafka -->|Deliver event| ConsumerA
+    Kafka -->|Deliver event| ConsumerB
+
+    ConsumerA -->|Validate / process| Registry
+    ConsumerB -->|Validate / process| Registry
+```
+Contract Principles
+
+* Event structure is explicitly defined.
+* Producers and consumers are decoupled through the event contract.
+* Schema changes must consider existing consumers.
+* Backward compatibility should be preferred where possible.
+* Breaking changes require an explicit migration strategy.
+* Consumers should not depend on undocumented producer implementation details.
+
 ## Delivery Semantics
 
 The architecture assumes that consumers must be prepared for duplicate delivery.
@@ -318,39 +349,6 @@ Important metrics include:
 8. Failed messages require controlled dead-letter handling.
 9. Event contracts must support evolution.
 10. Operational visibility is part of the architecture.
-
-## Event Contract
-
-An event is treated as a versioned integration contract between the producer and its consumers.
-
-```mermaid
-flowchart LR
-    Producer["Producer Service"]
-    Contract["Event Contract"]
-    Kafka[("Kafka")]
-    ConsumerA["Consumer A"]
-    ConsumerB["Consumer B"]
-    Registry["Schema Registry"]
-
-    Producer -->|Create event| Contract
-    Contract -->|Publish| Kafka
-
-    Contract -->|Validate schema| Registry
-
-    Kafka -->|Deliver event| ConsumerA
-    Kafka -->|Deliver event| ConsumerB
-
-    ConsumerA -->|Validate / process| Registry
-    ConsumerB -->|Validate / process| Registry
-```
-Contract Principles
-
-* Event structure is explicitly defined.
-* Producers and consumers are decoupled through the event contract.
-* Schema changes must consider existing consumers.
-* Backward compatibility should be preferred where possible.
-* Breaking changes require an explicit migration strategy.
-* Consumers should not depend on undocumented producer implementation details.
 
 ## Architecture Highlights
 
