@@ -27,11 +27,24 @@ stateDiagram-v2
 
 ## State Definition
 
-?
+| State | Meaning | Terminal |
+|---|---|---|
+| NEW | Operation created but processing has not started | No |
+| PROCESSING | Operation is being processed | No |
+| UNKNOWN | Final external outcome cannot currently be established | No |
+| COMPLETED | Successful business outcome confirmed | Yes |
+| FAILED | Unsuccessful business outcome confirmed | Yes |
 
 ## Transition Rules
 
-?
+| Current State | Event | Next State | Condition |
+|---|---|---|---|
+| NEW | Start processing | PROCESSING | Operation is valid |
+| PROCESSING | Success | COMPLETED | Success is confirmed |
+| PROCESSING | Business failure | FAILED | Failure is confirmed |
+| PROCESSING | Timeout / unknown result | UNKNOWN | Final outcome unavailable |
+| UNKNOWN | Reconciliation success | COMPLETED | External status confirms success |
+| UNKNOWN | Reconciliation failure | FAILED | External status confirms failure |
 
 ## Ownership
 The Transfer Service owns the authoritative internal operation state.
@@ -60,7 +73,13 @@ Client applications may map internal states to user-oriented statuses.
 
 For example:
 
-?
+| Internal State | Possible Client Status |
+|---|---|
+| NEW | Created |
+| PROCESSING | In progress |
+| UNKNOWN | Processing |
+| COMPLETED | Completed |
+| FAILED | Failed |
 
 The client-facing status is not the authoritative operation state.
 
