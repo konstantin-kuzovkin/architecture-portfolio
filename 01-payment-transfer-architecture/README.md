@@ -36,6 +36,14 @@ How should the bank maintain a reliable operation state when different systems m
 
 ![Payment & Transfer Reconciliation](./diagrams/reconciliation.svg)
 
+## Analytical Artifacts
+
+### Operation State Model
+
+The state model defines the authoritative lifecycle of the transfer operation, valid transitions and the semantics of the `UNKNOWN` state.
+
+[View Operation State Model](./artifacts/operation-state-model.md)
+
 ## Architecture Highlights
 
 ### 1. Explicit State Ownership
