@@ -1,0 +1,232 @@
+openapi: 3.1.0
+
+info:
+  title: Transfer Integration API
+  version: 1.0.0
+  description: |
+    Sanitised OpenAPI 3.1 example demonstrating
+    a synchronous transfer API contract.
+
+servers:
+  - url: https://api.example.com
+
+tags:
+  - name: Transfers
+    description: Transfer operations
+
+paths:
+
+  /transfers:
+
+    post:
+      tags:
+        - Transfers
+      summary: Create a transfer
+      operationId: createTransfer
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CorrelationId'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransferRequest'
+
+      responses:
+
+        '201':
+          description: Transfer operation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferOperation'
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '401':
+          description: Authentication required
+
+        '409':
+          description: Conflicting request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '500':
+          description: Internal technical error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /transfers/{operationId}:
+
+    get:
+      tags:
+        - Transfers
+      summary: Get transfer operation
+      operationId: getTransfer
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+
+        - name: operationId
+          in: path
+          required: true
+          description: Unique transfer operation identifier.
+          schema:
+            type: string
+
+        - $ref: '#/components/parameters/CorrelationId'
+
+      responses:
+
+        '200':
+          description: Current transfer operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferOperation'
+
+        '404':
+          description: Operation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '401':
+          description: Authentication required
+
+        '500':
+          description: Internal technical error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: |
+        Client-generated key used to prevent duplicate
+        creation of the same business operation.
+      schema:
+        type: string
+        minLength: 1
+
+    CorrelationId:
+      name: X-Correlation-ID
+      in: header
+      required: true
+      description: Identifier used to correlate the request across services.
+      schema:
+        type: string
+        minLength: 1
+
+  schemas:
+
+    CreateTransferRequest:
+      type: object
+      required:
+        - sourceAccount
+        - destinationAccount
+        - amount
+        - currency
+      properties:
+
+        sourceAccount:
+          type: string
+          description: Sanitised source account identifier.
+
+        destinationAccount:
+          type: string
+          description: Sanitised destination account identifier.
+
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+
+    TransferOperation:
+      type: object
+      required:
+        - operationId
+        - status
+      properties:
+
+        operationId:
+          type: string
+
+        status:
+          type: string
+          enum:
+            - NEW
+            - PROCESSING
+            - UNKNOWN
+            - COMPLETED
+            - FAILED
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+
+        code:
+          type: string
+          example: VALIDATION_ERROR
+
+        message:
+          type: string
+
+        correlationId:
+          type: string
+
+        details:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
