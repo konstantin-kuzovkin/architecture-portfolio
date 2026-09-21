@@ -210,6 +210,8 @@ Lead / Principal System Analyst → Solution / System Architect
 ## Contact
 
 • **Email:** kka89899599696@gmail.com
+• **LinkedIn:** www.linkedin.com/in/konstantin-kuzovkin
+
 
 ## Portfolio Status
 
