@@ -6,81 +6,51 @@ Accepted
 
 ## Context
 
-Long-running business processes may involve several independent services.
-
-A process can be implemented through service choreography, where services react to events independently, or through orchestration, where a workflow component coordinates the process.
-
-The choice affects visibility, state ownership, recovery and operational support.
+Some business processes span several services, wait for external results, need timers, compensation or human decisions. Others are simple reactions to an event. Using one style for everything makes simple things heavy or complex things invisible.
 
 ## Problem
 
-The architecture must determine when explicit workflow orchestration should be preferred over distributed event choreography.
-
-## Constraints
-
-- Processes may contain multiple business steps.
-- Some steps may require retries or compensation.
-- Some processes may contain human tasks.
-- Process state must remain observable.
-- Operational teams may need to investigate and recover failed processes.
+When should a process be run by a workflow engine (orchestration), and when should services react to events on their own (choreography)?
 
 ## Alternatives
 
-### Alternative 1 — Event choreography
+1. **Choreography only.** Every service reacts to events.
+2. **Orchestration only.** Every multi-service flow runs in a workflow engine.
+3. **Rule-based hybrid (chosen).** Orchestration when a process meets the rule below; choreography otherwise.
 
-Each service reacts to events and decides independently what action to perform next.
+## Decision rule
 
-### Alternative 2 — Central workflow orchestration
+Use orchestration when a process meets **at least two** of these conditions:
 
-A workflow component explicitly coordinates the process and tracks process state.
+1. It waits longer than 1 minute (timers, external results).
+2. It contains a human task.
+3. It must compensate two or more completed steps.
+4. It crosses three or more services that share one business outcome and need one place to see its status.
 
-### Alternative 3 — Hybrid approach
+Otherwise use choreography with Kafka events.
 
-Use orchestration for long-running business processes while allowing event-driven communication inside individual process steps.
+## Application
 
-## Evaluation Criteria
+| Process | Conditions met | Style |
+|---|---|---|
+| Transfer processing (hold, submit, wait, reconcile, capture or release) | 1, 2, 3 | Orchestration. See [BPMN model](../05-workflow-orchestration/artifacts/workflow-example.bpmn). |
+| Notification after `COMPLETED` or `FAILED` | none | Choreography. See [AsyncAPI contract](../02-event-driven-architecture/artifacts/asyncapi-example.yaml). |
+| Statement or analytics update after a transfer | none | Choreography. |
 
-- Process visibility
-- State ownership
-- Recovery
-- Compensation
-- Operational support
-- Coupling
-- Scalability
-- Complexity
-
-## Decision
-
-Use workflow orchestration for long-running business processes that require explicit state, recovery, compensation, timeouts or human tasks.
-
-Use event-driven choreography where independent services can react to events without requiring a central process coordinator.
-
-A hybrid architecture is therefore acceptable.
-
-The decision should be based on process semantics rather than on a general preference for one communication style.
+State ownership stays with the Transfer Service in both styles ([ADR-001](./ADR-001-operation-state-ownership.md)). The engine runs the process; it does not own the operation state.
 
 ## Consequences
 
-### Positive
+Positive:
+- Long-running processes have visible state, timers and recovery.
+- Simple reactions stay simple and loosely coupled.
+- The rule is testable: a new process is classified before design starts.
 
-- Explicit process state.
-- Predictable recovery.
-- Central visibility of long-running workflows.
-- Easier implementation of compensation and human tasks.
-- Clear operational control.
+Negative:
+- Two styles to operate and to teach.
+- The engine is an extra critical component. Its choice is compared in [decision-matrix.md](../05-workflow-orchestration/decision-matrix.md).
 
-### Negative
+## Rejected alternatives
 
-- Workflow infrastructure introduces an additional architectural component.
-- The workflow definition requires lifecycle management.
-- Excessive orchestration can create unnecessary coupling.
-
-## Rejected Alternatives
-
-Pure choreography was rejected for processes where state, recovery and compensation must be centrally observable.
-
-Pure orchestration was rejected as a universal approach because simple independent event reactions do not necessarily require a workflow coordinator.
-
-## Related Case
-
-[05 — Workflow & Process Orchestration](../05-workflow-orchestration/README.md)
+- **Choreography only** was rejected: the transfer process would have no single place to see its status, and compensation and timers would be spread across services.
+- **Orchestration only** was rejected: simple event reactions would become heavy processes with no benefit.
