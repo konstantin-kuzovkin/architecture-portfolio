@@ -468,27 +468,6 @@ The Transfer Service coordinates the critical business flow.
 - increased responsibility of the orchestration service;
 - potential centralization of business-flow logic.
 
-## Interview Talking Points
-
-This case can be discussed through the following architecture questions:
-
-1. Why is the Transfer Service responsible for operation state?
-
-2. Why is `UNKNOWN` different from `FAILED`?
-
-3. Why is blind retry dangerous for financial operations?
-
-4. How does idempotency prevent duplicate operations?
-
-5. What happens if the external system completed the operation but the response was lost?
-
-6. Why is reconciliation separated from the main transaction flow?
-
-7. Where should transaction boundaries exist?
-
-8. How should concurrent requests for the same operation be handled?
-
-9. When would orchestration be preferable to choreography?
 
 10. What observability signals are required for production support?
 
