@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Transfer" targetNamespace="http://example.com/architecture-portfolio" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:message id="Message_NetworkResult" name="network-result">
+    <bpmn:extensionElements><zeebe:subscription correlationKey="=operationId" /></bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:process id="transfer-processing" name="Transfer processing (reference)" isExecutable="true">
+    <bpmn:documentation>Reference process. Every job worker uses operationId as the idempotency key for calls to core banking and the payment network. Money is held first, then captured or released. A timeout is never treated as a failure: the process asks the network for the real status for up to 2 hours (24 attempts every 5 minutes), then a human decides.</bpmn:documentation>
+    <bpmn:startEvent id="Start_Received" name="Transfer accepted"><bpmn:outgoing>f1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:serviceTask id="Task_Reserve" name="Reserve funds (hold)"><bpmn:extensionElements><zeebe:taskDefinition type="reserve-funds" retries="3" /></bpmn:extensionElements><bpmn:incoming>f1</bpmn:incoming><bpmn:outgoing>f2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="GW_Reserved" name="Funds reserved?" default="f4"><bpmn:incoming>f2</bpmn:incoming><bpmn:outgoing>f3</bpmn:outgoing><bpmn:outgoing>f4</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_NotReserved" name="Failed: funds not reserved"><bpmn:incoming>f4</bpmn:incoming></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Submit" name="Submit to payment network"><bpmn:extensionElements><zeebe:taskDefinition type="submit-to-network" retries="3" /></bpmn:extensionElements><bpmn:incoming>f3</bpmn:incoming><bpmn:outgoing>f5</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:eventBasedGateway id="GW_Wait"><bpmn:incoming>f5</bpmn:incoming><bpmn:outgoing>f6</bpmn:outgoing><bpmn:outgoing>f7</bpmn:outgoing></bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="Msg_Result" name="Network result received"><bpmn:incoming>f6</bpmn:incoming><bpmn:outgoing>f8</bpmn:outgoing><bpmn:messageEventDefinition messageRef="Message_NetworkResult" /></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Timer_NoResponse" name="No response in 2 min"><bpmn:incoming>f7</bpmn:incoming><bpmn:outgoing>f9</bpmn:outgoing><bpmn:timerEventDefinition><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT2M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Task_Query" name="Request network status"><bpmn:extensionElements><zeebe:taskDefinition type="query-network-status" retries="3" /></bpmn:extensionElements><bpmn:incoming>f9</bpmn:incoming><bpmn:incoming>f14</bpmn:incoming><bpmn:outgoing>f10</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="GW_Confirmed" name="Status confirmed?" default="f12"><bpmn:incoming>f10</bpmn:incoming><bpmn:outgoing>f11</bpmn:outgoing><bpmn:outgoing>f12</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="GW_Deadline" name="2 hours passed?" default="f13"><bpmn:incoming>f12</bpmn:incoming><bpmn:outgoing>f13</bpmn:outgoing><bpmn:outgoing>f15</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="Timer_Wait" name="Wait 5 min"><bpmn:incoming>f13</bpmn:incoming><bpmn:outgoing>f14</bpmn:outgoing><bpmn:timerEventDefinition><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="Task_Manual" name="Manual investigation"><bpmn:extensionElements><zeebe:assignmentDefinition candidateGroups="payments-ops" /></bpmn:extensionElements><bpmn:incoming>f15</bpmn:incoming><bpmn:outgoing>f16</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_Outcome" name="Outcome?" default="f18"><bpmn:incoming>f8</bpmn:incoming><bpmn:incoming>f11</bpmn:incoming><bpmn:incoming>f16</bpmn:incoming><bpmn:outgoing>f17</bpmn:outgoing><bpmn:outgoing>f18</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Capture" name="Capture funds"><bpmn:extensionElements><zeebe:taskDefinition type="capture-funds" retries="3" /></bpmn:extensionElements><bpmn:incoming>f17</bpmn:incoming><bpmn:outgoing>f19</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:endEvent id="End_Completed" name="Completed"><bpmn:incoming>f19</bpmn:incoming></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Release" name="Release hold"><bpmn:extensionElements><zeebe:taskDefinition type="release-hold" retries="3" /></bpmn:extensionElements><bpmn:incoming>f18</bpmn:incoming><bpmn:outgoing>f20</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:endEvent id="End_Failed" name="Failed"><bpmn:incoming>f20</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="Start_Received" targetRef="Task_Reserve" />
+    <bpmn:sequenceFlow id="f2" sourceRef="Task_Reserve" targetRef="GW_Reserved" />
+    <bpmn:sequenceFlow id="f3" sourceRef="GW_Reserved" targetRef="Task_Submit" name="yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=reserved = true</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f4" sourceRef="GW_Reserved" targetRef="End_NotReserved" name="no" />
+    <bpmn:sequenceFlow id="f5" sourceRef="Task_Submit" targetRef="GW_Wait" />
+    <bpmn:sequenceFlow id="f6" sourceRef="GW_Wait" targetRef="Msg_Result" />
+    <bpmn:sequenceFlow id="f7" sourceRef="GW_Wait" targetRef="Timer_NoResponse" />
+    <bpmn:sequenceFlow id="f8" sourceRef="Msg_Result" targetRef="GW_Outcome" />
+    <bpmn:sequenceFlow id="f9" sourceRef="Timer_NoResponse" targetRef="Task_Query" />
+    <bpmn:sequenceFlow id="f10" sourceRef="Task_Query" targetRef="GW_Confirmed" />
+    <bpmn:sequenceFlow id="f11" sourceRef="GW_Confirmed" targetRef="GW_Outcome" name="yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=statusConfirmed = true</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f12" sourceRef="GW_Confirmed" targetRef="GW_Deadline" name="no" />
+    <bpmn:sequenceFlow id="f13" sourceRef="GW_Deadline" targetRef="Timer_Wait" name="no" />
+    <bpmn:sequenceFlow id="f14" sourceRef="Timer_Wait" targetRef="Task_Query" />
+    <bpmn:sequenceFlow id="f15" sourceRef="GW_Deadline" targetRef="Task_Manual" name="yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=attempts &gt;= 24</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f16" sourceRef="Task_Manual" targetRef="GW_Outcome" />
+    <bpmn:sequenceFlow id="f17" sourceRef="GW_Outcome" targetRef="Task_Capture" name="success"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=outcome = "SUCCESS"</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f18" sourceRef="GW_Outcome" targetRef="Task_Release" name="failed" />
+    <bpmn:sequenceFlow id="f19" sourceRef="Task_Capture" targetRef="End_Completed" />
+    <bpmn:sequenceFlow id="f20" sourceRef="Task_Release" targetRef="End_Failed" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="transfer-processing">
+    <bpmndi:BPMNShape id="Start_Received_di" bpmnElement="Start_Received"><dc:Bounds x="132" y="282" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="95" y="322" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Reserve_di" bpmnElement="Task_Reserve"><dc:Bounds x="220" y="260" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="GW_Reserved_di" bpmnElement="GW_Reserved" isMarkerVisible="true"><dc:Bounds x="395" y="275" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="365" y="329" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="End_NotReserved_di" bpmnElement="End_NotReserved"><dc:Bounds x="402" y="402" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="365" y="442" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Submit_di" bpmnElement="Task_Submit"><dc:Bounds x="520" y="260" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="GW_Wait_di" bpmnElement="GW_Wait"><dc:Bounds x="695" y="275" width="50" height="50" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Msg_Result_di" bpmnElement="Msg_Result"><dc:Bounds x="852" y="282" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="815" y="322" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Timer_NoResponse_di" bpmnElement="Timer_NoResponse"><dc:Bounds x="852" y="452" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="815" y="492" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Query_di" bpmnElement="Task_Query"><dc:Bounds x="970" y="430" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="GW_Confirmed_di" bpmnElement="GW_Confirmed" isMarkerVisible="true"><dc:Bounds x="1145" y="445" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1115" y="499" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="GW_Deadline_di" bpmnElement="GW_Deadline" isMarkerVisible="true"><dc:Bounds x="1295" y="445" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1265" y="499" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Timer_Wait_di" bpmnElement="Timer_Wait"><dc:Bounds x="1152" y="582" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1115" y="622" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Manual_di" bpmnElement="Task_Manual"><dc:Bounds x="1420" y="430" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="GW_Outcome_di" bpmnElement="GW_Outcome" isMarkerVisible="true"><dc:Bounds x="1625" y="275" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1595" y="329" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Capture_di" bpmnElement="Task_Capture"><dc:Bounds x="1600" y="140" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="End_Completed_di" bpmnElement="End_Completed"><dc:Bounds x="1632" y="62" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1595" y="28" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_Release_di" bpmnElement="Task_Release"><dc:Bounds x="1730" y="260" width="100" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="End_Failed_di" bpmnElement="End_Failed"><dc:Bounds x="1912" y="282" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1875" y="322" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1"><di:waypoint x="168" y="300" /><di:waypoint x="220" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2"><di:waypoint x="320" y="300" /><di:waypoint x="395" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3"><di:waypoint x="445" y="300" /><di:waypoint x="520" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4"><di:waypoint x="420" y="325" /><di:waypoint x="420" y="402" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f5_di" bpmnElement="f5"><di:waypoint x="620" y="300" /><di:waypoint x="695" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6"><di:waypoint x="745" y="300" /><di:waypoint x="852" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7"><di:waypoint x="720" y="325" /><di:waypoint x="720" y="470" /><di:waypoint x="852" y="470" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8"><di:waypoint x="888" y="300" /><di:waypoint x="1625" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9"><di:waypoint x="888" y="470" /><di:waypoint x="970" y="470" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10"><di:waypoint x="1070" y="470" /><di:waypoint x="1145" y="470" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11"><di:waypoint x="1170" y="445" /><di:waypoint x="1170" y="380" /><di:waypoint x="1650" y="380" /><di:waypoint x="1650" y="325" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f12_di" bpmnElement="f12"><di:waypoint x="1195" y="470" /><di:waypoint x="1295" y="470" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f13_di" bpmnElement="f13"><di:waypoint x="1320" y="495" /><di:waypoint x="1320" y="600" /><di:waypoint x="1188" y="600" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f14_di" bpmnElement="f14"><di:waypoint x="1152" y="600" /><di:waypoint x="1020" y="600" /><di:waypoint x="1020" y="510" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f15_di" bpmnElement="f15"><di:waypoint x="1345" y="470" /><di:waypoint x="1420" y="470" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f16_di" bpmnElement="f16"><di:waypoint x="1470" y="430" /><di:waypoint x="1470" y="380" /><di:waypoint x="1650" y="380" /><di:waypoint x="1650" y="325" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f17_di" bpmnElement="f17"><di:waypoint x="1650" y="275" /><di:waypoint x="1650" y="220" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f18_di" bpmnElement="f18"><di:waypoint x="1675" y="300" /><di:waypoint x="1730" y="300" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f19_di" bpmnElement="f19"><di:waypoint x="1650" y="140" /><di:waypoint x="1650" y="98" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f20_di" bpmnElement="f20"><di:waypoint x="1830" y="300" /><di:waypoint x="1912" y="300" /></bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>
