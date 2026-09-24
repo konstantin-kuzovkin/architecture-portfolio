@@ -461,35 +461,3 @@ Temporary failures should be retried.
 Permanent failures should eventually be isolated in a DLQ.
 
 This requires distinguishing transient failures from non-retryable business or contract errors.
-
-## Interview Talking Points
-
-1. Why was event-driven communication selected?
-
-2. Why is Kafka used as the event backbone?
-
-3. What does at-least-once delivery mean?
-
-4. Why can duplicate events occur?
-
-5. How does an idempotent consumer prevent duplicate business effects?
-
-6. What determines Kafka partitioning?
-
-7. What does ordering mean in Kafka?
-
-8. Why should retry processing be isolated?
-
-9. When should a message go to the DLQ?
-
-10. How should DLQ messages be replayed?
-
-11. How can event schemas evolve without breaking consumers?
-
-12. How do you monitor consumer lag?
-
-13. What happens if a consumer crashes after processing an event but before committing the offset?
-
-14. When would synchronous REST communication be preferable to Kafka?
-
-15. What are the consistency implications of event-driven architecture?
