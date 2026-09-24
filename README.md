@@ -1,20 +1,26 @@
 # Konstantin Kuzovkin
 
-Lead / Principal System Analyst | Solution & Integration Architecture
+Senior / Lead System Analyst | Solution & Integration Architecture
 
-Banking · FinTech · Distributed Systems · Microservices · Kafka · Platform Engineering · AI-assisted Engineering
+Banking · Distributed Systems · Kafka · BPMN/Camunda · AI-assisted Engineering
 
 ## About
 
-I am a Senior / Lead System Analyst focused on solution and integration architecture of distributed and microservice-based systems.
+I am a system analyst in a large Russian bank (5+ years). I work on a microservice platform used by 40+ development teams (about 10 business domains, 90+ microservices). Before IT, I worked about 12 years in insurance claims, so I understand the business side of financial processes.
 
-My professional focus includes system analysis, architecture design, API and event contracts, integration patterns, reliability, security, platform engineering and architecture governance.
+My focus: distributed transactions, API and event contracts, integration patterns, failure handling and reconciliation. My goal is to grow from Lead System Analyst to Solution Architect.
 
-I work with complex systems where multiple services, teams and external dependencies must operate as a consistent technical and business solution.
+## How to read this portfolio (10 minutes)
 
-This portfolio contains reconstructed and sanitised architecture case studies created to demonstrate my approach to system analysis, architecture design and technical decision-making.
+1. [Case 01 — Payment & Transfer](./01-payment-transfer-architecture/README.md): state ownership, money flow, idempotency, the UNKNOWN outcome.
+2. [ADR-001](./adr/ADR-001-operation-state-ownership.md) and [ADR-005](./adr/ADR-005-transactional-outbox.md): two decisions with real alternatives and trade-offs.
+3. [Case 06 — AI-assisted analysis](./06-ai-assisted-system-analysis/README.md) and its [evaluation method](./06-ai-assisted-system-analysis/evaluation.md).
 
-> **Portfolio disclaimer:** all examples are reconstructed and sanitised for demonstration purposes. They do not contain confidential information, production endpoints, credentials, customer data, internal system names or proprietary source code.
+## Important notes
+
+- All cases are reconstructed and sanitised. They contain no confidential data.
+- Numbers in the cases are **reference values** for the case study. They are not measurements of a real system.
+- Contracts (OpenAPI, AsyncAPI, BPMN) are examples designed to be consistent with the cases.
 
 ────────
 
