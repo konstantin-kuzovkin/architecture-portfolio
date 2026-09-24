@@ -2,475 +2,126 @@
 
 ## Overview
 
-This case study presents a reference architecture for a payment/transfer operation involving a client application, an orchestration service, core banking systems, an audit service and an external payment processing network.
+A reference architecture for a transfer between a client channel, a Transfer Service, core banking (ABS) and an external payment network. The final result may arrive late or be lost. The main goals are: no duplicate payments, no lost money, one owner of the state and a clear way to recover.
 
-The architecture addresses a distributed business transaction where the final result may not be immediately available to the initiating channel.
+> Portfolio note: this case is reconstructed and sanitised. It contains no confidential data. Numbers are reference values, not measurements.
 
-The primary focus is reliability, consistency, idempotency, controlled state transitions and operational recovery.
+## The problem
 
-Portfolio note: This is a sanitized and reconstructed architecture case. It does not contain confidential information, production endpoints, internal system names, customer data or proprietary implementation details.
+The payment network may accept a payment while the response never reaches the bank. If the bank treats the timeout as a failure and the customer retries, the customer can pay twice. If the bank treats it as success without proof, the money can be lost. The system must handle the uncertainty explicitly.
 
-## Business Context
-
-A customer initiates a transfer through a client-facing channel.
-
-The request is processed by a dedicated Transfer Service that coordinates interactions with internal banking systems and an external payment network.
-
-The external network may accept the transaction while the final processing status is not immediately available to the client channel.
-
-This creates an important distributed-systems problem:
-
-How should the bank maintain a reliable operation state when different systems may temporarily have different views of the same transaction?
-
-## Architecture
-
-### System Context
+## Context
 
 ![Payment & Transfer System Context](./diagrams/context.svg)
 
-### Main Processing Flow
-
-![Payment & Transfer Sequence](./diagrams/sequence.svg)
-
-### Reconciliation
-
-![Payment & Transfer Reconciliation](./diagrams/reconciliation.svg)
-
-## Analytical Artifacts
-
-### Operation State Model
-
-The state model defines the authoritative lifecycle of the transfer operation, valid transitions and the semantics of the `UNKNOWN` state.
-
-[View Operation State Model](./artifacts/operation-state-model.md)
-
-## Architecture Highlights
-
-### 1. Explicit State Ownership
-
-Transfer Service owns the current operation state.
-
-### 2. Idempotency
-
-Repeated requests with the same idempotency key do not create duplicate operations.
-
-### 3. Unknown External Outcome
-
-A timeout does not automatically mean failure.
-
-The operation may enter an `UNKNOWN` state until the external result is confirmed.
-
-### 4. Reconciliation
-
-Unknown operations are resolved through a reconciliation process rather than by blindly retrying the original business operation.
-
-### 5. Separation of Concerns
-
-The architecture separates:
-
-- request processing;
-- operation state;
-- external execution;
-- audit;
-- reconciliation;
-- manual investigation.
-
-## Architectural Goals
-
-The solution must provide:
-
-* a single authoritative operation state;
-* deterministic and controlled state transitions;
-* idempotent request processing;
-* protection against concurrent updates;
-* reliable interaction with external systems;
-* explicit timeout and unknown-result handling;
-* reconciliation of uncertain operations;
-* auditability;
-* operational recovery;
-* clear separation between internal operation state and client-facing status.
-
-## Main Components
-
-Client Application
-
-Initiates the transfer and displays a customer-facing representation of the operation state.
-
-### Transfer Service
-
-Acts as the orchestration layer and the single source of truth for the internal operation state.
-
-Responsible for:
-
-* validating requests;
-* creating operations;
-* controlling state transitions;
-* coordinating downstream interactions;
-* enforcing idempotency;
-* handling technical and business failures;
-* initiating reconciliation.
-
-### Operations Database
-
-Persistent storage of operation state and technical processing information.
-
-Used for:
-
-* operation identification;
-* idempotency;
-* state management;
-* concurrency control;
-* audit correlation;
-* reconciliation support.
-
-### Core Banking System
-
-Responsible for banking-account operations and the corresponding financial processing within the bank.
-
-### Payment Processing Network
-
-External processing component responsible for processing the transfer outside the immediate transaction boundary of the Transfer Service.
-
-### Audit Service
-
-Stores auditable information about important business and technical events.
-
-### Operations Console
-
-Provides controlled access for authorised operational staff to investigate operations requiring manual reconciliation.
-
-## Architecture Decision Flow
+## Main flow
 
 ```mermaid
-flowchart TD
-    A["Client sends transfer request"] --> B{"Duplicate request?"}
-
-    B -->|Yes| C["Return existing operation"]
-    B -->|No| D["Create operation"]
-
-    D --> E["Set status: PROCESSING"]
-    E --> F{"External system result"}
-
-    F -->|Success| G["Set status: COMPLETED"]
-    F -->|Business failure| H["Set status: FAILED"]
-    F -->|Timeout / unknown| I["Set status: UNKNOWN"]
-
-    I --> J["Reconciliation"]
-    J --> K{"External status confirmed?"}
-
-    K -->|Success| G
-    K -->|Failure| H
-    K -->|Still unknown| I
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant T as Transfer Service
+    participant D as Operations DB
+    participant A as Core Banking (ABS)
+    participant N as Payment Network
+    C->>T: POST /transfers with Idempotency-Key
+    T->>D: create operation NEW, unique client and key
+    alt same key and same request
+        T-->>C: 200 current state (replay)
+    else new operation
+        T-->>C: 202 Accepted, status PENDING
+        T->>A: reserve funds, hold key = operationId
+        alt hold declined
+            T->>D: NEW to FAILED
+        else hold confirmed
+            T->>D: NEW to FUNDS_RESERVED
+            T->>D: FUNDS_RESERVED to SUBMITTED, before the call
+            T->>N: submit payment, reference = operationId
+            alt success
+                N-->>T: SUCCESS
+                T->>A: capture hold
+                T->>D: SUBMITTED to COMPLETED
+            else rejected
+                N-->>T: REJECTED
+                T->>A: release hold
+                T->>D: SUBMITTED to FAILED
+            else timeout or connection lost
+                T->>D: SUBMITTED to UNKNOWN
+                Note over T,N: Hold stays. Reconciliation asks the network for the status.
+            end
+        end
+        T->>D: write outbox event in the same transaction as the final state
+    end
 ```
 
-### High-Level Architecture
-
-```mermaid
-flowchart TB
-    Client["Client Application"]
-    Transfer["Transfer Service / Orchestrator"]
-    DB[("Operations DB")]
-    Audit["Audit Service"]
-    Core["Core Banking System"]
-    Network["Payment Processing Network"]
-    External["External Result"]
-    Recon["Reconciliation Process"]
-    Console["Operations Console"]
-
-    Client --> Transfer
-    Transfer --> DB
-    Transfer --> Audit
-    Transfer --> Core
-    Transfer --> Network
-    Network --> External
-    External --> Recon
-    Recon --> Console
-    Recon --> DB
-```
-
-## Core Architectural Principle
-
-The Transfer Service owns the internal lifecycle of the operation.
-
-There must be exactly one authoritative current state for an operation.
-
-Client-facing applications may translate this state into their own user-oriented statuses, but they must not become an independent source of truth for the operation lifecycle.
-
-## State Management
-
-The operation lifecycle is represented as an explicit state machine.
-
-A transition is valid only when:
-
-1. the current state allows the requested transition;
-2. the transition is triggered by an allowed event;
-3. the required business and technical conditions are satisfied.
-
-Invalid transitions must return a deterministic business error.
-
-### Example State Model
+## Lifecycle
 
 ```mermaid
 stateDiagram-v2
     [*] --> NEW
-    NEW --> PROCESSING: start
-    PROCESSING --> COMPLETED: success
-    PROCESSING --> FAILED: business error
-    PROCESSING --> UNKNOWN: timeout / unknown
-    UNKNOWN --> COMPLETED: reconciliation confirms success
-    UNKNOWN --> FAILED: reconciliation confirms failure
+    NEW --> FUNDS_RESERVED: hold confirmed
+    NEW --> FAILED: hold declined
+    FUNDS_RESERVED --> SUBMITTED: intent stored, then call network
+    SUBMITTED --> COMPLETED: network success and capture confirmed
+    SUBMITTED --> FAILED: network rejected and hold released
+    SUBMITTED --> UNKNOWN: timeout or connection lost
+    UNKNOWN --> COMPLETED: status confirmed success
+    UNKNOWN --> FAILED: status confirmed failure
+    UNKNOWN --> MANUAL_INVESTIGATION: not confirmed within 2 hours
+    MANUAL_INVESTIGATION --> COMPLETED: operator decision with evidence
+    MANUAL_INVESTIGATION --> FAILED: operator decision with evidence
+    COMPLETED --> [*]
+    FAILED --> [*]
 ```
 
-### Idempotency
+## Reconciliation
 
-The operation is associated with an idempotency key / operation identifier.
+![Payment & Transfer Reconciliation](./diagrams/reconciliation.svg)
 
-The identifier is persisted in the Operations Database and is used to prevent duplicate processing caused by client retries, network retries or repeated delivery of the same command.
+The diagram shows the reconciliation flow. In the current model, an operator decision goes through `MANUAL_INVESTIGATION` (see the state machine).
 
-The service must distinguish between:
+## Key decisions
 
-* a new operation;
-* a repeated request for an existing operation;
-* a request that conflicts with an existing operation;
-* an operation already in a terminal state.
+1. The Transfer Service owns the operation state. ABS owns balances and holds. ([ADR-001](../adr/ADR-001-operation-state-ownership.md))
+2. Intent is stored before every external call. `SUBMITTED` is written before the network call.
+3. Funds are held first, then captured or released. ([money-flow.md](./money-flow.md))
+4. A timeout moves the operation to `UNKNOWN`. It is never re-sent automatically. Reconciliation asks for the status.
+5. Idempotency at every hop: client key, `operationId` for ABS and the network, `eventId` for consumers. ([idempotency.md](./idempotency.md))
+6. Concurrency is controlled by optimistic locking with a version column. ([state-machine.md](./state-machine.md))
+7. Events are published through a transactional outbox. ([ADR-005](../adr/ADR-005-transactional-outbox.md))
+8. Clients see only `PENDING`, `COMPLETED`, `FAILED`. Internal states are not exposed.
 
-### Concurrency
+## Documents
 
-Concurrent updates to the same operation must not result in lost updates or invalid state transitions.
+| Document | Content |
+|---|---|
+| [state-machine.md](./state-machine.md) | States, transitions, recovery, data model, locking |
+| [money-flow.md](./money-flow.md) | What happens to the money in every outcome |
+| [idempotency.md](./idempotency.md) | Keys, response rules, hops |
+| [failure-scenarios.md](./failure-scenarios.md) | 18 failure scenarios |
+| [reconciliation.md](./reconciliation.md) | Reconciliation flow and policy |
+| [non-functional-requirements.md](./non-functional-requirements.md) | Reference numbers and alerts |
+| [observability.md](./observability.md) | Metrics, logs, traces |
+| [security.md](./security.md) | Security model |
+| [artifacts/operation-state-model.md](./artifacts/operation-state-model.md) | Client status mapping |
 
-State modification is performed within a database transaction.
+Contracts: [OpenAPI](../03-integration-architecture/artifacts/openapi-example.yaml), [AsyncAPI](../02-event-driven-architecture/artifacts/asyncapi-example.yaml).
 
-The persistence layer provides the required concurrency control so that competing transactions cannot independently overwrite the operation state.
+## Trade-offs
 
-The business transition is therefore treated as an atomic operation:
+| Decision | Benefit | Cost |
+|---|---|---|
+| Central state in the Transfer Service | One truth, easy recovery and audit | The service is critical; it needs high availability (see ADR-001) |
+| Hold and capture | No reversal on failure; money is safe during uncertainty | ABS must support holds; holds must expire safely |
+| Status inquiry instead of re-send | No duplicate payments | Some operations stay `UNKNOWN` for minutes; support tooling is needed |
+| Optimistic locking | No long locks, simple | Conflicts need a retry path |
 
-Read current state
-      ↓
-Validate transition
-      ↓
-Update state
-      ↓
-Persist
-      ↓
-Commit
+## My role and contribution
 
-Unknown Result
+Role: System Analyst / Senior System Analyst.
 
-A timeout does not necessarily mean that the transfer failed.
+What I did in the real project (sanitised):
 
-For example:
-
-Transfer Service
-      │
-      │ request
-      ▼
-Payment Network
-      │
-      │ accepted
-      ▼
-      X  response lost / timeout
-      │
-      ▼
-Transfer Service
-      │
-      ▼
-UNKNOWN
-
-The operation must not automatically be marked as failed solely because the response was not received.
-
-This prevents an important class of financial consistency problems.
-
-### Reconciliation
-
-Operations in an uncertain state are reconciled using the authoritative status provided by the external payment network.
-
-The reconciliation process may be:
-
-* automatic;
-* scheduled;
-* initiated by an authorised operator.
-
-If the external status confirms successful processing, the operation transitions to COMPLETED.
-
-If the external status confirms unsuccessful processing, the operation transitions to FAILED.
-
-Manual intervention is subject to the same state-transition rules as automated processing.
-
-### Manual Investigation
-
-An operational investigation is required for cases where the final status cannot be determined automatically.
-
-The operations user must:
-
-1. identify the operation;
-2. inspect the internal operation state;
-3. request or retrieve the external processing status;
-4. compare the external result with the internal state;
-5. perform only an allowed state transition;
-6. record the action in the audit trail.
-
-Manual intervention must not bypass the state machine.
-
-### Audit
-
-Important lifecycle events are auditable, including:
-
-* operation creation;
-* processing start;
-* downstream request;
-* received response;
-* timeout;
-* transition to unknown state;
-* reconciliation attempt;
-* manual investigation;
-* manual state transition.
-
-Audit records should contain sufficient correlation information to reconstruct the operation lifecycle.
-
-### Security
-
-The architecture assumes:
-
-* authenticated client requests;
-* service-to-service authentication;
-* authorisation for operational actions;
-* encrypted communication;
-* controlled access to operational tooling;
-* auditability of privileged actions.
-
-Operational users must not be able to arbitrarily assign an operation state.
-
-### Observability
-
-The operation should be traceable across participating components using a correlation identifier.
-
-Recommended observability dimensions include:
-
-* operation ID;
-* correlation ID;
-* current state;
-* transition;
-* downstream system;
-* processing duration;
-* timeout;
-* retry count;
-* reconciliation result;
-* error category.
-
-Metrics should allow operators to identify abnormal growth of:
-
-* failed operations;
-* unknown operations;
-* reconciliation backlog;
-* processing latency;
-* downstream timeouts.
-
-### Key Design Decisions
-
-1. Transfer Service is the orchestration component.
-2. Transfer Service owns the authoritative operation state.
-3. Operation state is persisted.
-4. State transitions are explicitly modelled.
-5. Invalid transitions are rejected.
-6. Idempotency is implemented using persistent operation identity.
-7. Concurrent state modifications are protected transactionally.
-8. Unknown results are represented explicitly rather than interpreted as failures.
-9. Reconciliation resolves uncertain operations.
-10. Manual intervention is controlled by the same state machine.
-
-### Trade-offs
-
-Advantages
-
-* Clear ownership of operation state.
-* Predictable lifecycle.
-* Strong protection against duplicate processing.
-* Explicit handling of uncertain outcomes.
-* Better operational support.
-* Improved auditability.
-
-Trade-offs
-
-* Additional persistence and transaction management.
-* More complex state management.
-* Need for reconciliation mechanisms.
-* Operational tooling is required.
-* The orchestration service becomes an important component of the overall solution.
-
-### What I Personally Contributed
-
-The case reflects my approach to system analysis and architecture of integration-heavy banking processes.
-
-The key areas of contribution include:
-
-* decomposition of the distributed business process;
-* definition of service responsibilities;
-* modelling of operation states and transitions;
-* analysis of idempotency requirements;
-* analysis of concurrent updates and transactional consistency;
-* design of failure and timeout scenarios;
-* reconciliation and manual investigation scenarios;
-* definition of integration and audit requirements;
-* preparation of technical documentation and architecture models.
-
-### My Role
-
-Role: System Analyst / Architecture-oriented System Analyst
-
-Responsibilities
-
-• requirements analysis;
-• solution design;
-• state model definition;
-• integration analysis;
-• idempotency design;
-• failure scenario analysis;
-• reconciliation design;
-• technical documentation;
-• architecture decision analysis.
-
-## Key Trade-offs
-
-### Explicit State vs. Implicit Status
-
-The operation state is stored explicitly in the Transfer Service rather than being inferred from external system responses.
-
-**Benefit:**
-- single source of truth for the current operation state;
-- deterministic state transitions;
-- easier recovery and reconciliation.
-
-**Trade-off:**
-- additional persistence and state-management logic.
-
-### Reconciliation vs. Blind Retry
-
-Unknown external outcomes are resolved through reconciliation rather than blindly retrying the original business operation.
-
-**Benefit:**
-- reduces the risk of duplicate financial operations;
-- separates technical uncertainty from business failure.
-
-**Trade-off:**
-- requires a separate reconciliation mechanism;
-- some operations may remain in `UNKNOWN` temporarily.
-
-### Centralized Orchestration vs. Choreography
-
-The Transfer Service coordinates the critical business flow.
-
-**Benefit:**
-- explicit process ownership;
-- easier control of state transitions;
-- easier operational support.
-
-**Trade-off:**
-- increased responsibility of the orchestration service;
-- potential centralization of business-flow logic.
-
-
-10. What observability signals are required for production support?
-
-11. Which components should own business state?
-
-12. What are the main failure scenarios and recovery mechanisms?
+- TODO-FILL: what part of the real process you analysed and which decisions were yours (2–3 lines).
+- TODO-FILL: which failure scenarios you found or added, and what changed because of that.
+- TODO-FILL: the result you can state without confidential data (for example, fewer duplicate cases, faster recovery, a clearer support process).
