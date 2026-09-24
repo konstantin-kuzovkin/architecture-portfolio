@@ -126,7 +126,7 @@ Source: [migration.puml](diagrams/migration.puml)
 
 ### BPMN Workflow Model
 
-A sanitised BPMN 2.0 process model demonstrates workflow orchestration, processing outcomes, retry, timeout, reconciliation and manual review.
+An executable BPMN 2.0 model (Camunda 8 format) of the transfer process. It contains: reserve funds, submit to the network, an event-based gateway (network result or a 2-minute timer), a status-inquiry loop (every 5 minutes, up to 24 times), a manual investigation user task, and an explicit release of the hold on failure.
 
 [View BPMN Workflow Model](./artifacts/workflow-example.bpmn)
 
@@ -359,6 +359,8 @@ Technology selection should consider:
 • migration complexity;
 • team expertise;
 • licensing and support.
+
+A worked example is in [decision-matrix.md](./decision-matrix.md). The rule for choosing orchestration is in [ADR-004](../adr/ADR-004-workflow-orchestration-vs-choreography.md).
 
 ## Migration
 
