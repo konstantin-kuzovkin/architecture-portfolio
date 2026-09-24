@@ -1,11 +1,16 @@
 openapi: 3.1.0
 
 info:
-  title: Transfer Integration API
-  version: 1.0.0
+  title: Transfer API
+  version: 1.1.0
   description: |
-    Sanitised OpenAPI 3.1 example demonstrating
-    a synchronous transfer API contract.
+    Reference API for creating and reading transfer operations (sanitised example).
+
+    Rules:
+    - Money is a decimal string and a currency code. It is never a floating-point number.
+    - A new operation is accepted with 202. The result is read with GET or received as an event.
+    - The API returns a client status (PENDING, COMPLETED, FAILED). Internal states are not exposed.
+    - The Idempotency-Key header is required for POST.
 
 servers:
   - url: https://api.example.com
@@ -15,216 +20,243 @@ tags:
     description: Transfer operations
 
 paths:
-
   /transfers:
-
     post:
-      tags:
-        - Transfers
+      tags: [Transfers]
       summary: Create a transfer
       operationId: createTransfer
-
       security:
         - bearerAuth: []
-
       parameters:
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/CorrelationId'
-
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateTransferRequest'
-
       responses:
-
-        '201':
-          description: Transfer operation created
+        '202':
+          description: New operation accepted. Processing continues asynchronously.
+          headers:
+            Location:
+              description: URL of the created operation.
+              schema:
+                type: string
+                format: uri-reference
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransferOperation'
-
+        '200':
+          description: Replay. The same Idempotency-Key and the same request. Returns the current state.
+          headers:
+            Idempotency-Replayed:
+              description: Always "true" for a replay.
+              schema:
+                type: string
+                enum: ['true']
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferOperation'
         '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Authentication required
-
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '409':
-          description: Conflicting request
+          description: The first request with this Idempotency-Key is still being stored (REQUEST_IN_PROGRESS). Retry later.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-        '500':
-          description: Internal technical error
+        '422':
+          description: The Idempotency-Key was reused with a different request (IDEMPOTENCY_KEY_REUSED), or the request breaks a business rule.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
 
   /transfers/{operationId}:
-
     get:
-      tags:
-        - Transfers
-      summary: Get transfer operation
+      tags: [Transfers]
+      summary: Get a transfer operation
       operationId: getTransfer
-
       security:
         - bearerAuth: []
-
       parameters:
-
         - name: operationId
           in: path
           required: true
-          description: Unique transfer operation identifier.
+          description: Identifier of the transfer operation.
           schema:
             type: string
-
+            format: uuid
         - $ref: '#/components/parameters/CorrelationId'
-
       responses:
-
         '200':
-          description: Current transfer operation
+          description: Current operation.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransferOperation'
-
-        '404':
-          description: Operation not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
         '401':
-          description: Authentication required
-
-        '500':
-          description: Internal technical error
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Operation not found.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
 
 components:
-
   securitySchemes:
-
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
 
   parameters:
-
     IdempotencyKey:
       name: Idempotency-Key
       in: header
       required: true
-      description: |
-        Client-generated key used to prevent duplicate
-        creation of the same business operation.
+      description: Client-generated unique key (for example a UUID). Keys are kept for at least 7 days.
       schema:
         type: string
-        minLength: 1
-
+        minLength: 8
+        maxLength: 128
     CorrelationId:
       name: X-Correlation-ID
       in: header
-      required: true
-      description: Identifier used to correlate the request across services.
+      required: false
+      description: Correlation identifier. The server generates one if it is missing.
       schema:
         type: string
-        minLength: 1
+        maxLength: 128
+
+  responses:
+    BadRequest:
+      description: Malformed request or missing required header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication is required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: The caller is not allowed to use this account or operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooManyRequests:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before the next request.
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailable:
+      description: Temporary technical problem. Retry with the same Idempotency-Key.
+      headers:
+        Retry-After:
+          description: Seconds to wait before the next request.
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
 
   schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount:
+          type: string
+          pattern: '^[0-9]{1,15}(\.[0-9]{1,4})?$'
+          description: Decimal string. Never a floating-point number.
+          examples: ['1500.50']
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          description: ISO 4217 currency code.
+          examples: ['RUB']
 
     CreateTransferRequest:
       type: object
-      required:
-        - sourceAccount
-        - destinationAccount
-        - amount
-        - currency
+      required: [sourceAccount, destinationAccount, amount]
       properties:
-
         sourceAccount:
           type: string
-          description: Sanitised source account identifier.
-
+          description: Source account identifier (sanitised).
         destinationAccount:
           type: string
-          description: Sanitised destination account identifier.
-
+          description: Destination account identifier (sanitised).
         amount:
-          type: number
-          format: double
-          exclusiveMinimum: 0
-
-        currency:
-          type: string
-          minLength: 3
-          maxLength: 3
+          $ref: '#/components/schemas/Money'
 
     TransferOperation:
       type: object
-      required:
-        - operationId
-        - status
+      required: [operationId, status, amount, createdAt, updatedAt]
       properties:
-
         operationId:
           type: string
-
+          format: uuid
         status:
           type: string
-          enum:
-            - NEW
-            - PROCESSING
-            - UNKNOWN
-            - COMPLETED
-            - FAILED
-
+          enum: [PENDING, COMPLETED, FAILED]
+          description: Client status. Internal states are not exposed.
+        statusReason:
+          type: [string, 'null']
+          enum: [INSUFFICIENT_FUNDS, ACCOUNT_BLOCKED, REJECTED_BY_NETWORK, null]
+          description: Present only when status is FAILED.
+        amount:
+          $ref: '#/components/schemas/Money'
         createdAt:
           type: string
           format: date-time
-
         updatedAt:
           type: string
           format: date-time
 
     ErrorResponse:
       type: object
-      required:
-        - code
-        - message
+      required: [code, message]
       properties:
-
         code:
           type: string
-          example: VALIDATION_ERROR
-
+          description: Stable machine-readable code.
+          examples: ['IDEMPOTENCY_KEY_REUSED']
         message:
           type: string
-
         correlationId:
           type: string
-
         details:
           type: array
           items:
