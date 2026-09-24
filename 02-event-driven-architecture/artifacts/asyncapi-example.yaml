@@ -1,109 +1,207 @@
-asyncapi: 3.1.0
+asyncapi: 3.0.0
 
 info:
   title: Transfer Events API
-  version: 1.0.0
+  version: 1.1.0
   description: |
-    Sanitised AsyncAPI 3.1.0 example demonstrating
-    a versioned event contract for a transfer platform.
+    Reference event contract for transfer events (sanitised example).
+
+    Rules:
+    - Events are published through a transactional outbox (see ADR-005). Delivery is at-least-once.
+    - The Kafka message key is operationId. This keeps the events of one operation in order inside a partition.
+    - Consumers must be idempotent and deduplicate by eventId.
+    - Schema evolution: only backward-compatible changes are allowed inside a version (add optional fields).
+      A breaking change creates a new topic version (transfer.events.v2).
+    - Money is a decimal string and a currency code. It is never a floating-point number.
 
 defaultContentType: application/json
 
 servers:
-  production:
-    host: kafka.example.internal:9092
-    protocol: kafka
-    description: Example Kafka environment
+  kafkaExample:
+    host: kafka.example.internal:9093
+    protocol: kafka-secure
+    description: Example environment. Not a real host.
 
 channels:
-  transferCompleted:
-    address: transfer.completed
+  transferEvents:
+    address: transfer.events.v1
+    description: Business events about the final result of a transfer.
     messages:
-      TransferCompleted:
+      transferCompleted:
         $ref: '#/components/messages/TransferCompleted'
+      transferFailed:
+        $ref: '#/components/messages/TransferFailed'
+    bindings:
+      kafka:
+        partitions: 12
+        replicas: 3
+        topicConfiguration:
+          cleanup.policy: ['delete']
+          retention.ms: 604800000
+
+  transferEventsRetry:
+    address: transfer.events.v1.retry.5m
+    description: Events that failed processing. Consumed again after a delay of 5 minutes. Original headers are kept.
+    messages:
+      retryMessage:
+        $ref: '#/components/messages/RetryOrDeadLetter'
+
+  transferEventsDlq:
+    address: transfer.events.v1.dlq
+    description: Events that failed after all retries. Needs a human decision. An alert is raised when the topic is not empty.
+    messages:
+      deadLetterMessage:
+        $ref: '#/components/messages/RetryOrDeadLetter'
 
 operations:
-  publishTransferCompleted:
+  publishTransferEvents:
     action: send
     channel:
-      $ref: '#/channels/transferCompleted'
-    summary: Publish transfer completion event
-    description: |
-      Published when the transfer service has confirmed
-      successful completion of a transfer operation.
+      $ref: '#/channels/transferEvents'
+    summary: Publish the final result of a transfer
+    description: Published by the outbox relay after the final state is committed.
     messages:
-      - $ref: '#/channels/transferCompleted/messages/TransferCompleted'
+      - $ref: '#/channels/transferEvents/messages/transferCompleted'
+      - $ref: '#/channels/transferEvents/messages/transferFailed'
+
+  consumeTransferEvents:
+    action: receive
+    channel:
+      $ref: '#/channels/transferEvents'
+    summary: Consume transfer results
+    description: |
+      Example consumer: a notification service. It deduplicates by eventId.
+      After the retry budget (3 attempts) the message goes to the retry topic, then to the DLQ.
+    messages:
+      - $ref: '#/channels/transferEvents/messages/transferCompleted'
+      - $ref: '#/channels/transferEvents/messages/transferFailed'
 
 components:
-
   messages:
-
     TransferCompleted:
       name: TransferCompleted
-      title: Transfer Completed
-      summary: Transfer completion event
+      title: Transfer completed
       contentType: application/json
+      headers:
+        $ref: '#/components/schemas/EventHeaders'
+      bindings:
+        kafka:
+          key:
+            type: string
+            description: operationId
       payload:
         $ref: '#/components/schemas/TransferCompletedPayload'
 
+    TransferFailed:
+      name: TransferFailed
+      title: Transfer failed
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/EventHeaders'
+      bindings:
+        kafka:
+          key:
+            type: string
+            description: operationId
+      payload:
+        $ref: '#/components/schemas/TransferFailedPayload'
+
+    RetryOrDeadLetter:
+      name: RetryOrDeadLetter
+      title: Message in a retry or dead-letter topic
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/RetryHeaders'
+      payload:
+        type: object
+        description: The original payload without changes.
+        additionalProperties: true
+
   schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount:
+          type: string
+          pattern: '^[0-9]{1,15}(\.[0-9]{1,4})?$'
+          description: Decimal string. Never a floating-point number.
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          description: ISO 4217 currency code.
+
+    EventHeaders:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Correlation identifier for tracing.
+
+    RetryHeaders:
+      type: object
+      properties:
+        correlationId:
+          type: string
+        x-original-topic:
+          type: string
+        x-retry-count:
+          type: integer
+          minimum: 0
+        x-error-class:
+          type: string
+          description: Category of the last processing error.
 
     TransferCompletedPayload:
       type: object
-      required:
-        - eventId
-        - eventType
-        - eventVersion
-        - occurredAt
-        - operationId
-        - correlationId
-        - status
+      required: [eventId, eventType, eventVersion, occurredAt, operationId, status, amount]
       properties:
-
         eventId:
           type: string
-          description: Unique identifier of the event.
-
+          format: uuid
+          description: Unique event identifier. Used by consumers for deduplication.
         eventType:
           type: string
           const: TransferCompleted
-          description: Business event type.
-
         eventVersion:
           type: integer
           minimum: 1
-          description: Version of the event contract.
-
         occurredAt:
           type: string
           format: date-time
-          description: Time when the business event occurred.
-
         operationId:
           type: string
-          description: Identifier of the business operation.
-
-        correlationId:
-          type: string
-          description: Identifier used to correlate processing across systems.
-
+          format: uuid
         status:
           type: string
-          enum:
-            - COMPLETED
-          description: Confirmed operation status.
-
+          const: COMPLETED
         amount:
-          type: number
-          format: double
-          description: Transfer amount.
+          $ref: '#/components/schemas/Money'
 
-        currency:
+    TransferFailedPayload:
+      type: object
+      required: [eventId, eventType, eventVersion, occurredAt, operationId, status, failureReason]
+      properties:
+        eventId:
           type: string
-          minLength: 3
-          maxLength: 3
-          description: ISO 4217 currency code.
-
-        occurredBy:
+          format: uuid
+        eventType:
           type: string
-          description: Component that produced the event.
+          const: TransferFailed
+        eventVersion:
+          type: integer
+          minimum: 1
+        occurredAt:
+          type: string
+          format: date-time
+        operationId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          const: FAILED
+        failureReason:
+          type: string
+          enum: [INSUFFICIENT_FUNDS, ACCOUNT_BLOCKED, REJECTED_BY_NETWORK]
+        amount:
+          $ref: '#/components/schemas/Money'
