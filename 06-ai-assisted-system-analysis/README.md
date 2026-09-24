@@ -57,6 +57,9 @@ It must not invent:
 
 When information cannot be established from the available sources, the agent must explicitly report:
 
+The production agent works in Russian, so its markers are Russian: `НЕ НАЙДЕНО` means "NOT FOUND" and `ОТСУТСТВУЕТ` means "ABSENT". In this English portfolio they are equal to `UNKNOWN`.
+
+
 ```text
 НЕ НАЙДЕНО
 ```
@@ -284,7 +287,7 @@ Source provenance makes the result easier to verify and reduces the risk of pres
 
 The agent operates within explicit security boundaries.
 
-Production implementations should consider:
+Security controls of this agent and their implementation status are listed in [evaluation.md](./evaluation.md#security-controls-status). The controls are:
 
 • access control for source artefacts and tools;
 • data classification before sending content to the LLM;
@@ -368,6 +371,8 @@ Key areas include:
 • hallucination prevention;
 • analytical workflow design;
 • technical documentation automation.
+
+Evidence: the evaluation method and results are in [evaluation.md](./evaluation.md).
 
 ## My Role
 
