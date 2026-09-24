@@ -84,3 +84,7 @@ Exactly-once was not selected as the primary business correctness assumption bec
 ## Related Case
 
 [02 — Event-Driven Architecture](../02-event-driven-architecture/README.md)
+
+## Producer side
+
+Publication of events uses the transactional outbox. See [ADR-005](./ADR-005-transactional-outbox.md). The Kafka key is `operationId`, so events of one operation stay in order inside a partition. Consumers deduplicate by `eventId` in the same transaction as the business effect.
