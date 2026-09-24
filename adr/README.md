@@ -23,6 +23,8 @@ The purpose is to preserve:
 | [ADR-002](ADR-002-at-least-once-with-idempotent-consumers.md) | At-Least-Once Delivery with Idempotent Consumers | 02 — Event-Driven Architecture |
 | [ADR-003](ADR-003-platform-governance-vs-team-autonomy.md) | Platform Governance vs Team Autonomy | 04 — Platform Architecture |
 | [ADR-004](ADR-004-workflow-orchestration-vs-choreography.md) | Workflow Orchestration vs Choreography | 05 — Workflow & Process Orchestration |
+| [ADR-005](ADR-005-transactional-outbox.md) | Transactional Outbox for Event Publication | 02 — Event-Driven Architecture |
+
 
 ## Decision Principles
 
@@ -34,7 +36,3 @@ The ADR collection follows several principles:
 - rejected alternatives should be documented;
 - architectural decisions should remain traceable to the problem and constraints;
 - no technology is treated as universally correct.
-
-## Producer side
-
-Publication of events uses the transactional outbox. See [ADR-005](./ADR-005-transactional-outbox.md). The Kafka key is `operationId`, so events of one operation stay in order inside a partition. Consumers deduplicate by `eventId` in the same transaction as the business effect.
