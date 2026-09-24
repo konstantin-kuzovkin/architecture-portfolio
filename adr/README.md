@@ -34,3 +34,7 @@ The ADR collection follows several principles:
 - rejected alternatives should be documented;
 - architectural decisions should remain traceable to the problem and constraints;
 - no technology is treated as universally correct.
+
+## Producer side
+
+Publication of events uses the transactional outbox. See [ADR-005](./ADR-005-transactional-outbox.md). The Kafka key is `operationId`, so events of one operation stay in order inside a partition. Consumers deduplicate by `eventId` in the same transaction as the business effect.
