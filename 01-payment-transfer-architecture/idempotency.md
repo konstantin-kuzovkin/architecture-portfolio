@@ -2,102 +2,35 @@
 
 ## Problem
 
-Distributed systems commonly retry requests because of network failures, timeouts or temporary unavailability.
+Clients, gateways and workers retry requests after timeouts. A retry can arrive after the first request was already accepted. Without idempotency the same transfer can be executed twice.
 
-A retry may reach the Transfer Service after the original request has already been accepted or processed.
+## Model
 
-Without idempotency, the same business operation could potentially be executed more than once.
+- The client sends an `Idempotency-Key` header. The key is unique per client and per logical operation.
+- The service creates its own `operationId` and stores it together with the key.
+- The service stores `request_hash` (SHA-256 of the canonical request body) to detect a reused key with different data.
+- A unique constraint on `(client_id, idempotency_key)` protects against races. Two parallel first requests cannot both create an operation.
+- Keys are kept for at least 7 days (NFR-06).
 
-## Idempotency Model
+## Response rules
 
-Each logical transfer operation has a unique operation identifier.
+| Case | Response |
+|---|---|
+| New key | `202 Accepted`, operation is created in `NEW`. |
+| Same key, same `request_hash`, operation exists | `200 OK` with the current client status. Header `Idempotency-Replayed: true`. |
+| Same key, different `request_hash` | `422 Unprocessable Entity`, code `IDEMPOTENCY_KEY_REUSED`. |
+| Same key, first request is still being stored | `409 Conflict`, code `REQUEST_IN_PROGRESS`. The client retries later. |
+| Missing key | `400 Bad Request`. |
 
-```text
-Client
-  │
-  │ operation_id = X
-  ▼
-Transfer Service
-  │
-  ▼
-Operations DB
-```
+## Idempotency at every hop
 
-The identifier is persisted before the operation proceeds into the processing lifecycle.
+| Hop | Idempotency key |
+|---|---|
+| Client to Transfer Service | `Idempotency-Key` header |
+| Transfer Service to ABS (hold, capture, release) | `operationId` (hold key stored in `hold_id`) |
+| Transfer Service to the payment network | `operationId` as the payment reference |
+| Kafka consumers | `eventId` (see case 02) |
 
-## Request Scenarios
+## Idempotency and the state machine
 
-Scenario 1 — New Operation
-
-```text
-operation_id = X
-        │
-        ▼
-not found
-        │
-        ▼
-create operation
-        │
-        ▼
-PROCESSING
-```
-
-Scenario 2 — Retry
-
-```text
-operation_id = X
-        │
-        ▼
-operation exists
-        │
-        ▼
-return existing operation/result
-```
-
-Scenario 3 — Conflicting Request
-
-If the same operation identifier is reused with incompatible business parameters, the request must be rejected rather than interpreted as a new operation.
-
-## Idempotency Storage
-
-The Operations Database stores the operation identity together with the information required to determine whether a request represents:
-
-• a new operation;
-• a retry;
-• an already completed operation;
-• an operation currently being processed;
-• a conflicting request.
-
-A uniqueness constraint on the operation identifier can provide an additional protection against duplicate creation.
-
-## Important Principle
-
-Idempotency is not the same as simply checking whether an operation exists.
-
-The system must define what response should be returned for each existing operation state.
-
-For example:
-
-```text
-NEW / PROCESSING
-→ operation already exists
-
-COMPLETED
-→ return successful existing result
-
-FAILED
-→ return existing failed result
-
-UNKNOWN
-→ return current uncertain state
-```
-
-The exact client-facing representation may differ from the internal operation state.
-
-## Idempotency and State Machine
-
-Idempotency and state management work together.
-
-An idempotent request must not bypass the state machine.
-
-A retry of an existing operation should observe the current authoritative state rather than create a second lifecycle.
+A retry never creates a second lifecycle and never bypasses the state machine. It only observes the current state.
