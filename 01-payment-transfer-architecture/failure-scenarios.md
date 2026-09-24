@@ -2,124 +2,41 @@
 
 ## Purpose
 
-This document describes the main technical and business failure scenarios for the payment/transfer process.
+This document lists the main failures, the resulting state, what happens to the money and what the system does. States are defined in [state-machine.md](./state-machine.md). Money rules are in [money-flow.md](./money-flow.md).
 
-The objective is to distinguish between:
+## Failure matrix
 
-• confirmed failure;
-• temporary technical failure;
-• unknown outcome;
-• duplicate processing;
-• recoverable operational conditions.
+| # | Scenario | State after | Money | Action |
+|---|---|---|---|---|
+| 1 | Client times out before the response | Unchanged | None or hold | Client retries with the same `Idempotency-Key` and gets the current state. |
+| 2 | Duplicate client request | Unchanged | Unchanged | `200` replay. No second operation. |
+| 3 | Same key, different body | Unchanged | Unchanged | `422 IDEMPOTENCY_KEY_REUSED`. |
+| 4 | ABS unavailable at hold | `NEW` | None | Retry with backoff; fail after the retry budget. |
+| 5 | ABS declines the hold | `FAILED` | None | Return `statusReason`. |
+| 6 | Crash after the hold, before sending | `FUNDS_RESERVED` | Hold | Recovery job continues to `SUBMITTED` and sends. |
+| 7 | Network rejects the payment | `FAILED` | Hold released | Release with retry. |
+| 8 | Network timeout | `UNKNOWN` | Hold | Status inquiry every 5 min. **No re-send.** |
+| 9 | Network accepted, response lost | `UNKNOWN` -> `COMPLETED` | Hold, then captured | Status inquiry finds success. |
+| 10 | Crash after `SUBMITTED`, before the call | `UNKNOWN` | Hold | Treated as unknown. Status inquiry decides. |
+| 11 | Network success but ABS unavailable at capture | `SUBMITTED` (`network_result = SUCCESS`) | Hold, money left the bank | Retry capture; alert after 10 min. Critical. |
+| 12 | Release fails after rejection | `SUBMITTED` | Hold | Retry release; the hold expires after 72 h. |
+| 13 | Duplicate network response or event | Unchanged | Unchanged | Processed idempotently; transition already applied. |
+| 14 | Concurrent transitions | One wins | Unchanged | Optimistic lock; the loser reloads and gets a business error. |
+| 15 | Database failure during a transition | Previous state | Unchanged | Transaction rolls back; the worker retries. |
+| 16 | Status inquiry keeps returning unknown | `MANUAL_INVESTIGATION` after 2 h | Hold | Operator decides with evidence; four-eyes approval. |
+| 17 | Audit service unavailable | Unchanged | Unchanged | Audit events go through the outbox; the transition is not blocked. |
+| 18 | Invalid manual transition | Unchanged | Unchanged | Rejected with `INVALID_STATE_TRANSITION`. |
 
-## Failure Matrix
-
-|# |Scenario                                          |Internal State                 |Expected Behaviour                   |
-|--|--------------------------------------------------|-------------------------------|-------------------------------------|
-|1 |Client request timeout before operation creation  |No operation / unknown         |Client may retry                     |
-|2 |Duplicate client request                          |Existing state                 |Return existing operation state      |
-|3 |Core Banking unavailable                          |PROCESSING / failed attempt    |Retry or fail according to policy    |
-|4 |Payment Network timeout                           |UNKNOWN                        |Reconciliation required              |
-|5 |Payment Network explicitly rejects operation      |FAILED                         |Persist confirmed failure            |
-|6 |Payment Network accepts operation                 |COMPLETED or intermediate state|Persist confirmed result             |
-|7 |Response lost after successful external processing|UNKNOWN                        |Do not mark as FAILED; reconcile     |
-|8 |Database failure during transition                |Previous state                 |Roll back transaction                |
-|9 |Concurrent transition attempt                     |Current state                  |Apply transaction/concurrency control|
-|10|Duplicate external response/event                 |Existing state                 |Process idempotently                 |
-|11|Reconciliation unavailable                        |UNKNOWN                        |Keep operation unresolved and retry  |
-|12|Manual investigation required                     |MANUAL_INVESTIGATION           |Authorised operator investigates     |
-|13|Invalid manual transition                         |Current state                  |Reject operation                     |
-|14|Audit service temporarily unavailable             |Depends on criticality         |Apply defined audit failure policy   |
-
-## Critical Scenario: Lost Response
-
-One of the most important scenarios is when the external payment network successfully processes the transaction but the response does not reach the Transfer Service.
+## Critical scenario: lost response
 
 ```text
-Transfer Service
-      │
-      │ request
-      ▼
-Payment Network
-      │
-      │ transaction accepted
-      ▼
-   SUCCESS
-      │
-      X
- response lost
-      │
-      ▼
-Transfer Service
-      │
-      ▼
-    UNKNOWN
+Transfer Service --submit--> Payment Network --accepted--> (response lost)
+Transfer Service: SUBMITTED -> UNKNOWN (hold stays)
+Reconciliation: asks the network for the status -> SUCCESS -> capture -> COMPLETED
 ```
 
-The absence of a response does not provide sufficient evidence that the operation failed.
+A missing response is not evidence of failure. Sending the payment again could pay twice.
 
-Therefore:
+## Design principle
 
-> **Technical timeout must not automatically be interpreted as business failure.**
-
-## Duplicate Request
-
-A client may retry because the original response was lost.
-
-```text
-Request #1
-operation_id = X
-      │
-      ▼
-Transfer Service
-      │
-      ▼
-PROCESSING
-
-Request #2
-operation_id = X
-      │
-      ▼
-Transfer Service
-      │
-      ▼
-Existing operation
-```
-
-The second request must not create another financial operation.
-
-## Database Failure
-
-If persistence fails during a state transition:
-
-```text
-BEGIN
-   │
-   ├─ validate transition
-   │
-   ├─ update operation
-   │
-   X database error
-   │
-ROLLBACK
-```
-
-The system must not expose a partially committed lifecycle transition.
-
-## Invalid State Transition
-
-Example:
-
-```text
-COMPLETED → FAILED
-```
-
-This is not a technical failure.
-
-It is an invalid business operation and should return a deterministic business error.
-
-## Design Principle
-
-Failures must be classified before determining the next state.
-
-A timeout, a confirmed rejection and an unknown external outcome are different conditions and must not be collapsed into one generic FAILED state.
+Classify a failure before choosing the next state. A confirmed rejection, a technical timeout and an unknown outcome are different situations and must not be collapsed into one `FAILED` state.
