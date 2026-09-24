@@ -34,9 +34,13 @@ An event-driven approach allows services to communicate asynchronously while rem
 
 ### AsyncAPI Event Contract
 
-A sanitised AsyncAPI 3.1.0 contract demonstrates the formal definition of the `TransferCompleted` event, including event identity, versioning, correlation and payload schema.
+A sanitised AsyncAPI 3.0.0 contract defines two events (`TransferCompleted`, `TransferFailed`), the Kafka key (`operationId`), retry and dead-letter channels, and the schema evolution rule. Money is a decimal string.
 
-[View AsyncAPI 3.1.0 Contract](./artifacts/asyncapi-example.yaml)
+[View AsyncAPI Contract](./artifacts/asyncapi-example.yaml)
+
+### Transactional Outbox
+
+Events are published through a transactional outbox to avoid the dual-write problem. See [outbox.md](./outbox.md) and [ADR-005](../adr/ADR-005-transactional-outbox.md).
 
 ## Architectural Goals
 
