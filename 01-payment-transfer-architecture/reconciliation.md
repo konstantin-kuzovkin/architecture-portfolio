@@ -109,3 +109,20 @@ Recommended metrics:
 Reconciliation is not an exceptional workaround.
 
 It is a normal part of reliable distributed financial processing where the final result may be temporarily unavailable.
+
+## Reconciliation Policy
+
+| Parameter | Value (reference) |
+|---|---|
+| Status inquiry interval | 5 minutes |
+| Maximum attempts | 24 (2 hours) |
+| After the last attempt | `UNKNOWN -> MANUAL_INVESTIGATION` |
+| Inquiry key | `operationId` used as the payment reference |
+| Manual decision | Four-eyes approval, evidence attached, audit record |
+
+Rules:
+
+1. Reconciliation never sends the payment again. It only asks for the status.
+2. A `NOT_FOUND` answer is treated as a confirmed failure only if the network guarantees that a payment it did not receive will never be processed later. Otherwise the inquiry is repeated until the network's maximum processing window has passed.
+3. Reconciliation requests a transition from the Transfer Service. It never writes the state directly.
+4. Reconciliation metrics: number of `UNKNOWN` operations, age of the oldest one, resolution time, number of manual cases.
