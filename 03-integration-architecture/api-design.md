@@ -32,7 +32,10 @@ Request:
   "operationId": "operation-id",
   "source": "source-account",
   "destination": "destination-account",
-  "amount": 100.00
+  "amount": {
+    "amount": "100.00",
+    "currency": "RUB"
+  }
 }
 ```
 
@@ -41,7 +44,7 @@ Response:
 ```json
 {
   "operationId": "operation-id",
-  "status": "PROCESSING"
+  "status": "PENDING"
 }
 ```
 
