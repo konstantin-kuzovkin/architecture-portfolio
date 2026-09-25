@@ -42,7 +42,7 @@ A sanitised AsyncAPI 3.0.0 contract defines two events (`TransferCompleted`, `Tr
 
 Events are published through a transactional outbox to avoid the dual-write problem. See [outbox.md](./outbox.md) and [ADR-005](../adr/ADR-005-transactional-outbox.md).
 
-A runnable proof of concept of this pattern (with tests) is here: [outbox-idempotency-poc](ссылка).
+A runnable proof of concept of this pattern (with tests) is here: [outbox-idempotency-poc][https://github.com/konstantin-kuzovkin/outbox-idempotency-poc]
 
 ## Architectural Goals
 
