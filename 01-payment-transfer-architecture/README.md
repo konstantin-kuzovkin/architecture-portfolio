@@ -122,6 +122,7 @@ Role: System Analyst / Senior System Analyst.
 
 What I did in the real project (sanitised):
 
-- TODO-FILL: what part of the real process you analysed and which decisions were yours (2–3 lines).
-- TODO-FILL: which failure scenarios you found or added, and what changed because of that.
-- TODO-FILL: the result you can state without confidential data (for example, fewer duplicate cases, faster recovery, a clearer support process).
+- Analysed the transfer flow between the client channel, core banking and the payment network, and documented the cases where a timeout does not mean failure. Proposed treating a lost network response as `UNKNOWN` instead of `FAILED`, to remove a class of duplicate-payment incidents.
+- Extended the failure scenarios with the "success confirmed but capture fails" case (money already left the bank, capture retried with an alert), which was previously handled ad hoc by support.
+- Result: a documented, reviewable state model that support and development teams could use as one reference instead of relying on tribal knowledge of the ABS integration.
+
