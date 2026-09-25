@@ -28,12 +28,14 @@ Measure whether the agent's controls (source grounding, FACT / INFERENCE / UNKNO
 
 | Metric | Plain LLM prompt | Agent with controls |
 |---|---|---|
-| Fact precision | TODO-FILL | TODO-FILL |
-| Invented-fact rate | TODO-FILL | TODO-FILL |
-| UNKNOWN recall | TODO-FILL | TODO-FILL |
-| Completeness | TODO-FILL | TODO-FILL |
-| Defects found | TODO-FILL | TODO-FILL |
-| Analyst time (minutes per task) | TODO-FILL | TODO-FILL |
+| Fact precision | not measured | not measured |
+| Invented-fact rate | not measured | not measured |
+| UNKNOWN recall | not measured | not measured |
+| Completeness | not measured | not measured |
+| Defects found | not measured | not measured |
+| Analyst time (minutes per task) | not measured | not measured |
+
+This evaluation is designed but not yet run. Running it against 10–30 tasks is a half-day task (see "How to run it" below); the plan itself already demonstrates the evaluation method.
 
 Limitations: one analyst, a small test set, the same person wrote the test set and the agent. Numbers show a trend, not a proof.
 
@@ -43,12 +45,12 @@ Fill in honestly. "Planned" is a valid answer.
 
 | Control | Status | Evidence |
 |---|---|---|
-| Access control for source artifacts and tools | TODO-FILL (Implemented / Planned) | TODO-FILL |
-| Data classification before sending content to the LLM | TODO-FILL | TODO-FILL |
-| Prompt injection protection (external text is untrusted) | TODO-FILL | TODO-FILL |
-| Allowlist of commands and URLs | TODO-FILL | TODO-FILL |
-| Audit log of tool calls | TODO-FILL | TODO-FILL |
-| Retention and deletion of analysis results | TODO-FILL | TODO-FILL |
+| Access control for source artifacts and tools | Planned | Tool access is currently limited by what the operator explicitly runs; no formal allowlist yet |
+| Data classification before sending content to the LLM | Planned | Currently manual: only public/sanitised artifacts are used as input |
+| Prompt injection protection (external text is untrusted) | Partially implemented | Source documents are treated as data, not instructions, by convention; not yet enforced by tooling |
+| Allowlist of commands and URLs | Planned | |
+| Audit log of tool calls | Planned | |
+| Retention and deletion of analysis results | Planned | |
 
 ## How to run it (about half a day)
 
