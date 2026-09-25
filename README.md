@@ -15,6 +15,8 @@ My focus: distributed transactions, API and event contracts, integration pattern
 1. [Case 01 — Payment & Transfer](./01-payment-transfer-architecture/README.md): state ownership, money flow, idempotency, the UNKNOWN outcome.
 2. [ADR-001](./adr/ADR-001-operation-state-ownership.md) and [ADR-005](./adr/ADR-005-transactional-outbox.md): two decisions with real alternatives and trade-offs.
 3. [Case 06 — AI-assisted analysis](./06-ai-assisted-system-analysis/README.md) and its [evaluation method](./06-ai-assisted-system-analysis/evaluation.md).
+4. [outbox-idempotency-poc](https://github.com/konstantin-kuzovkin/outbox-idempotency-poc): a runnable proof of concept with tests for the outbox pattern used in ADR-005.
+
 
 ## Important notes
 
