@@ -205,7 +205,8 @@ The goal is to make the architecture:
 
 ## Career Direction
 
-Lead / Principal System Analyst → Solution / System Architect
+Lead System Analyst → Solution Architect
+
 
 ### I am particularly interested in:
 
