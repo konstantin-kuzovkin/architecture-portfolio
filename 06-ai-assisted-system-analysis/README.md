@@ -374,6 +374,9 @@ Key areas include:
 
 Evidence: the evaluation method and results are in [evaluation.md](./evaluation.md).
 
+A working, tested implementation of a multi-agent version of this idea (5 agents, 39 unit tests, deterministic-first architecture) is here: [requirements-pipeline-poc](https://github.com/konstantin-kuzovkin/requirements-pipeline-poc).
+
+
 ## My Role
 
 Role: System Analyst / AI-Assisted Solution Designer
